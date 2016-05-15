@@ -1,4 +1,4 @@
-/target/
-/wrapper/
-/grailsw
-/grailsw.bat
+target/*
+wrapper/*
+grailsw
+grailsw.bat

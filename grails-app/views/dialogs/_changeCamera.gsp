@@ -12,12 +12,12 @@
 			<div id="scriviModalBody" class="modal-body form">
 				<div class="form-group">
 					<select ng-model="mc.enteSelezionato" id="aziendaIdSelect"  class="form-control">
-						  <option ng-repeat="ente in mc.entiPossibili" value="{{ente.aziendaId}}">{{ente.nome}}</option>
+						  <option ng-repeat="ente in entiPossibili" value="{{ente.aziendaId}}">{{ente.nome}}</option>
 					</select>
 				</div>
 			</div>
 			<div id="modalFooter" class="modal-footer form">
-						<button class="btn-btn-primary" data-dismiss="modal" ng-click="mc.selectEnte()" >OK</button>
+						<button class="btn btn-primary" data-dismiss="modal" ng-click="mc.selectEnte()" >OK</button>
 			
 <%--			<button class="btn-btn-primary" data-dismiss="modal" onclick="saveCurrentObject({ente:$('#aziendaIdSelect').val()})">OK</button>--%>
 			

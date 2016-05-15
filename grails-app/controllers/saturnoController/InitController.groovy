@@ -62,18 +62,25 @@ class InitController {
 		def tabId = request.JSON.tabId;
 		JSONObject data = new JSONObject();
 		data.data =  session."${tabId}".userObject;
-		render data as JSON
+		render  session."${tabId}".userObject as JSON
 		
 		
 	}
+	
+	
 
 	def updateUserObject(){
 		if (!testTabId()){
 			return
 		}
 		def tabId = request.JSON?.tabId;		
-		def userObjectClient = request.JSON?.userObject;
+		def data = request.JSON?.data;
 		
+		if (data == null){
+			log.error("Data not found in request")
+			render status: 500, text: 'Data not found '
+			return
+		}
 		
 		
 		if(!testTabId()){
@@ -93,11 +100,11 @@ class InitController {
 		//imposto l'ente se c'è nella richiesta
 		//o lo prendo da eaco 
 		//o mantengo quello che c'è
-		if (request.JSON?.ente!=null){
+		if (data.ente!=null){
 			log.debug("settaggio ente utente")
 			//FIXME qui va un controllo per far abilitare solo l'utente
 			//per le azinede a lui associate
-			userObject.ente=getEnteFromEacoCode(request.JSON.ente);
+			userObject.ente=getEnteFromEacoCode(data.ente);
 		}else if (userObject.ente==null){
 			log.debug("settaggio ente da eaco")
 			userObject.ente=getEnteFromEacoCode(userObject.currentUser?.userEnte);
@@ -107,10 +114,23 @@ class InitController {
 		
 		//TODO fare lo stesso per anno e versione
 		
+		if (data.anno != null){
+			userObject.anno=anno;
+			log.debug("Anno settato: "+userObject.anno)
+		}else{
+			log.debug("Mantenuto anno: "+userObject.anno)
+		}
+		if (data.versione != null){
+			userObject.versione = data.versione;
+			log.debug("Versione settata "+userObject.versione)
+		}else{
+			log.debug("Mantenuta versione: "+userObject.versione)
+		}
+		
 		session."${tabId}".userObject = userObject
-		JSONObject data = new JSONObject();
-		data.data = userObject;
-		render data as JSON
+	
+		log.debug("Setup userObject : "+session."${tabId}"?.userObject)
+		render userObject as JSON
 		
 		
 		

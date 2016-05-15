@@ -1,38 +1,55 @@
 var myApp = angular.module('myApp', []);
 
-// controller ereditato dal body e quindi da tutte le pagine
-//contiene i metodi per la gestione dell'user object
+// servizio invocato ogni qual volta si aggiornane le
+// caratteristiche dell'untete: ente in uso, anno, versione
 
-myApp.controller('MainController', [
-		'$scope',
+myApp.service('serviceUtils', [
 		'$http',
+		function($http) {
+			updateInterfaces = function(scope) {
 
-		function($scope, $http) {
+				scope.logoSrc = "images/logo/"
+						+ JSON.parse(sessionStorage.userObject).ente.id
+						+ ".jpg"
 
-			console.log("MainController")
-			var vm = this
-			vm.tabId = sessionStorage.tabId;
-			//selezione dell'ente da finesrta
-			vm.selectEnte=function(){
-				console.log("ente selezioato "+vm.enteSelezionato)
-				
-				$http.post(
-						sessionStorage.context
-								+ '/init/updateUserObject', {
-							'tabId' : sessionStorage.tabId,
-							'ente':vm.enteSelezionato
-						}).success(
-						function(response, status, headers, config) {
-							sessionStorage.userObject=JSON.stringify(response.data)
-							
-						}).error(
-						function(response, status, headers, config) {
-							alert(response.data);
-						});
 			}
 
-			vm.getEnti = function(tabId) {
-				console.log("getEnti for tabID " + tabId)
+			this.updateInterfaces = updateInterfaces;
+			userObject = function(scope, enteSelezionato, anno, versione) {
+				var data = new Object();
+				if (enteSelezionato != undefined) {
+					data.ente = enteSelezionato
+				}
+				if (anno != undefined) {
+					data.anno = anno
+				}
+				if (versione != undefined) {
+					data.versione = versione;
+				}
+
+				var updateUser = $http.post(sessionStorage.context
+						+ '/init/updateUserObject', {
+					'tabId' : sessionStorage.tabId,
+					'data' : data
+
+				});
+				updateUser.then(function(response, status, headers, config) {
+					
+					sessionStorage.userObject = JSON.stringify(response.data)
+					// aggiorno tutto ciò che dipende dall'ente
+					updateInterfaces(scope)
+
+					return response.data
+
+				}, function(response, status, headers, config) {
+					alert(response.data);
+					return undefined
+				});
+			}
+
+			this.userObject = userObject
+
+			this.getEnti = function(scope) {
 				var entiPromise = $http.post(sessionStorage.context
 						+ '/init/getEnti', {
 					'tabId' : sessionStorage.tabId
@@ -40,71 +57,118 @@ myApp.controller('MainController', [
 
 				entiPromise.then(function(response) {
 					if (response.data.length == 1) {
-						var userObject = new Object();
 						
-						$http.post(
-								sessionStorage.context
-										+ '/init/updateUserObject', {
-									'tabId' : sessionStorage.tabId,
-									'ente':response.data[0].aziendaId
-								}).success(
-								function(response, status, headers, config) {
-									console.log(response.data)
-									sessionStorage.userObject=JSON.stringify(response.data)
-									
-								}).error(
-								function(response, status, headers, config) {
-									alert(response.data);
-								});
-					}else{
-						//attivare la finestra di ricerca enti
-						vm.entiPossibili = response.data
+						userObject(scope, response.data[0].aziendaId)
+
+					} else {
+						// attivare la finestra
+						// di ricerca enti
+						scope.entiPossibili = response.data
 						$('#cambiaCamera').modal()
 					}
 
 				}, function(response) {
 					alert(response.data);
 				});
-
 			}
 
-			if (sessionStorage.tabId == null) {
-				console.log("tabId not found in sessionStorage")
+		}
 
-				$http.post(sessionStorage.context + '/init/createSessionTabId',
-						{
-							'tabId' : vm.tabId
-						}).success(function(data, status, headers, config) {
-					console.log("tab id received " + data.tabId)
-					sessionStorage.tabId = data.tabId
-					vm.tabId = data.tabId
-					vm.getEnti(sessionStorage.tabId)
-				}).error(function(data, status, headers, config) {
-					alert(data);
-				});
-			} else {
-				//controllo se ho già un utente in session
-				$http.post(sessionStorage.context + '/init/getUserObject',
-						{
-							'tabId' : sessionStorage.tabId
-						}).success(function(response, status, headers, config) {
-					if (response.data != undefined){
-						//ho già un oggetto utente
-						//lo carico in session client
-						sessionStorage.userObject=sessionStorage.userObject=JSON.stringify(response.data);
-						return;
-					}else{
-						//non ho un oggetto utente in sessione,
-						//passo per la scelta dell'ente
-						vm.getEnti(sessionStorage.tabId);
+]);
+
+// controller ereditato dal body e quindi da tutte le pagine
+// contiene i metodi per la gestione dell'user object
+
+myApp
+		.controller(
+				'MainController',
+
+				function($scope, $http, serviceUtils) {
+					
+					//questo serve per poter permettere 
+					//alla finsetra changeCamera di essere aperta 
+					//da pulsante
+					
+					$scope.cambiaCamera=function(){
+						serviceUtils.getEnti($scope)
+						
 					}
-				}).error(function(response, status, headers, config) {
-					alert(response.data);
-				});
+					
 				
-			
-			}
 
-			
+					console.log("MainController")
+					var vm = this
+					vm.tabId = sessionStorage.tabId;
+					// selezione dell'ente da finesrta
+					vm.selectEnte = function() {
 
-		} ]);
+						serviceUtils.userObject($scope, vm.enteSelezionato);
+
+					}
+
+					
+
+					if (sessionStorage.tabId == null) {
+						console.log("tabId not found in sessionStorage")
+
+						$http.post(
+								sessionStorage.context
+										+ '/init/createSessionTabId', {
+									'tabId' : vm.tabId
+								}).success(
+								function(data, status, headers, config) {
+									console
+											.log("tab id received "
+													+ data.tabId)
+									sessionStorage.tabId = data.tabId
+									vm.tabId = data.tabId
+									// vm.getEnti(sessionStorage.tabId)
+									serviceUtils.getEnti($scope)
+								}).error(
+								function(data, status, headers, config) {
+									alert(data);
+								});
+					} else {
+						// controllo se ho già un utente in session
+						$http
+								.post(
+										sessionStorage.context
+												+ '/init/getUserObject', {
+											'tabId' : sessionStorage.tabId
+										})
+								.success(
+										function(response, status, headers,
+												config) {
+											if (response != undefined
+													&& !$
+															.isEmptyObject(response)) {
+
+												// ho già un oggetto
+												// utente
+												// lo carico in session
+												// client
+												sessionStorage.userObject = sessionStorage.userObject = JSON
+														.stringify(response);
+												// e aggiorno l'interfaccia
+												serviceUtils
+														.updateInterfaces($scope)
+												return;
+											} else {
+												// non ho un oggetto
+												// utente in sessione,
+												// passo per la scelta
+												// dell'ente
+												// vm
+												// .getEnti(sessionStorage.tabId);
+												serviceUtils.getEnti($scope)
+
+											}
+										}).error(
+										function(response, status, headers,
+												config) {
+											alert(response.data);
+										});
+
+					}
+
+				});

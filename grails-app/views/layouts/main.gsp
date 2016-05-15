@@ -59,7 +59,7 @@
 						<div class="navbar-header">
 							<div class="navbar-brand"
 								style="margin-bottom: 5px; padding-bottom: 5px">
-								<a  href="${createLink(uri:'/')}"><img id="logoImg" style="height: 60px"
+								<a  href="${createLink(uri:'/')}"><img id="logoImg" src="{{logoSrc}}" style="height: 60px"
 									 />
 								</a>
 								<label id="enteName"></label>
@@ -92,8 +92,8 @@
 										class="glyphicon glyphicon-th-list"></i> PULSANTE 2</a></li>
 
 								<li class="paddingRightNavBar"><a
-									onclick="event.preventDefault();changeCamera('${request.contextPath}');"
-									href="${createLink(controller: 'test')}" id="iscriviti"
+									ng-click="event.preventDefault();cambiaCamera();"
+									 id="iscriviti"
 									class="navbar-button"><i
 										class="glyphicon glyphicon-th-list"></i> Pulsante 3</a></li>
 
