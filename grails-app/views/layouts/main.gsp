@@ -7,7 +7,9 @@
 <html lang="en" class="no-js">
 <!--<![endif]-->
 <head>
-
+<script>
+sessionStorage.context = '${request.contextPath}';
+</script>
 
 
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -26,11 +28,6 @@
 <asset:javascript src="application.js" />
 <%--<script src="/saturno/js/angularjs/module/main.js" type="text/javascript"></script>--%>
 
-<script>
-	sessionStorage.context = '${request.contextPath}'
-</script>
-
-<link id="enteStyle" rel="stylesheet">
 <g:layoutHead />
 <%-- Finestra di riecerca della camera --%>
 
@@ -39,18 +36,20 @@
 
 </head>
 
-	
+
 <g:if test="true">
+
 	<body ng-app="myApp" ng-controller="MainController as mc">
+		
+		<link rel="stylesheet" href="{{enteCss}}">
+		<g:render template="/dialogs/changeCamera" />
 
-<g:render template="/dialogs/changeCamera" />
 
 
 
-
-		<div class="container-fluid" >
-			<div class="row" >
-				<div class="col-md-12">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-10">
 					<!-- navbar -->
 					<nav
 						class="navbar navbar-main navbar-default navbar-fixed-top bkgImgXS"
@@ -59,11 +58,10 @@
 						<div class="navbar-header">
 							<div class="navbar-brand"
 								style="margin-bottom: 5px; padding-bottom: 5px">
-								<a  href="${createLink(uri:'/')}"><img id="logoImg" src="{{logoSrc}}" style="height: 60px"
-									 />
-								</a>
-								<label id="enteName"></label>
-							
+								<a href="${createLink(uri:'/')}"><img id="logoImg"
+									src="{{logoSrc}}" style="height: 60px" /> </a> <label
+									id="enteName"></label>
+
 							</div>
 
 
@@ -93,8 +91,7 @@
 
 								<li class="paddingRightNavBar"><a
 									ng-click="event.preventDefault();cambiaCamera();"
-									 id="iscriviti"
-									class="navbar-button"><i
+									id="iscriviti" class="navbar-button"><i
 										class="glyphicon glyphicon-th-list"></i> Pulsante 3</a></li>
 
 								<li><a id="assistenzaButton"
@@ -106,6 +103,7 @@
 
 						<div class="breadCumb  hidden-xs gradient">
 							<p>
+
 
 								<g:layoutTitle />
 
@@ -123,11 +121,14 @@
 					</div>
 
 				</div>
+				<div class="col-md-2">
+					<label>Anno corrente:{{annoCorrente}}</label>
+				</div>
 			</div>
 
 			<div class="row-fluid">
-				<div class="col-md-12 mainContainer" >
-					
+				<div class="col-md-12 mainContainer">
+
 					<g:layoutBody />
 
 				</div>

@@ -1,80 +1,99 @@
-var myApp = angular.module('myApp', []);
+var myApp = angular.module('myApp', ['CambiaAnno']);
 
 // servizio invocato ogni qual volta si aggiornane le
 // caratteristiche dell'untete: ente in uso, anno, versione
 
-myApp.service('serviceUtils', [
-		'$http',
-		function($http) {
-			updateInterfaces = function(scope) {
+myApp.run(function($rootScope) {
+	// torna alla pagina principale
+	$rootScope.goToMain = function() {
+		window.location = location.protocol + "//" + location.host + "/"
+				+ sessionStorage.context
+	}
+});
 
-				scope.logoSrc = "images/logo/"
-						+ JSON.parse(sessionStorage.userObject).ente.id
-						+ ".jpg"
+myApp.service('serviceUtils', function($http) {
 
-			}
+	// usato per aggiornare l'interfaccia da userObject
 
-			this.updateInterfaces = updateInterfaces;
-			userObject = function(scope, enteSelezionato, anno, versione) {
-				var data = new Object();
-				if (enteSelezionato != undefined) {
-					data.ente = enteSelezionato
-				}
-				if (anno != undefined) {
-					data.anno = anno
-				}
-				if (versione != undefined) {
-					data.versione = versione;
-				}
+	updateInterfaces = function(scope) {
 
-				var updateUser = $http.post(sessionStorage.context
-						+ '/init/updateUserObject', {
-					'tabId' : sessionStorage.tabId,
-					'data' : data
+		// logo camerale
 
-				});
-				updateUser.then(function(response, status, headers, config) {
-					
-					sessionStorage.userObject = JSON.stringify(response.data)
-					// aggiorno tutto ciò che dipende dall'ente
-					updateInterfaces(scope)
+		scope.logoSrc = "" + sessionStorage.context + "/images/logo/"
+				+ JSON.parse(sessionStorage.userObject).ente.id + ".jpg"
+		scope.enteCss = "" + sessionStorage.context + "/css/"
+				+ JSON.parse(sessionStorage.userObject).ente.id + "_style.css"
 
-					return response.data
+		// aggiornamento della label di anno
 
-				}, function(response, status, headers, config) {
-					alert(response.data);
-					return undefined
-				});
-			}
+		scope.annoCorrente = JSON.parse(sessionStorage.userObject).anno
 
-			this.userObject = userObject
+	}
 
-			this.getEnti = function(scope) {
-				var entiPromise = $http.post(sessionStorage.context
-						+ '/init/getEnti', {
+	this.updateInterfaces = updateInterfaces;
+	userObject = function(scope, enteSelezionato, anno, versione) {
+		var data = new Object();
+		if (enteSelezionato != undefined) {
+			data.ente = enteSelezionato
+		}
+		if (anno != undefined) {
+			data.anno = anno
+		}
+		if (versione != undefined) {
+			data.versione = versione;
+		}
+		
+		var updateUser = $http.post(sessionStorage.context
+				+ '/init/updateUserObject', {
+			'tabId' : sessionStorage.tabId,
+			'data' : data
+
+		});
+		updateUser.then(function(response, status, headers, config) {
+
+			sessionStorage.userObject = JSON.stringify(response.data)
+			// aggiorno tutto ciò che dipende dall'ente
+			updateInterfaces(scope)
+
+			return response.data
+
+		}, function(response, status, headers, config) {
+			alert(response.data);
+			return undefined
+		});
+	}
+
+	this.userObject = userObject
+
+	this.getEnti = function(scope) {
+		var entiPromise = $http.post(sessionStorage.context + '/init/getEnti',
+				{
 					'tabId' : sessionStorage.tabId
 				});
 
-				entiPromise.then(function(response) {
-					if (response.data.length == 1) {
-						
-						userObject(scope, response.data[0].aziendaId)
+		entiPromise.then(function(response) {
+			if (response.data.length == 1) {
 
-					} else {
-						// attivare la finestra
-						// di ricerca enti
-						scope.entiPossibili = response.data
-						$('#cambiaCamera').modal()
-					}
+				userObject(scope, response.data[0].aziendaId)
 
-				}, function(response) {
-					alert(response.data);
-				});
+			} else {
+				// attivare la finestra
+				// di ricerca enti
+				scope.entiPossibili = response.data
+				$('#cambiaCamera').modal({
+					backdrop : 'static',
+					keyboard : true
+				})
 			}
 
-		}
+		}, function(response) {
+			alert(response.data);
+		});
+	}
 
-]);
+}
+
+);
 
 // controller ereditato dal body e quindi da tutte le pagine
 // contiene i metodi per la gestione dell'user object
@@ -84,17 +103,16 @@ myApp
 				'MainController',
 
 				function($scope, $http, serviceUtils) {
-					
-					//questo serve per poter permettere 
-					//alla finsetra changeCamera di essere aperta 
-					//da pulsante
-					
-					$scope.cambiaCamera=function(){
+					console.log("SerbiceUtils "+serviceUtils)
+
+					// questo serve per poter permettere
+					// alla finsetra changeCamera di essere aperta
+					// da pulsante
+
+					$scope.cambiaCamera = function() {
 						serviceUtils.getEnti($scope)
-						
+
 					}
-					
-				
 
 					console.log("MainController")
 					var vm = this
@@ -106,10 +124,8 @@ myApp
 
 					}
 
-					
-
 					if (sessionStorage.tabId == null) {
-						console.log("tabId not found in sessionStorage")
+						// console.log("tabId not found in sessionStorage")
 
 						$http.post(
 								sessionStorage.context

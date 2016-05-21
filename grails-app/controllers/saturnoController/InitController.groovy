@@ -6,33 +6,14 @@ import it.ictechnology.eaco.client.framework.Client
 import it.ictechnology.eaco.client.framework.FrameworkFacade
 
 import org.codehaus.groovy.grails.web.json.JSONObject
+import org.joda.time.DateTime
 
 import saturno.common.Ente
 
 class InitController {
 	def dataSource_portal
 	public static final String APP_NAME="FEBE"
-	def testTabId(){
-		def tabId = request.JSON?.tabId;
-		if (tabId == null){
-			log.error("tabId not found in request")
-
-			render status: 500, text: 'tabId not found in request'
-
-			return false;
-		}
-		//se non esiste in session il tabId lo creo
-		if (session."${tabId}"==null){
-			log.error("tabId not found in session")
-
-			render status: 500, text: 'tabId not found in session'
-			return false;
-		}
-
-
-		return true
-	}
-
+	def utilsService
 	def getEacoUser(){
 		try{
 			Client eacoClient = FrameworkFacade.getClient(request);
@@ -56,7 +37,8 @@ class InitController {
 	}
 	
 	def getUserObject(){
-		if (!testTabId()){
+		
+		if (!utilsService.testTabId()){
 			return
 		}
 		def tabId = request.JSON.tabId;
@@ -70,7 +52,8 @@ class InitController {
 	
 
 	def updateUserObject(){
-		if (!testTabId()){
+		
+		if (!utilsService.testTabId()){
 			return
 		}
 		def tabId = request.JSON?.tabId;		
@@ -83,7 +66,7 @@ class InitController {
 		}
 		
 		
-		if(!testTabId()){
+		if(!utilsService.testTabId()){
 			return
 		}
 		
@@ -115,9 +98,11 @@ class InitController {
 		//TODO fare lo stesso per anno e versione
 		
 		if (data.anno != null){
-			userObject.anno=anno;
+			userObject.anno=data.anno;
 			log.debug("Anno settato: "+userObject.anno)
 		}else{
+		//di default viene settato l'anno corrente
+			userObject.anno = new DateTime().getYear();
 			log.debug("Mantenuto anno: "+userObject.anno)
 		}
 		if (data.versione != null){
@@ -163,7 +148,7 @@ class InitController {
 	}
 
 	def getEnti(){
-		if (!testTabId()){
+		if (!utilsService.testTabId()){
 			return
 		}
 		//prelevo l'utente di eaco
@@ -190,6 +175,7 @@ class InitController {
 		}
 		session."${tabId}"=new JSONObject();
 		log.debug("Create tabId: "+tabId)
+		
 		JSONObject obj = new JSONObject();
 		obj.tabId=tabId
 		render obj as JSON

@@ -17,7 +17,10 @@ class CambiaAnnoController {
 
 
 	def getAnni(){
-		def currentUserObject = utilsService.currentUserObject();
+		
+		
+		def currentUserObject = utilsService.currentUserObject() 
+		
 		if (currentUserObject==null){
 			log.error("getAnni currentUserObject not found");
 			render new JSONArray() as JSON

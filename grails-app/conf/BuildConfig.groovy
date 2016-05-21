@@ -34,8 +34,9 @@ grails.project.dependency.resolution = {
 
     repositories {
         inherits true // Whether to inherit repository definitions from plugins
-		
+		mavenRepo "http://mvnrepository.com/artifact/joda-time/joda-time"
 		mavenRepo "http://nexus.intra.infocamere.it/content/groups/public/"
+		
         grailsPlugins()
         grailsHome()
         mavenLocal()
@@ -53,6 +54,7 @@ grails.project.dependency.resolution = {
         // runtime 'org.postgresql:postgresql:9.3-1101-jdbc41'
         test "org.grails:grails-datastore-test-support:1.0.2-grails-2.4"
 		provided 'it.infocamere.dite:eaco-local:1.0.0'
+		compile "joda-time:joda-time:2.9.3"
 		
 		
     }
@@ -74,6 +76,7 @@ grails.project.dependency.resolution = {
 		compile ":jquery-ui:1.10.4"
 		compile ":rest-client-builder:2.1.1"
 		compile ":twitter-bootstrap:3.3.5"
+		
 		
 
         // Uncomment these to enable additional asset-pipeline capabilities

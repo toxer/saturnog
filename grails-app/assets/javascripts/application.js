@@ -11,8 +11,9 @@
 //= require bootstrap
 //= require js/jquery-ui-1.10.4.custom
 //= require angular.min
-//= require angularjs/module/main.js
 //= require angularjs/module/cambiaAnno.js
+//= require angularjs/module/main.js
+
 
 if (typeof jQuery !== 'undefined') {
 	(function($) {

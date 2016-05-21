@@ -11,7 +11,7 @@
 
 			
 			<div class="col-xs-12" ng-hide="mc.userObject">
-				<a 	href="cambiaAnno/index?tabId={{mc.tabId}}" class="btn btn-primary btn-index " >Cambia anno</a>
+				<a 	href="cambiaAnno/index" class="btn btn-primary btn-index " >Cambia anno</a>
 			
 			</div>
 			

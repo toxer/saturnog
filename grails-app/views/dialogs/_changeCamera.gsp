@@ -17,7 +17,7 @@
 				</div>
 			</div>
 			<div id="modalFooter" class="modal-footer form">
-						<button class="btn btn-primary" data-dismiss="modal" ng-click="mc.selectEnte()" >OK</button>
+						<button class="btn btn-primary" data-dismiss="modal" ng-click="mc.selectEnte();goToMain()" >OK</button>
 			
 <%--			<button class="btn-btn-primary" data-dismiss="modal" onclick="saveCurrentObject({ente:$('#aziendaIdSelect').val()})">OK</button>--%>
 			
