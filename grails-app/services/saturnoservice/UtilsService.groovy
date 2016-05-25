@@ -40,9 +40,7 @@ class UtilsService {
 		def tabId = req.JSON?.tabId;
 		log.info("TESTTAB: "+tabId)
 		if (tabId == null){
-			log.error("tabId not found in request")
-
-			groovyPageRenderer.render status: 500, text: 'tabId not found in request'
+			
 
 			return false;
 		}
@@ -50,7 +48,7 @@ class UtilsService {
 		if (sess."${tabId}"==null){
 			log.error("tabId not found in session")
 
-			 groovyPageRenderer.render status: 500, text: 'tabId not found in session'
+			
 			return false;
 		}
 

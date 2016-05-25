@@ -1,4 +1,4 @@
-var myApp = angular.module('myApp', ['CambiaAnno']);
+var myApp = angular.module('myApp', ['CambiaAnno','Pianificazione']);
 
 // servizio invocato ogni qual volta si aggiornane le
 // caratteristiche dell'untete: ente in uso, anno, versione
@@ -100,7 +100,7 @@ myApp.service('serviceUtils', function($http) {
 
 myApp
 		.controller(
-				'MainController',
+				'MainController',['$scope', '$http','serviceUtils',
 
 				function($scope, $http, serviceUtils) {
 					console.log("SerbiceUtils "+serviceUtils)
@@ -114,10 +114,13 @@ myApp
 
 					}
 
-					console.log("MainController")
+					
 					var vm = this
 					vm.tabId = sessionStorage.tabId;
-					// selezione dell'ente da finesrta
+					
+					
+					
+					// selezione dell'ente da finestra
 					vm.selectEnte = function() {
 
 						serviceUtils.userObject($scope, vm.enteSelezionato);
@@ -182,9 +185,10 @@ myApp
 										}).error(
 										function(response, status, headers,
 												config) {
-											alert(response.data);
+											
+											alert(response);
 										});
 
 					}
 
-				});
+				}]);

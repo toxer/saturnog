@@ -1,5 +1,7 @@
 package saturnoController
 
+import javax.net.ssl.SSLEngineResult.Status;
+
 import grails.converters.JSON
 import groovy.sql.Sql
 import it.ictechnology.eaco.client.framework.Client
@@ -39,6 +41,7 @@ class InitController {
 	def getUserObject(){
 		
 		if (!utilsService.testTabId()){
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
 		}
 		def tabId = request.JSON.tabId;
@@ -54,6 +57,7 @@ class InitController {
 	def updateUserObject(){
 		
 		if (!utilsService.testTabId()){
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
 		}
 		def tabId = request.JSON?.tabId;		
@@ -67,6 +71,7 @@ class InitController {
 		
 		
 		if(!utilsService.testTabId()){
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
 		}
 		
@@ -149,6 +154,7 @@ class InitController {
 
 	def getEnti(){
 		if (!utilsService.testTabId()){
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
 		}
 		//prelevo l'utente di eaco
