@@ -103,7 +103,7 @@ myApp
 				'MainController',['$scope', '$http','serviceUtils',
 
 				function($scope, $http, serviceUtils) {
-					console.log("SerbiceUtils "+serviceUtils)
+					
 
 					// questo serve per poter permettere
 					// alla finsetra changeCamera di essere aperta
@@ -186,7 +186,10 @@ myApp
 										function(response, status, headers,
 												config) {
 											
-											alert(response);
+											alert("Tab id invalido");
+											sessionStorage.removeItem('tabId')
+											window.location = location.protocol + "//" + location.host + "/"
+											+ sessionStorage.context
 										});
 
 					}

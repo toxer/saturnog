@@ -14,7 +14,7 @@
 			</div>
 			<div id="modalFooter" class="modal-footer form">
 				<button class="btn btn-success" data-dismiss="modal"
-					ng-click="pc.creaNuovaVersione()">SI</button>
+					ng-click="pc.creaNuovaVersioneOpenDialog()">SI</button>
 				<button class="btn btn-danger" data-dismiss="modal"
 					ng-click="goToMain()">NO</button>
 

@@ -34,9 +34,6 @@ class UtilsService {
 		GrailsWebRequest webUtils = WebUtils.retrieveGrailsWebRequest()
 		def sess = webUtils.getSession()
 		def req = webUtils.getRequest()
-		sess.getAttributeNames().each{
-			log.debug("SessionAttribute: "+it)
-		}
 		def tabId = req.JSON?.tabId;
 		log.info("TESTTAB: "+tabId)
 		if (tabId == null){

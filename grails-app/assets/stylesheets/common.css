@@ -128,3 +128,14 @@
 	font-weight:bold;
 	font-size:12pt;
 }
+
+/*Validazione form angular*/
+
+  .css-form .ng-invalid.ng-invalid-required {
+    background-color: #FA787E;
+  }
+
+  .css-form .ng-valid.ng-touched {
+  /*  background-color: #78FA89;*/
+  }
+

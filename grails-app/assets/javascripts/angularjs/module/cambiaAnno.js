@@ -2,7 +2,7 @@ var cambiaAnno = angular.module("CambiaAnno", []);
 
 cambiaAnno.controller('CambiaAnnoController', [ '$scope', '$http','serviceUtils',
 		function($scope, $http,serviceUtils) {
-			console.log("SerbiceUtils2 "+serviceUtils)
+		
 			var vm = this
 			vm.tabId = sessionStorage.tabId;
 

@@ -8,19 +8,19 @@ import saturno.piano.Piano
 
 class PianificazioneController {
 	def utilsService;
-	
+
 	def index(){
-		
 	}
-	
+
 	def testVersionExist(){
 		def userObject = utilsService.currentUserObject()
 		if (userObject == null){
 			render status:500,text:'Errore, non trovato un utente valido'
-			
-			log.error("testVersionExist user object non trovato");			
+
+			log.error("testVersionExist user object non trovato");
+			return;
 		}
-		
+
 		//estraggo l'anno del piano
 		def anno = userObject.anno
 		def ente = userObject.ente;
@@ -32,8 +32,9 @@ class PianificazioneController {
 			render status:500, text:'Ente non trovato'
 			return
 		}
-		
+
 		//controllo se esiste almeno una versione per quell'anno
+		
 		Piano p = Piano.findByEnteAndAnno(ente,anno);
 		def versione = new JSONObject();
 		versione.versionePresente =false
@@ -41,12 +42,86 @@ class PianificazioneController {
 		if (p == null){
 			render versione as JSON
 			return
-			
+
 		}
 		versione.versionePresente=true
-		versione.versione=p
-		render versione as JSON		
+		versione.versioni=Piano.findAllByEnteAndAnno(ente,anno)
+		render versione as JSON
+
+	}
+	
+	def creaNuovaVersione(){
+		if (!utilsService.testTabId()){
+			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			return
+		}
+		def userObject = utilsService.currentUserObject()
+		if (userObject==null){
+			render status:500,text:'Utente non trovato'
+			return;
+		}
 		
+		Piano piano = request.JSON?.piano;
+		if (piano == null){
+			render status:500,text:'Piano non trovato'
+			return
+		}
+		piano.setDtIniSist(new Date());
+		piano.setDtFinSist(null);
+		piano.setCreatoDa(userObject.currentUser?.userId)
+		piano.save(true);
+		
+		render piano as JSON
+		
+		
+		
+	}
+
+	def prossimoPianoLibero(){
+		def userObject = utilsService.currentUserObject()
+		def anno = userObject.anno
+		def ente = userObject.ente;
+		if (anno == null){
+			render  status: 500, text: 'Anno non trovato'
+			return
+		}
+		if (ente==null){
+			render status:500, text:'Ente non trovato'
+			return
+		}
+		if (userObject == null){
+			render status:500,text:'Errore, non trovato un utente valido'
+
+			log.error("testVersionExist user object non trovato");
+		}
+
+		//recupero il prossimo codice versione per l'anno
+		List<Piano> piani = Piano.findByEnteAndAnno(ente, anno)
+		Piano piano = null;
+		if (piani == null || piani.size()==0){
+			piano = new Piano()
+			piano.setAnno(anno)
+			piano.setVersione(1);
+			piano.setEnte(ente);
+			piano.setAperto(true);
+			piano.setNomeVersione("Versione 1/"+anno);
+
+		}else{
+			piani=piani.sort();
+			piano = new Piano();
+			piano.setAnno(anno)
+			piano.setVersione(piani.get(piani.size()-1).versione++);
+			piano.setEnte(ente);
+			piano.setAperto(true);
+			piano.setNomeVersione("Versione "+piano.getVersione()+"/"+anno);
+			
+
+		}
+		
+		render piano as JSON
+
+
+
 	}
 
 }
