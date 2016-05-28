@@ -2,7 +2,7 @@ package saturno.piano
 
 import saturno.common.Ente
 
-class Piano implements Serializable,Comparable<Piano>{
+class Piano implements Serializable{
 	Integer id
 	Integer anno
 	Ente ente
@@ -23,12 +23,13 @@ class Piano implements Serializable,Comparable<Piano>{
 		//indice ricerche
 		ente index: 'ente_anno_piano_idx'
 		anno index: 'ente_anno_piano_idx'
+		
+		//ordinamento di default
+		sort versione:"asc"
 	}
 	static constraints={
 		versione(unique:['anno','ente'])
+		
 	}
-	@Override
-	public int compareTo(Piano p) {
-		return versione.compareTo(p.versione)
-	}
+	
 }

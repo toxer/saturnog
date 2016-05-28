@@ -79,6 +79,11 @@ class PianificazioneController {
 
 	def prossimoPianoLibero(){
 		def userObject = utilsService.currentUserObject()
+		if (userObject == null){
+			render status:500,text:'Errore, non trovato un utente valido'
+
+			log.error("testVersionExist user object non trovato");
+		}
 		def anno = userObject.anno
 		def ente = userObject.ente;
 		if (anno == null){
@@ -89,14 +94,10 @@ class PianificazioneController {
 			render status:500, text:'Ente non trovato'
 			return
 		}
-		if (userObject == null){
-			render status:500,text:'Errore, non trovato un utente valido'
-
-			log.error("testVersionExist user object non trovato");
-		}
+	
 
 		//recupero il prossimo codice versione per l'anno
-		List<Piano> piani = Piano.findByEnteAndAnno(ente, anno)
+		def piani = Piano.findAllByEnteAndAnno(ente, anno)
 		Piano piano = null;
 		if (piani == null || piani.size()==0){
 			piano = new Piano()
@@ -107,10 +108,12 @@ class PianificazioneController {
 			piano.setNomeVersione("Versione 1/"+anno);
 
 		}else{
-			piani=piani.sort();
+			Integer versione = piani.get(piani.size()-1).versione;
+			versione = versione+1
+		
 			piano = new Piano();
 			piano.setAnno(anno)
-			piano.setVersione(piani.get(piani.size()-1).versione++);
+			piano.setVersione(versione);
 			piano.setEnte(ente);
 			piano.setAperto(true);
 			piano.setNomeVersione("Versione "+piano.getVersione()+"/"+anno);

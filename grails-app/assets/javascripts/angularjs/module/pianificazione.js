@@ -8,6 +8,7 @@ pianificazione.controller('PianificazioneController', [
 			console.log("PianificazioneController")
 			var vm = this
 			vm.tabId = sessionStorage.tabId;
+			
 
 			// eseguo il test per vedere se ho almeno una versione presente
 
@@ -18,12 +19,16 @@ pianificazione.controller('PianificazioneController', [
 								'tabId' : vm.tabId
 							}).success(
 							function(response, status, headers, config) {
-								var versione = JSON.stringify(response)
+								var versione = response
+								
 								if (!versione.versionePresente) {
 									$('#versioneNonPresenteDialog').modal({
 										backdrop : 'static',
 										keyboard : true
 									})
+								}else{
+										
+									
 								}
 
 							}).error(
@@ -72,9 +77,12 @@ pianificazione.controller('PianificazioneController', [
 							}).success(function(response, status, headers, config) {
 					
 						
-						$('#creaNuovaVersioneDialog').hide();
+						$('#creaNuovaVersioneDialog').modal('toggle');
 						alert("Nuova versione creata")
-
+						vm.pianoCorrente=response
+						serviceUtils.userObject($scope,undefined,undefined,vm.pianoCorrente.versione)
+						serviceUtils.updateBreadcumb("Pianificazione "+vm.pianoCorrente.nomeVersione)
+						
 					}).error(function(response, status, headers, config) {
 						alert(response)
 					});

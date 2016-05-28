@@ -7,8 +7,9 @@ myApp.run(function($rootScope) {
 	// torna alla pagina principale
 	$rootScope.goToMain = function() {
 		window.location = location.protocol + "//" + location.host + "/"
-				+ sessionStorage.context
+				+ sessionStorage.context	
 	}
+	
 });
 
 myApp.service('serviceUtils', function($http) {
@@ -16,7 +17,7 @@ myApp.service('serviceUtils', function($http) {
 	// usato per aggiornare l'interfaccia da userObject
 
 	updateInterfaces = function(scope) {
-
+		
 		// logo camerale
 
 		scope.logoSrc = "" + sessionStorage.context + "/images/logo/"
@@ -29,6 +30,11 @@ myApp.service('serviceUtils', function($http) {
 		scope.annoCorrente = JSON.parse(sessionStorage.userObject).anno
 
 	}
+	
+	updateBreadcumb = function(text){
+		$('#breadcumb').html(text);
+	}
+	this.updateBreadcumb=updateBreadcumb;
 
 	this.updateInterfaces = updateInterfaces;
 	userObject = function(scope, enteSelezionato, anno, versione) {
@@ -103,7 +109,7 @@ myApp
 				'MainController',['$scope', '$http','serviceUtils',
 
 				function($scope, $http, serviceUtils) {
-					
+					$scope.breadcumb=""
 
 					// questo serve per poter permettere
 					// alla finsetra changeCamera di essere aperta

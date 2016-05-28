@@ -106,6 +106,10 @@ sessionStorage.context = '${request.contextPath}';
 
 
 								<g:layoutTitle />
+								
+								<div id="breadcumb" class="breadCumb  hidden-xs gradient">
+								
+								</div>
 
 
 
