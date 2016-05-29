@@ -1,48 +1,51 @@
-var pianificazione = angular.module("Pianificazione", []);
+var pianificazione = angular.module("Pianificazione", ['Tree']);
+
+// servizio usato per comunicare con TreeController
 
 pianificazione.controller('PianificazioneController', [
 		'$scope',
 		'$http',
 		'serviceUtils',
 		function($scope, $http, serviceUtils) {
-			console.log("PianificazioneController")
+			console.log($scope)
 			var vm = this
 			vm.tabId = sessionStorage.tabId;
 
-			// eseguo il test per vedere se ho almeno una versione presente
+			// funzione che esegue il test per vedere se ho almeno una versione
+			// presente
+			// se si apre la finestra di selezione, altrimenti apre quella di
+			// creazione
+			vm.scegliVersioneOpenDialog = function() {
+				$http.post(
+						sessionStorage.context
+								+ '/pianificazione/testVersionExist', {
+							'tabId' : vm.tabId
+						}).success(function(response, status, headers, config) {
+					var versione = response
 
-			$http
-					.post(
-							sessionStorage.context
-									+ '/pianificazione/testVersionExist', {
-								'tabId' : vm.tabId
-							}).success(
-							function(response, status, headers, config) {
-								var versione = response
+					if (!versione.versionePresente) {
+						$('#versioneNonPresenteDialog').modal({
+							backdrop : 'static',
+							keyboard : true
+						})
+					} else {
+						// salvo le versioni presenti nel piano
 
-								if (!versione.versionePresente) {
-									$('#versioneNonPresenteDialog').modal({
-										backdrop : 'static',
-										keyboard : true
-									})
-								} else {
-									// salvo le versioni presenti nel piano
+						vm.piani = versione.versioni
+						vm.pianoCorrente = versione.versioni[0];
+						// apri seleziona versione
+						$('#scegliVersioneDialog').modal({
+							backdrop : 'static',
+							keyboard : true
+						});
+					}
 
-									vm.piani = versione.versioni
-									vm.pianoCorrente = versione.versioni[0];
-									// apri seleziona versione
-									$('#scegliVersioneDialog').modal({
-										backdrop : 'static',
-										keyboard : true
-									})
-								}
+				}).error(function(response, status, headers, config) {
+					alert(response)
+				});
 
-							}).error(
-							function(response, status, headers, config) {
-								alert(response)
-							});
-
-			// funzioni del controller
+				// funzioni del controller
+			}
 
 			vm.creaNuovaVersioneOpenDialog = function() {
 
@@ -84,13 +87,17 @@ pianificazione.controller('PianificazioneController', [
 							function(response, status, headers, config) {
 
 								$('#creaNuovaVersioneDialog').modal('toggle');
-								alert("Nuova versione creata")
+
+								// set della variabile locale al controlle
+								// e di quello scope in watch dal TreeController
 								vm.pianoCorrente = response
+								$scope.pianoCorrente = vm.pianoCorrente
 								serviceUtils.userObject($scope, undefined,
-										undefined, vm.pianoCorrente.versione)
+										undefined, vm.pianoCorrente.id)
 								serviceUtils.updateBreadcumb("Pianificazione "
 										+ vm.pianoCorrente.nomeVersione)
-
+								alert("Nuova versione creata "
+										+ vm.pianoCorrente.nomeVersione)
 							}).error(
 							function(response, status, headers, config) {
 								alert(response)
@@ -101,8 +108,20 @@ pianificazione.controller('PianificazioneController', [
 
 			}
 
+			// elimina tutte le variabili d'ambiente
+			// e lo user object
+			vm.resettaVersione = function() {
+				// cancellazioni delle variabili d'ambiente
+				vm.pianoCorrente = null
+				$scope.pianoCorrente = null
+				// aggiornamento dell'userObject locale
+				serviceUtils.userObject($scope, undefined, undefined, "-1")
+				serviceUtils.updateBreadcumb("Pianificazione ")
+
+			}
+
 			// seleziona una versione
-			vm.segliVersione = function() {
+			vm.scegliVersione = function() {
 				// controllo se c'è il form
 
 				if (vm.versioneForm == undefined) {
@@ -111,11 +130,76 @@ pianificazione.controller('PianificazioneController', [
 				}
 
 				serviceUtils.userObject($scope, undefined, undefined,
-						vm.pianoCorrente.versione)
+						vm.pianoCorrente.id)
 				serviceUtils.updateBreadcumb("Pianificazione "
 						+ vm.pianoCorrente.nomeVersione)
+
+				// aggiorno la variabile di scope che è in watch su
+				// TreeController
+				console.log(vm.pianoCorrente)
+				$scope.pianoCorrente = vm.pianoCorrente;
 				$('#scegliVersioneDialog').modal('toggle');
 
 			}
 
+			// eliminazione della versione
+
+			vm.eliminaVersione = function() {
+				if (vm.pianoCorrente != undefined) {
+
+					$('#eliminaVersioneDialog').modal({
+						backdrop : 'static',
+						keyboard : true
+					})
+				} else {
+					alert("Piano corrente non trovato")
+				}
+
+			}
+
+			vm.eliminaVersioneOpenDialog = function() {
+				$('#eliminaVersioneDialog').modal('toggle');
+				$('#confermaEliminazioneVersione').modal({
+					backdrop : 'static',
+					keyboard : true
+				})
+			}
+
+			vm.eliminaVersioneDefinitivamente = function() {
+				// eliminazione della versione dal db
+				// i controlli di legitimità sono demandati al backend
+				$http.post(
+						sessionStorage.context
+								+ '/pianificazione/cancellaVersioneCorrente', {
+							'tabId' : vm.tabId,
+							'idVersione' : vm.pianoCorrente.id
+						}).success(function(response, status, headers, config) {
+
+					// cancellazioni delle variabili d'ambiente
+					vm.pianoCorrente = null
+					$scope.pianoCorrente = null
+					// aggiornamento dell'userObject locale
+					serviceUtils.userObject($scope, undefined, undefined, "-1")
+					serviceUtils.updateBreadcumb("Pianificazione ")
+					// avviso di eliminazione
+					alert("Versione eliminata " + response.nomeVersione)
+
+				}).error(function(response, status, headers, config) {
+					alert(response)
+				});
+
+			}
+
+			// per prima cosa, quando eseguo il controller, faccio un test di
+			// esistenza
+			// delle versioni con la funzione
+			vm.scegliVersioneOpenDialog();
+			
+			//eseguo il watch della variabile
+			
+//			$scope.$watch('pc.pianoCorrente',function(){
+//				alert("Ok")
+//			})
+
 		} ]);
+

@@ -3,19 +3,37 @@
 <head>
 <meta name="layout" content="main" />
 </head>
+<%--Nota, per poter funzionare il watch dello scope, i controlli devono essere nested tra di loro--%>
 <body>
 
 	<div class="container-fluid"
 		ng-controller="PianificazioneController as pc">
 		<g:render template="/dialogsWarning/versioneNonPresente" />
+		<g:render template="/dialogsWarning/confermaEliminazioneVersione" />
 		<g:render template="/dialogs/creaNuovaVersione" />
 		<g:render template="/dialogs/segliVersione" />
-		<div class="row-fluid form " align="center" ng-view>
-			
-
-
-
+		<g:render template="/dialogs/eliminaVersione" />
+		<div class="container-fluid menu" id="pianificazioneMenu">
+			<div class="row-fluid">
+				<div class="col-xs-10">
+					<button class="btn btn-primary"
+						ng-click="pc.scegliVersioneOpenDialog()">Cambia versione</button>
+					<button class="btn btn-warning"
+						ng-click="pc.creaNuovaVersioneOpenDialog();">Crea nuova
+						versione</button>
+				</div>
+				<div class="col-xs-2">
+					<button class="btn btn-danger" ng-click="pc.eliminaVersione();">Elimina
+						questa versione</button>
+				</div>
+			</div>
 		</div>
+		<div class="row-fluid" id="treeRender"
+			ng-controller="TreeController as tc" align="center">
+			{{tc.tree}}</div>
 	</div>
+
+
+
 
 </body>

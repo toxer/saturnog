@@ -139,8 +139,15 @@
   border-top: 1px solid #D9D7D7 ; /*#D1CDCD;*/
   margin-bottom: 20px;
   padding-top: 5px;
+   padding-left: 10px;
   height: 25px;  
   background-image:   linear-gradient( #D9D7D7 ,  white );
+}
+/*menu di navigazione schermate */
+.menu{
+	background-image:   linear-gradient(to right, #51A351 ,  white );
+	/*backgroud-color:#F89406;*/
+	padding:5px 0px 5px 0px
 }
 
 

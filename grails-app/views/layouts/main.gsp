@@ -58,7 +58,7 @@ sessionStorage.context = '${request.contextPath}';
 						<div class="navbar-header">
 							<div class="navbar-brand"
 								style="margin-bottom: 5px; padding-bottom: 5px">
-								<a href="${createLink(uri:'/')}"><img id="logoImg"
+								<a href="${createLink(uri:'/')}" style="text-decoration: none;"><img id="logoImg"
 									src="{{logoSrc}}" style="height: 60px" /> </a> <label
 									id="enteName"></label>
 

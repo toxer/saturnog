@@ -105,7 +105,7 @@ class InitController {
 		if (data.anno != null){
 			userObject.anno=data.anno;
 			log.debug("Anno settato: "+userObject.anno)
-		}else{
+		}else if (data.anno == null && userObject.anno == null){
 		//di default viene settato l'anno corrente
 			userObject.anno = new DateTime().getYear();
 			log.debug("Mantenuto anno: "+userObject.anno)

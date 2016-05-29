@@ -76,6 +76,42 @@ class PianificazioneController {
 		
 		
 	}
+	
+	def cancellaVersioneCorrente(){
+		if (!utilsService.testTabId()){
+			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			return
+		}
+		def userObject = utilsService.currentUserObject()
+		if (userObject==null){
+			render status:500,text:'Utente non trovato'
+			return;
+		}
+		def idVersione = request.JSON?.idVersione
+		
+		if (idVersione==null){
+			render status:500,text:'Id versione non trovato'
+			return;
+		}
+		
+		if (idVersione != userObject.versione){
+			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+			return;
+		}
+		
+		Piano p = Piano.findById(idVersione)
+		if (p == null){
+			render status:500,text:'Versione non presente nel db'
+			return;
+		}
+		p.delete(flush:true, failOnError:true);
+		//per controllo, guardo che l'id versine ricevuto corrisponda a
+		//quello presente nell'id utente in sessione.
+		//Questi devono sempre coincidere
+		render p as JSON
+		
+		
+	}
 
 	def prossimoPianoLibero(){
 		def userObject = utilsService.currentUserObject()

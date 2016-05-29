@@ -110,7 +110,7 @@ myApp
 
 				function($scope, $http, serviceUtils) {
 					$scope.breadcumb=""
-
+					
 					// questo serve per poter permettere
 					// alla finsetra changeCamera di essere aperta
 					// da pulsante
