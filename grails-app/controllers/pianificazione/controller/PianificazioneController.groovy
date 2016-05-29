@@ -35,17 +35,17 @@ class PianificazioneController {
 
 		//controllo se esiste almeno una versione per quell'anno
 		
-		Piano p = Piano.findByEnteAndAnno(ente,anno);
+		def piani = Piano.findAllByEnteAndAnno(ente,anno);
 		def versione = new JSONObject();
 		versione.versionePresente =false
 		versione.versione=null;
-		if (p == null){
+		if (piani == null || piani.size()==0){
 			render versione as JSON
 			return
 
 		}
 		versione.versionePresente=true
-		versione.versioni=Piano.findAllByEnteAndAnno(ente,anno)
+		versione.versioni=piani
 		render versione as JSON
 
 	}

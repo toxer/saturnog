@@ -9,7 +9,8 @@
 		ng-controller="PianificazioneController as pc">
 		<g:render template="/dialogsWarning/versioneNonPresente" />
 		<g:render template="/dialogs/creaNuovaVersione" />
-		<div class="row-fluid form " align="center">
+		<g:render template="/dialogs/segliVersione" />
+		<div class="row-fluid form " align="center" ng-view>
 			
 
 
