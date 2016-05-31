@@ -25,7 +25,7 @@ class Piano implements Serializable{
 		anno index: 'ente_anno_piano_idx'
 		
 		//ordinamento di default
-		sort versione:"asc"
+		sort versione:"desc"
 	}
 	static constraints={
 		versione(unique:['anno','ente'])

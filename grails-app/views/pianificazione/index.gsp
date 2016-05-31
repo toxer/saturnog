@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+
+<asset:javascript src="angularjs/module/test.js" />
 <meta name="layout" content="main" />
+
 </head>
 <%--Nota, per poter funzionare il watch dello scope, i controlli devono essere nested tra di loro--%>
 <body>
@@ -30,7 +33,12 @@
 		</div>
 		<div class="row-fluid" id="treeRender"
 			ng-controller="TreeController as tc" align="center">
-			{{tc.tree}}</div>
+			{{tc.tree}}
+			
+		
+		</div>
+		<div id="body"></div>
+			
 	</div>
 
 

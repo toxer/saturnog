@@ -24,7 +24,7 @@ sessionStorage.context = '${request.contextPath}';
 	href="${assetPath(src: 'apple-touch-icon-retina.png')}">
 <asset:stylesheet src="application.css" />
 <asset:stylesheet src="common.css" />
-
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <asset:javascript src="application.js" />
 <%--<script src="/saturno/js/angularjs/module/main.js" type="text/javascript"></script>--%>
 
@@ -40,7 +40,14 @@ sessionStorage.context = '${request.contextPath}';
 <g:if test="true">
 
 	<body ng-app="myApp" ng-controller="MainController as mc">
-		
+		<div id="spinner" class="spinner" style="display: none;">
+			<div class="container-fluid">
+				<div class="row" align="center">
+					<g:img uri="${assetPath(src: 'spinner.gif')}" alt="Loading..." />
+				</div>
+			</div>
+		</div>
+
 		<link rel="stylesheet" href="{{enteCss}}">
 		<g:render template="/dialogs/changeCamera" />
 
@@ -58,8 +65,8 @@ sessionStorage.context = '${request.contextPath}';
 						<div class="navbar-header">
 							<div class="navbar-brand"
 								style="margin-bottom: 5px; padding-bottom: 5px">
-								<a href="${createLink(uri:'/')}" style="text-decoration: none;"><img id="logoImg"
-									src="{{logoSrc}}" style="height: 60px" /> </a> <label
+								<a href="${createLink(uri:'/')}" style="text-decoration: none;"><img
+									id="logoImg" src="{{logoSrc}}" style="height: 60px" /> </a> <label
 									id="enteName"></label>
 
 							</div>
@@ -106,10 +113,9 @@ sessionStorage.context = '${request.contextPath}';
 
 
 								<g:layoutTitle />
-								
-								<div id="breadcumb" class="breadCumb  hidden-xs gradient">
-								
-								</div>
+							<div id="breadcumb" class="breadCumb  hidden-xs gradient">
+
+							</div>
 
 
 
@@ -119,10 +125,7 @@ sessionStorage.context = '${request.contextPath}';
 
 
 
-					<div id="spinner" style="display: none;">
-						<g:img uri="${resource(dir: 'images')}/spinner.gif"
-							alt="Loading..." />
-					</div>
+
 
 				</div>
 				<div class="col-md-2">
@@ -132,8 +135,9 @@ sessionStorage.context = '${request.contextPath}';
 
 			<div class="row-fluid">
 				<div class="col-md-12 mainContainer">
-
 					<g:layoutBody />
+
+
 
 				</div>
 			</div>

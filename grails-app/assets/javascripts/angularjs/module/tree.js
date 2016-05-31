@@ -25,6 +25,7 @@ tree.controller('TreeController', [ '$scope', '$http', 'serviceUtils',
 				// renderizza il piano
 				// TODO logica svg qui
 				vm.tree = piano
+				initTest();
 			}
 
 		} ]);

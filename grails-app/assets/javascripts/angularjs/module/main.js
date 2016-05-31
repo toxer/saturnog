@@ -12,6 +12,33 @@ myApp.run(function($rootScope) {
 	
 });
 
+//interceptor per avere lo spinner ad ogni richiesta post
+myApp.config(['$httpProvider',function($httpProvider) {
+    $httpProvider.interceptors.push('httpSpinnerInterceptor');
+}]);
+
+myApp.factory('httpSpinnerInterceptor', function($q,$rootScope) {
+   
+    return {
+    	
+      request:function(request){
+    	  $('#spinner').fadeIn();
+    	  return request
+      },
+
+      response: function(response) {
+    	  $('#spinner').fadeOut();
+        return response;
+      },
+
+     responseError: function(response) {
+    	 $('#spinner').fadeOut();
+        return response;
+      }
+    };
+  });
+
+
 myApp.service('serviceUtils', function($http) {
 
 	// usato per aggiornare l'interfaccia da userObject
