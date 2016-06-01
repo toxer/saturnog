@@ -13,7 +13,7 @@ class PianificazioneController {
 	}
 
 	def testVersionExist(){
-		Thread.sleep(5000)
+		
 		def userObject = utilsService.currentUserObject()
 		if (userObject == null){
 			render status:500,text:'Errore, non trovato un utente valido'
