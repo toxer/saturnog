@@ -11,6 +11,13 @@ class PianificazioneController {
 
 	def index(){
 	}
+	
+	def tree(){
+	}
+	
+	def leftMenu(){
+		
+	}
 
 	def testVersionExist(){
 		

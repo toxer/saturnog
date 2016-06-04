@@ -1,4 +1,31 @@
-var pianificazione = angular.module("Pianificazione", ['Tree']);
+var pianificazione = angular.module("Pianificazione", ['ui.router','Tree' ]);
+//view per la pagina di pianificazione
+pianificazione.config(['$stateProvider',function($stateProvider) {
+	$stateProvider.state('navigazione',{
+		//risponde all'url /pianificazione/index/#/prova
+		url:'/prova',		
+		views:{
+			'leftMenu':{
+				 //template: "<div>Test</div>"
+				 templateUrl:"/saturno/pianificazione/leftMenu"
+				//add controller
+				
+			},
+			'mainView':{
+				 //template: "<div>Test</div>"
+				 templateUrl:"/saturno/pianificazione/tree"
+				//add controller
+				
+				
+			}
+			
+		}
+		
+	});
+}]);
+
+
+
 
 // servizio usato per comunicare con TreeController
 
@@ -194,12 +221,11 @@ pianificazione.controller('PianificazioneController', [
 			// esistenza
 			// delle versioni con la funzione
 			vm.scegliVersioneOpenDialog();
-			
-			//eseguo il watch della variabile
-			
-//			$scope.$watch('pc.pianoCorrente',function(){
-//				alert("Ok")
-//			})
+
+			// eseguo il watch della variabile
+
+			// $scope.$watch('pc.pianoCorrente',function(){
+			// alert("Ok")
+			// })
 
 		} ]);
-

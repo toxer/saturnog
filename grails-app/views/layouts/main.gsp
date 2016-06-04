@@ -24,7 +24,8 @@ sessionStorage.context = '${request.contextPath}';
 	href="${assetPath(src: 'apple-touch-icon-retina.png')}">
 <asset:stylesheet src="application.css" />
 <asset:stylesheet src="common.css" />
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<%--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>--%>
+<asset:javascript src="d3.min.js" />
 <asset:javascript src="application.js" />
 <%--<script src="/saturno/js/angularjs/module/main.js" type="text/javascript"></script>--%>
 
@@ -70,8 +71,6 @@ sessionStorage.context = '${request.contextPath}';
 									id="enteName"></label>
 
 							</div>
-
-
 							<button type="button" class="navbar-toggle"
 								data-toggle="collapse" data-target=".navbar-ex1-collapse"
 								style="margin-bottom: 25px; margin-top: 20px;">

@@ -12,6 +12,11 @@ myApp.run(function($rootScope) {
 	
 });
 
+
+
+
+
+
 //interceptor per avere lo spinner ad ogni richiesta post
 myApp.config(['$httpProvider',function($httpProvider) {
     $httpProvider.interceptors.push('httpSpinnerInterceptor');

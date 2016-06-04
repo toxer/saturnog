@@ -5,7 +5,7 @@
 // You're free to add application-wide JavaScript to this file, but it's generally better 
 // to create separate JavaScript files as needed.
 //
-// require d3.min.js
+//require d3.min.js
 //= require jquery
 //= require_tree .
 //= require_self
@@ -16,6 +16,7 @@
 //= require angularjs/module/pianificazione.js
 //= require angularjs/module/cambiaAnno.js
 //= require angularjs/module/main.js
+//= require angularjs/plugins/angular-ui-router.min.js
 
 
 /*
