@@ -1,6 +1,5 @@
 package saturno.piano
 
-import saturno.anagrafica.ObiettivoAnagrafica
 import saturno.anagrafica.Organigramma
 import saturno.anagrafica.Persona
 import saturno.common.Scala
@@ -14,12 +13,21 @@ class Obiettivo {
 	String codice
 	String tipologia //area objstr ect.
 	String note
-	static belongsTo = [piano:Piano,padre:Obiettivo,obiettivoSorgente:ObiettivoAnagrafica]
-	static hasMany = [figli:Obiettivo,scale:Scala,responsabile:Persona,persone:Persona,organigrammi:Organigramma]
+	//in caso di clonazione
+	//sorgente diretta: obiettivo dal quale deriva direttamente
+	//sorgente principale: obiettivo che è stato il primo ad essere clonato
+
+	static belongsTo = [piano:Piano,padre:Obiettivo,sorgenteDiretta:Obiettivo,sorgentePrincipale:Obiettivo,scala:Scala]
+	static hasMany = [figli:Obiettivo,responsabile:Persona,persone:Persona,organigrammi:Organigramma]
+	Integer livello
+	
+	
 	
 	Double performance
 
 
+	static mappedBy = [figli:'padre']
+	
 	static mapping = {
 		version true
 		id generator:'identity', column:'id_obiettivo', type:'integer'

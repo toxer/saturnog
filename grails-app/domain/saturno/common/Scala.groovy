@@ -3,13 +3,13 @@ package saturno.common
 class Scala {
 	Integer id
 	String tipologia
-	Double intervalloNumericoStart
-	Double intervalloNumericoEnd
-	Date intervalloDateStart
-	Date intervalloDateEnd
+	String nome;
+	String desc;
+	String descrizione;
+	static hasMany=[gradini:Gradino]
+
 	static mapping = {
 		version true
 		id generator:'identity', column:'id_scala', type:'integer'
 	}
-	
 }

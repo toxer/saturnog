@@ -227,5 +227,41 @@ pianificazione.controller('PianificazioneController', [
 			// $scope.$watch('pc.pianoCorrente',function(){
 			// alert("Ok")
 			// })
+			
+			
+			
+			//funzione per inserire dati di test in una versione
+			vm.datiDiTest=function(){
+				$http.post(
+						sessionStorage.context
+								+ '/test/test', {
+							'tabId' : vm.tabId,
+							'idVersione' : vm.pianoCorrente.id
+						}).success(function(response, status, headers, config) {
+
+					
+					alert("Dati di test inseriti " + response.nomeVersione)
+
+				}).error(function(response, status, headers, config) {
+					alert(response)
+				});
+
+			}
+			
+			vm.clonaVersione=function(){
+				$http.post(
+						sessionStorage.context
+								+ '/test/testClonazione', {
+							'tabId' : vm.tabId,
+							'idVersione' : vm.pianoCorrente.id
+						}).success(function(response, status, headers, config) {
+
+					
+					alert("Versione clonata con successo " + response.nomeVersione)
+
+				}).error(function(response, status, headers, config) {
+					alert(response)
+				});
+			}
 
 		} ]);

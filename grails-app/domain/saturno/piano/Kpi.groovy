@@ -1,7 +1,5 @@
 package saturno.piano
 
-import java.util.Date;
-
 import saturno.anagrafica.KpiAnagrafica
 import saturno.common.Scala
 
@@ -14,9 +12,9 @@ class Kpi {
 	String codice
 	String note
 	String algoritmo
-	static belongsTo=[obiettivo:Obiettivo,kpiSorgente:KpiAnagrafica]
+	static belongsTo=[obiettivo:Obiettivo,kpiSorgente:KpiAnagrafica,piano:Piano,scala:Scala]
 	Boolean composto //se false è un valore singolo
-	static hasMany = [targets:Target,scale:Scala]
+	static hasMany = [targets:Target]
 	Double performance
 	Double performanceImposta
 	Double valoreConsuntivo
