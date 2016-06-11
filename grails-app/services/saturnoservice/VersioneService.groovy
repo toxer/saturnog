@@ -35,6 +35,8 @@ class VersioneService {
 
 	//FIXME clonazione kpi
 	//FIXME clonazione organigramma e anangrafiche
+	
+	
 
 
 	def Obiettivo clonaObiettivo(Obiettivo o,Piano versioneSuCuiClonare,Organigramma nuovoOrganigramma){

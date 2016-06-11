@@ -1,9 +1,7 @@
 package saturno.anagrafica
 
-import java.util.Date;
-
 import saturno.common.Ente
-import saturno.common.Gradino
+import saturno.common.Scala
 
 class KpiAnagrafica {
 	Integer id
@@ -16,7 +14,8 @@ class KpiAnagrafica {
 	String algoritmo
 	Ente ente
 	Boolean composto //se false è un valore singolo
-	static hasMany = [targets:TargetAnagrafica,scale:Gradino]
+	static hasMany = [targets:TargetAnagrafica]
+	static hasOne=[scala:Scala]
 	Double performance
 	Double performanceImposta
 	Double valoreConsuntivo

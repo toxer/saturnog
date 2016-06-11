@@ -16,8 +16,8 @@ class Obiettivo {
 	//in caso di clonazione
 	//sorgente diretta: obiettivo dal quale deriva direttamente
 	//sorgente principale: obiettivo che è stato il primo ad essere clonato
-
-	static belongsTo = [piano:Piano,padre:Obiettivo,sorgenteDiretta:Obiettivo,sorgentePrincipale:Obiettivo,scala:Scala]
+	static hasOne=[scala:Scala]
+	static belongsTo = [piano:Piano,padre:Obiettivo,sorgenteDiretta:Obiettivo,sorgentePrincipale:Obiettivo]
 	static hasMany = [figli:Obiettivo,responsabile:Persona,persone:Persona,organigrammi:Organigramma]
 	Integer livello
 	
