@@ -12,8 +12,11 @@ class Kpi {
 	String codice
 	String note
 	String algoritmo
-	static hasOne=[scala:Scala]
-	static belongsTo=[obiettivo:Obiettivo,kpiSorgente:KpiAnagrafica,piano:Piano]
+	KpiAnagrafica kpiSorgente
+	Versione versione
+	Scala scala;
+
+	static belongsTo=[obiettivo:Obiettivo]
 	Boolean composto //se false è un valore singolo
 	static hasMany = [targets:Target]
 	Double performance

@@ -1,8 +1,11 @@
 package saturnoController
 
 import grails.converters.JSON
+import saturno.anagrafica.Persona
+import saturno.organigramma.NodoOrganigramma
+import saturno.organigramma.Organigramma
 import saturno.piano.Obiettivo
-import saturno.piano.Piano
+import saturno.piano.Versione
 
 class TestController {
 	def dataSource_portal
@@ -33,15 +36,15 @@ class TestController {
 			return;
 		}
 		//creo una nuova versione
-		Piano pianoFrom = Piano.findById(idVersione);
+		Versione pianoFrom = Versione.findById(idVersione);
 		
 		if (pianoFrom ==null){
 			render status:500,text:'Versione non esistente'
 			return;
 		}
 		
-		Piano pianoTo = new Piano();
-		pianoTo.anno = pianoFrom.anno +1;
+		Versione pianoTo = new Versione();
+		pianoTo.anno = pianoFrom.anno;
 		pianoTo.setEnte(pianoFrom.ente);
 		pianoTo.setNomeVersione(pianoTo.getNomeVersione()+"/bis");
 		
@@ -78,7 +81,7 @@ class TestController {
 			return;
 		}
 		
-		Piano p = Piano.findById(idVersione)
+		Versione p = Versione.findById(idVersione)
 		if (p == null){
 			render status:500,text:'Versione non presente nel db'
 			return;
@@ -110,10 +113,48 @@ class TestController {
 		
 		uno.addToFigli(tre)		
 		due.addToFigli(quattro)
+		
+		
+		//persone
+		Persona p1 = new Persona();
+		p1.nome="Mario"
+		p1.cognome="Rossi";
+		p1.ente=p.ente;
+		
+		Persona p2 = new Persona();
+		p2.nome="Giacomo"
+		p2.cognome="Leopardi";
+		p2.ente=p.ente;
+		
+		p1.save();
+		p2.save(true);
+		
+		Organigramma o1 = new Organigramma();
+		o1.ente=p.ente
+		
+		NodoOrganigramma nodo1 = new NodoOrganigramma();
+		nodo1.nome="Area1";
+		nodo1.addToPersone(p1);
+		o1.addToNodi(nodo1);
+		
+		NodoOrganigramma nodo2 = new NodoOrganigramma();
+		nodo1.nome="Area2";
+		nodo2.addToPersone(p2);
+		o1.addToNodi(nodo2);
+		
+		nodo1.addToFigli(nodo2)
+		
+		uno.addToNodiOrganigramma(nodo1);
+		due.addToNodiOrganigramma(nodo2);
+		
+		
+		
+		
 		p.addToObiettivi(uno);
 		p.addToObiettivi(due);
 		p.addToObiettivi(tre);
 		p.addToObiettivi(quattro);
+		p.organigramma=o1;
 		p.save(true);
 		render p as JSON	
 	}

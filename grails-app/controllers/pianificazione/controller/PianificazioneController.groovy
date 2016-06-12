@@ -4,7 +4,7 @@ import grails.converters.JSON
 
 import org.codehaus.groovy.grails.web.json.JSONObject
 
-import saturno.piano.Piano
+import saturno.piano.Versione
 
 class PianificazioneController {
 	def utilsService;
@@ -43,7 +43,7 @@ class PianificazioneController {
 
 		//controllo se esiste almeno una versione per quell'anno
 		
-		def piani = Piano.findAllByEnteAndAnno(ente,anno);
+		def piani = Versione.findAllByEnteAndAnno(ente,anno);
 		def versione = new JSONObject();
 		versione.versionePresente =false
 		versione.versione=null;
@@ -69,7 +69,7 @@ class PianificazioneController {
 			return;
 		}
 		
-		Piano piano = request.JSON?.piano;
+		Versione piano = request.JSON?.piano;
 		if (piano == null){
 			render status:500,text:'Piano non trovato'
 			return
@@ -107,7 +107,7 @@ class PianificazioneController {
 			return;
 		}
 		
-		Piano p = Piano.findById(idVersione)
+		Versione p = Versione.findById(idVersione)
 		if (p == null){
 			render status:500,text:'Versione non presente nel db'
 			return;
@@ -141,10 +141,10 @@ class PianificazioneController {
 	
 
 		//recupero il prossimo codice versione per l'anno
-		def piani = Piano.findAllByEnteAndAnno(ente, anno)
-		Piano piano = null;
+		def piani = Versione.findAllByEnteAndAnno(ente, anno)
+		Versione piano = null;
 		if (piani == null || piani.size()==0){
-			piano = new Piano()
+			piano = new Versione()
 			piano.setAnno(anno)
 			piano.setVersione(1);
 			piano.setEnte(ente);
@@ -155,7 +155,7 @@ class PianificazioneController {
 			Integer versione = piani.get(piani.size()-1).versione;
 			versione = versione+1
 		
-			piano = new Piano();
+			piano = new Versione();
 			piano.setAnno(anno)
 			piano.setVersione(versione);
 			piano.setEnte(ente);

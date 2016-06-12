@@ -12,10 +12,10 @@ class KpiAnagrafica {
 	String codice
 	String note
 	String algoritmo
-	Ente ente
 	Boolean composto //se false è un valore singolo
 	static hasMany = [targets:TargetAnagrafica]
-	static hasOne=[scala:Scala]
+	static hasOne = [ente:Ente]
+	Scala scala;
 	Double performance
 	Double performanceImposta
 	Double valoreConsuntivo

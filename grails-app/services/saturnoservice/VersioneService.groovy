@@ -1,23 +1,24 @@
 package saturnoservice
 
-import java.util.Date;
-
-import saturno.anagrafica.Organigramma
 import saturno.anagrafica.Persona
-import saturno.common.Ente;
+import saturno.organigramma.NodoOrganigramma;
+import saturno.organigramma.Organigramma
 import saturno.piano.Obiettivo
-import saturno.piano.Piano
+import saturno.piano.Versione
 
 class VersioneService {
 
-	def clonaVersione(Piano versioneSorgente,Piano versioneDestinazione){
+	def clonaVersione(Versione versioneSorgente,Versione versioneDestinazione){
 		//clono l'organigramma perchè poi mi serve nella clonazione dei figli
-		Organigramma nuovoOrganigramma = clonaOrganigramma(versioneDestinazione.organigramma, versioneDestinazione)
-		
+		Organigramma nuovoOrganigramma = null;
+		if (versioneSorgente.organigramma != null){
+			 nuovoOrganigramma = clonaOrganigramma(versioneSorgente.organigramma, versioneDestinazione)
+		}
+		versioneDestinazione.organigramma=nuovoOrganigramma
 		//prelevo tutti gli obiettivi della versione sorgente
 		//che non hanno padre. Il processo di clonazione
 		//ricorsiva clona poi i figli
-		
+
 		for (Obiettivo o : versioneSorgente.obiettivi.findAll({it.padre==null})){
 			clonaObiettivo(o,versioneDestinazione,nuovoOrganigramma);
 		}
@@ -35,11 +36,11 @@ class VersioneService {
 
 	//FIXME clonazione kpi
 	//FIXME clonazione organigramma e anangrafiche
-	
-	
 
 
-	def Obiettivo clonaObiettivo(Obiettivo o,Piano versioneSuCuiClonare,Organigramma nuovoOrganigramma){
+
+
+	def Obiettivo clonaObiettivo(Obiettivo o,Versione versioneSuCuiClonare,Organigramma nuovoOrganigramma){
 		Obiettivo newO = new Obiettivo();
 		newO.anno= versioneSuCuiClonare.anno;
 		newO.nome=o.nome;
@@ -48,65 +49,89 @@ class VersioneService {
 		newO.tipologia=o.tipologia;
 		newO.note=o.note;
 		newO.scala=o.scala;
+		newO.livello=o.livello;
 		for (Persona persona : o.persone){
 			newO.addToPersone(persona);
 		}
-		
+
 		//l'organigramma va clonato e riassociato
 		//in modo da consentirne la modifica per singola versione
-		
+
 		//attacco al nuovo obiettivo il nodo organigramma
 		//derivato dalla clonazione di quello che era attaccato
 		//al vecchio obiettivo
-		for (Organigramma org : o.organigrammi){
-			for (Organigramma nOrg : nuovoOrganigramma){
-				if (org.equals(nOrg.sorgenteDiretta)){
-					o.addToOrganigrammi(nOrg);
+
+		if (nuovoOrganigramma!=null){
+			for (NodoOrganigramma org : o.nodiOrganigramma){
+				for (NodoOrganigramma nOrg : nuovoOrganigramma.nodi){
+					if (org.equals(nOrg.sorgenteDiretta)){
+						o.addToNodiOrganigramma(nOrg);
+					}
 				}
 			}
 		}
-		
 		//sorgente diretta: obiettivo dal quale deriva direttamente
-		//sorgente principale: obiettivo che è stato il primo ad essere clonato	
+		//sorgente principale: obiettivo che è stato il primo ad essere clonato
 		if (o.sorgentePrincipale==null){
-			newO.sorgentePrincipale=o;
+			newO.sorgentePrincipale=o.id;
 		}else{
 			newO.sorgentePrincipale=o.sorgentePrincipale;
 		}
-		o.sorgenteDiretta=o;
+		newO.sorgenteDiretta=o.id;
 		versioneSuCuiClonare.addToObiettivi(newO);
 		//per tutti i figli applico il processo di clonazione
 		//in modo ricorsivo
 
 
 		for (Obiettivo c : o.figli){
-			Obiettivo newC = clonaObiettivo(c,versioneSuCuiClonare);
+			Obiettivo newC = clonaObiettivo(c,versioneSuCuiClonare,nuovoOrganigramma);
 			newO.addToFigli(newC);
 		}
 		return newO
 
 
 	}
-	
-	
-	def Organigramma clonaOrganigramma(Organigramma organigramma,Piano versioneSuCuiClonare){
+
+
+	def Organigramma clonaOrganigramma(Organigramma organigramma,Versione versioneSuCuiClonare){
 		Organigramma newOrg = new Organigramma()
-	
-		newOrg.nome=organigramma.ente
-		newOrg.descrizione=organigramma.descrizione
-		newOrg.dataInizioValidita=organigramma.dataInizioValidita
-		newOrg.dataFineValidida=organigramma.dataFineValidida
-		newOrg.ente=organigramma.ente
-		versioneSuCuiClonare.addToOrganigrammi(newOrg);
-		newOrg.sorgenteDiretta=organigramma;
-		for (Organigramma c : newOrg.figli){
-			Organigramma newOrgC = clonaOrganigramma(c,versioneSuCuiClonare);
-			newOrg.addToFigli(c);
+		newOrg.anno = versioneSuCuiClonare.anno;
+		newOrg.note = organigramma.note;
+
+		//prelevo tutti i nodi senza padre
+		//riocorsivamente il metodo clona i figli
+
+
+		for (NodoOrganigramma o : organigramma.nodi.findAll({it.padre==null})){
+			clonaNodoOrganigramma(o,newOrg);
 		}
-		
+
 		return newOrg;
+
+
+	}
+
+	private NodoOrganigramma clonaNodoOrganigramma(NodoOrganigramma nodo,Organigramma organigrammaSuCuiClonare){
+		NodoOrganigramma newNodo = new NodoOrganigramma();
+		newNodo.codiceCamera = nodo.codiceCamera;
+		newNodo.nome=nodo.nome
+		newNodo.descrizione=nodo.descrizione;
+		newNodo.livello=nodo.livello;
+		newNodo.dataInserimento=nodo.dataInserimento
+		newNodo.dataModifica=nodo.dataModifica
+		newNodo.sorgenteDiretta = nodo.id
+		for (Persona p : nodo.persone){
+			newNodo.addToPersone(p)
+		}
+		organigrammaSuCuiClonare.addToNodi(newNodo);
+		for (NodoOrganigramma c :nodo.figli){
+			NodoOrganigramma newC = clonaNodoOrganigramma(c,organigrammaSuCuiClonare);
+			newNodo.addToFigli(newC);
+		}
+		println("Clonazione organigramma terminata")
 		
-		
+		return newNodo;
+
 	}
 
 

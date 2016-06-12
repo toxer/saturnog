@@ -1,6 +1,7 @@
 package saturno.anagrafica
 
 import saturno.common.Ente
+import saturno.organigramma.NodoOrganigramma
 
 class Persona {
 	Integer id
@@ -11,6 +12,7 @@ class Persona {
 	Ente ente
 	Date dataInizioValidita
 	Date dataFineValidita
+	
 	
 	
 	

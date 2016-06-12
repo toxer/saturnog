@@ -1,12 +1,11 @@
 package saturno.piano
 
-import saturno.anagrafica.Organigramma
 import saturno.common.Ente
+import saturno.organigramma.Organigramma;
 
-class Piano implements Serializable{
+class Versione implements Serializable{
 	Integer id
 	Integer anno
-	Ente ente
 	Integer versione
 	String note
 	Boolean aperto;
@@ -15,8 +14,9 @@ class Piano implements Serializable{
 	String modificatoDa
 	Date dtIniSist
 	Date dtFinSist
+	static hasOne=[organigramma:Organigramma,ente:Ente]
 	static hasMany = [obiettivi:Obiettivo,kpi:Kpi]
-	static hasOne=[organigramma:Organigramma]
+	
 
 	static mapping = {
 		version true

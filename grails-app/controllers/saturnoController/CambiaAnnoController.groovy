@@ -5,7 +5,7 @@ import grails.converters.JSON
 import org.codehaus.groovy.grails.web.json.JSONArray
 
 import saturno.common.Ente
-import saturno.piano.Piano
+import saturno.piano.Versione
 
 class CambiaAnnoController {
 	def utilsService;
@@ -26,7 +26,7 @@ class CambiaAnnoController {
 			render new JSONArray() as JSON
 		}
 		//prelevo tutti gli anni
-		def piani = Piano.findAllByEnte(Ente.findById(currentUserObject.currentEnte));
+		def piani = Versione.findAllByEnte(Ente.findById(currentUserObject.currentEnte));
 		def anni = []
 
 		if (piani != null){
