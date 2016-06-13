@@ -15,14 +15,14 @@ class NodoOrganigramma {
 	
 	//sorgente diretta: id del nodo da cui è stato clonato	
 	Integer sorgenteDiretta
-	static belongsTo=[organigramma:Organigramma]
+	static belongsTo=[Organigramma,Persona]
 	static hasMany=[figli:NodoOrganigramma,persone:Persona]
 	
 	static mappedBy = [figli:'padre']
 	
 	static mapping = {
 		version true
-		id generator:'identity', column:'id_organigramma', type:'integer'
+		id generator:'identity', column:'id_nodo_organigramma', type:'integer'
 		descrizione type: 'text'
 	}
 }

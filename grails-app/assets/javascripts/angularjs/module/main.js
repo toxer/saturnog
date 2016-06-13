@@ -19,7 +19,7 @@ myApp.run(function($rootScope) {
 
 //interceptor per avere lo spinner ad ogni richiesta post
 myApp.config(['$httpProvider',function($httpProvider) {
-    $httpProvider.interceptors.push('httpSpinnerInterceptor');
+   // $httpProvider.interceptors.push('httpSpinnerInterceptor');
 }]);
 
 myApp.factory('httpSpinnerInterceptor', function($q,$rootScope) {
@@ -38,7 +38,7 @@ myApp.factory('httpSpinnerInterceptor', function($q,$rootScope) {
 
      responseError: function(response) {
     	 $('#spinner').fadeOut();
-        return response;
+        return responseError;
       }
     };
   });
@@ -196,6 +196,7 @@ myApp
 								.success(
 										function(response, status, headers,
 												config) {
+											
 											if (response != undefined
 													&& !$
 															.isEmptyObject(response)) {

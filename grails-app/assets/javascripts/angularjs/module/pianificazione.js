@@ -2,6 +2,9 @@ var pianificazione = angular.module("Pianificazione", ['ui.router','Tree' ]);
 //view per la pagina di pianificazione
 pianificazione.config(['$stateProvider',function($stateProvider) {
 	$stateProvider.state('navigazione',{
+		//url di default
+		
+		
 		//risponde all'url /pianificazione/index/#/prova
 		url:'/prova',		
 		views:{

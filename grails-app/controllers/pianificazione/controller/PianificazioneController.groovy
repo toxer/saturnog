@@ -60,7 +60,7 @@ class PianificazioneController {
 	
 	def creaNuovaVersione(){
 		if (!utilsService.testTabId()){
-			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
 		}
 		def userObject = utilsService.currentUserObject()
@@ -87,7 +87,7 @@ class PianificazioneController {
 	
 	def cancellaVersioneCorrente(){
 		if (!utilsService.testTabId()){
-			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
 		}
 		def userObject = utilsService.currentUserObject()
@@ -112,11 +112,13 @@ class PianificazioneController {
 			render status:500,text:'Versione non presente nel db'
 			return;
 		}
+		def retObj = new JSONObject();
+		retObj.nomeVersione = p.nome;
 		p.delete(flush:true, failOnError:true);
 		//per controllo, guardo che l'id versine ricevuto corrisponda a
 		//quello presente nell'id utente in sessione.
 		//Questi devono sempre coincidere
-		render p as JSON
+		render retObj JSON
 		
 		
 	}

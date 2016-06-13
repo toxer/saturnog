@@ -36,6 +36,7 @@ class VersioneService {
 
 	//FIXME clonazione kpi
 	//FIXME clonazione organigramma e anangrafiche
+	//FIXME clonazione scale
 
 
 

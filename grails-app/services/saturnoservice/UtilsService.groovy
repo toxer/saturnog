@@ -35,7 +35,6 @@ class UtilsService {
 		def sess = webUtils.getSession()
 		def req = webUtils.getRequest()
 		def tabId = req.JSON?.tabId;
-		log.info("TESTTAB: "+tabId)
 		if (tabId == null){
 			
 

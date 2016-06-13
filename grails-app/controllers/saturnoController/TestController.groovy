@@ -59,6 +59,12 @@ class TestController {
 		
 	}
 	
+	def deletePersonTest(){
+		Persona p = Persona.findByNome("Mario");
+		p.delete(flush:true, failOnError:true);
+		render "";
+	}
+	
 	def test(){
 		if (!utilsService.testTabId()){
 			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
@@ -138,7 +144,7 @@ class TestController {
 		o1.addToNodi(nodo1);
 		
 		NodoOrganigramma nodo2 = new NodoOrganigramma();
-		nodo1.nome="Area2";
+		nodo2.nome="Area2";
 		nodo2.addToPersone(p2);
 		o1.addToNodi(nodo2);
 		

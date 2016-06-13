@@ -9,7 +9,8 @@ class Organigramma {
 	Ente ente
 	String note
 	Integer anno
-	Versione versione
+	
+	static belongsTo=[versione:Versione]
 	static hasMany=[nodi:NodoOrganigramma]
 	//sorgente diretta: il nodo da cui è stato clonato
 		

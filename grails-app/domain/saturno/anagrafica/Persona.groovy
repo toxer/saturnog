@@ -12,11 +12,7 @@ class Persona {
 	Ente ente
 	Date dataInizioValidita
 	Date dataFineValidita
-	
-	
-	
-	
-	
+	static hasMany=[NodoOrganigramma]
 	
 	
 	static mapping = {
