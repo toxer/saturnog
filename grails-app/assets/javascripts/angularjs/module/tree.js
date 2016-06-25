@@ -9,10 +9,10 @@ tree.controller('TreeController', [ '$scope', '$http', 'serviceUtils',
 			// metodo di visualizzazione dell'albero corrente
 			// basato sul watch della variabile di scope
 
-			$scope.$watch('pianoCorrente', function() {
+			$scope.$watch('pianoJson', function() {
 				
 				if ($scope.pianoCorrente != undefined) {
-					vm.renderPiano($scope.pianoCorrente)
+					vm.renderPiano($scope.pianoJson)
 				}else{
 					vm.tree=""
 				}
@@ -25,7 +25,8 @@ tree.controller('TreeController', [ '$scope', '$http', 'serviceUtils',
 				// renderizza il piano
 				// TODO logica svg qui
 				vm.tree = piano
-				initTest();
+				
+				initTest(piano);
 			}
 
 		} ]);

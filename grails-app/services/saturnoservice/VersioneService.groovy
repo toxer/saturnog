@@ -1,7 +1,10 @@
 package saturnoservice
 
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
+
 import saturno.anagrafica.Persona
-import saturno.organigramma.NodoOrganigramma;
+import saturno.organigramma.NodoOrganigramma
 import saturno.organigramma.Organigramma
 import saturno.piano.Obiettivo
 import saturno.piano.Versione
@@ -135,5 +138,36 @@ class VersioneService {
 
 	}
 
+	
+	def stampaPianoObiettiviCompleto(Versione v){
+		JSONObject versione=new JSONObject();
+		versione.name = v.nomeVersione;
+		versione.children = new JSONArray();
+		
+		//scorro solo gli obiettivi senza padre, il metodo stampaObiettivo
+		//farà il resto con la ricorsione
+		for (Obiettivo o : v.obiettivi.findAll({it.padre==null})){
+			JSONObject obj = new JSONObject()
+			versione.children.add(stampaObiettivo(o,null));
+		}
+		return versione
+		
+	}
+	
+	private JSONObject stampaObiettivo (Obiettivo o,JSONObject obj){
+		if (obj == null){
+			obj = new JSONObject();
+			
+		}
+		obj.name=o.nome;
+		obj.children = new JSONArray();
+		
+		for (Obiettivo c : o.figli){
+			JSONObject objc = new JSONObject()
+			stampaObiettivo (c,objc)
+			obj.children.add(objc);
+		}
+		return obj;
+	}
 
 }

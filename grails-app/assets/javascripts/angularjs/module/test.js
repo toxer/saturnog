@@ -764,6 +764,7 @@ var root = {
 	} ]
 };
 
+//var root = undefined
 var i = 0, duration = 750, rectW = 60, rectH = 30;
 
 var tree = d3.layout.tree().nodeSize([ 70, 40 ]);
@@ -775,6 +776,9 @@ var svg = undefined;
 
 // necessary so that zoom knows where to zoom and unzoom from
 
+//_children figli collassati
+//children figli non collassati
+
 function collapse(d) {
 	if (d.children) {
 		d._children = d.children;
@@ -783,7 +787,8 @@ function collapse(d) {
 	}
 }
 
-function initTest() {
+function initTest(_root) {
+	root = _root
 	svg= d3.select("#body").append("svg").attr("width", 1000).attr("height",
 			1000).call(
 			zm = d3.behavior.zoom().scaleExtent([ 1, 3 ]).on("zoom", redraw))
@@ -899,6 +904,9 @@ function update(source) {
 
 // Toggle children on click.
 function click(d) {
+	
+	
+	
 	if (d.children) {
 		d._children = d.children;
 		d.children = null;

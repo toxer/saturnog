@@ -2,9 +2,6 @@ var pianificazione = angular.module("Pianificazione", ['ui.router','Tree' ]);
 //view per la pagina di pianificazione
 pianificazione.config(['$stateProvider',function($stateProvider) {
 	$stateProvider.state('navigazione',{
-		//url di default
-		
-		
 		//risponde all'url /pianificazione/index/#/prova
 		url:'/prova',		
 		views:{
@@ -166,9 +163,23 @@ pianificazione.controller('PianificazioneController', [
 
 				// aggiorno la variabile di scope che è in watch su
 				// TreeController
-				console.log(vm.pianoCorrente)
+				
 				$scope.pianoCorrente = vm.pianoCorrente;
 				$('#scegliVersioneDialog').modal('toggle');
+				
+				//renderizzo il piano completo
+				$http.post(
+						sessionStorage.context
+								+ '/pianificazione/stampaAlberoCompleto', {
+							'tabId' : vm.tabId,
+							'idVersione' : vm.pianoCorrente.id
+						}).success(function(response, status, headers, config) {
+				$scope.pianoJson = response
+					
+
+				}).error(function(response, status, headers, config) {
+					alert(response)
+				});
 
 			}
 

@@ -8,6 +8,7 @@ import saturno.piano.Versione
 
 class PianificazioneController {
 	def utilsService;
+	def versioneService
 
 	def index(){
 	}
@@ -32,6 +33,7 @@ class PianificazioneController {
 		//estraggo l'anno del piano
 		def anno = userObject.anno
 		def ente = userObject.ente;
+		log.debug("testVersionExist "+anno+" "+ente)
 		if (anno == null){
 			render  status: 500, text: 'Anno non trovato'
 			return
@@ -54,8 +56,45 @@ class PianificazioneController {
 		}
 		versione.versionePresente=true
 		versione.versioni=piani
+	
 		render versione as JSON
 
+	}
+	
+	//stampa l'albero del piano per essere renderizzato dal render template
+	
+	
+	def stampaAlberoCompleto(){
+		if (!utilsService.testTabId()){
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			return
+		}
+		def userObject = utilsService.currentUserObject()
+		if (userObject==null){
+			render status:500,text:'Utente non trovato'
+			return;
+		}
+		def idVersione = request.JSON?.idVersione
+		
+		if (idVersione==null){
+			render status:500,text:'Id versione non trovato'
+			return;
+		}
+		
+		if (idVersione != userObject.versione){
+			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+			return;
+		}
+		
+		Versione p = Versione.findById(idVersione)
+		if (p == null){
+			render status:500,text:'Versione non presente nel db'
+			return;
+		}
+		JSONObject pianoJson = versioneService.stampaPianoObiettiviCompleto(p);
+		render pianoJson as JSON
+		
+		
 	}
 	
 	def creaNuovaVersione(){
