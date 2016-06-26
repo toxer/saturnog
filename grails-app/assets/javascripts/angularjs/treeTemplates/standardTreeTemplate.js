@@ -1,16 +1,34 @@
+/*context menu*/
+function contextMenu(x,y,id){
+	console.log(x,y,id)
+	closeContextMenu();
+}
+
+function closeContextMenu(){
+	  d3.select('.context-menu').remove();
+}
+
+
 //recupero l'oggetto piano corrente
+var margin = {
+	top : 20,
+	right : 120,
+	bottom : 20,
+	left : 120
+}, width = 960 - margin.right - margin.left, height = 800 - margin.top
+		- margin.bottom;
 
 
+var root = undefined
+var i = 0, duration = 750, rectW =120, rectH = 60;
 
-
-var i = 0, duration = 750, rectW = 60, rectH = 30;
-
-var tree = d3.layout.tree().nodeSize([ 70, 40 ]);
+var tree = d3.layout.tree().nodeSize([ rectW+10, rectH+10 ]);
 var diagonal = d3.svg.diagonal().projection(function(d) {
 	return [ d.x + rectW / 2, d.y + rectH / 2 ];
 });
 
 var svg = undefined;
+
 
 // necessary so that zoom knows where to zoom and unzoom from
 
@@ -25,7 +43,8 @@ function collapse(d) {
 	}
 }
 
-function initTest() {
+function initTemplate(_root) {
+	root = _root;
 	svg= d3.select("#body").append("svg").attr("width", 1000).attr("height",
 			1000).call(
 			zm = d3.behavior.zoom().scaleExtent([ 1, 3 ]).on("zoom", redraw))
@@ -60,6 +79,8 @@ function update(source) {
 			"transform", function(d) {
 				return "translate(" + source.x0 + "," + source.y0 + ")";
 			}).on("click", click);
+	
+	nodeEnter.on("contextmenu",function(){contextMenu(d3.mouse(this)[0], d3.mouse(this)[1],this.id)});
 
 	nodeEnter.append("rect").attr("width", rectW).attr("height", rectH).attr(
 			"stroke", "black").attr("stroke-width", 1).style("fill",
@@ -71,6 +92,10 @@ function update(source) {
 			"dy", ".35em").attr("text-anchor", "middle").text(function(d) {
 		return d.name;
 	});
+	
+	//applico l'id del nodo come attribute
+	nodeEnter.attr("id",function(d){return d.id})
+	
 
 	// Transition nodes to their new position.
 	var nodeUpdate = node.transition().duration(duration).attr("transform",
@@ -141,7 +166,7 @@ function update(source) {
 
 // Toggle children on click.
 function click(d) {
-	
+	closeContextMenu();
 	
 	
 	if (d.children) {
@@ -156,7 +181,7 @@ function click(d) {
 
 // Redraw for zoom
 function redraw() {
-	 console.log("here", d3.event.translate, d3.event.scale);
+	// console.log("here", d3.event.translate, d3.event.scale);
 	svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale("
 			+ d3.event.scale + ")");
 }

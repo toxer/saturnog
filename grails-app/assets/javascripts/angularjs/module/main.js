@@ -96,7 +96,7 @@ myApp.service('serviceUtils', function($http) {
 			return response.data
 
 		}, function(response, status, headers, config) {
-			alert(response.data);
+			//alert(response.data);
 			return undefined
 		});
 	}

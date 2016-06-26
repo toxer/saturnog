@@ -7,7 +7,6 @@
 //
 //require d3.min.js
 //= require jquery
-//= require_tree .
 //= require_self
 //= require bootstrap
 //= require js/jquery-ui-1.10.4.custom

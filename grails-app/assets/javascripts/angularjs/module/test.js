@@ -765,7 +765,7 @@ var root = {
 };
 
 //var root = undefined
-var i = 0, duration = 750, rectW = 60, rectH = 30;
+var i = 0, duration = 750, rectW =120, rectH = 30;
 
 var tree = d3.layout.tree().nodeSize([ 70, 40 ]);
 var diagonal = d3.svg.diagonal().projection(function(d) {

@@ -161,6 +161,7 @@ class VersioneService {
 		}
 		obj.name=o.nome;
 		obj.children = new JSONArray();
+		obj.id = o.id
 		
 		for (Obiettivo c : o.figli){
 			JSONObject objc = new JSONObject()
