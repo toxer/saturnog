@@ -34,11 +34,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="row-fluid" id="treeRender"
+		<div class="row" id="treeRender"
 			 align="center">
 
-			<div ui-view="leftMenu" class="col-md-3"></div>
-			<div ui-view="mainView" class="col-md-9">
+<%--			<div ui-view="leftMenu" class="col-md-3"></div>--%>
+			<div ui-view="mainView" class="col-md-12">
 				
 			</div>
 

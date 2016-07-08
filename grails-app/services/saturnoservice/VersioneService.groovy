@@ -15,7 +15,7 @@ class VersioneService {
 		//clono l'organigramma perchè poi mi serve nella clonazione dei figli
 		Organigramma nuovoOrganigramma = null;
 		if (versioneSorgente.organigramma != null){
-			 nuovoOrganigramma = clonaOrganigramma(versioneSorgente.organigramma, versioneDestinazione)
+			nuovoOrganigramma = clonaOrganigramma(versioneSorgente.organigramma, versioneDestinazione)
 		}
 		versioneDestinazione.organigramma=nuovoOrganigramma
 		//prelevo tutti gli obiettivi della versione sorgente
@@ -133,17 +133,17 @@ class VersioneService {
 			newNodo.addToFigli(newC);
 		}
 		println("Clonazione organigramma terminata")
-		
+
 		return newNodo;
 
 	}
 
-	
+
 	def stampaPianoObiettiviCompleto(Versione v){
 		JSONObject versione=new JSONObject();
 		versione.name = v.nomeVersione;
 		versione.children = new JSONArray();
-		
+
 		//scorro solo gli obiettivi senza padre, il metodo stampaObiettivo
 		//farà il resto con la ricorsione
 		for (Obiettivo o : v.obiettivi.findAll({it.padre==null})){
@@ -151,18 +151,20 @@ class VersioneService {
 			versione.children.add(stampaObiettivo(o,null));
 		}
 		return versione
-		
+
 	}
-	
+
 	private JSONObject stampaObiettivo (Obiettivo o,JSONObject obj){
 		if (obj == null){
 			obj = new JSONObject();
-			
+
 		}
 		obj.name=o.nome;
-		obj.children = new JSONArray();
-		obj.id = o.id
-		
+		if (o.figli != null && o.figli.size()>0){
+			obj.children = new JSONArray();
+		}
+		obj.idNodo = o.id
+
 		for (Obiettivo c : o.figli){
 			JSONObject objc = new JSONObject()
 			stampaObiettivo (c,objc)

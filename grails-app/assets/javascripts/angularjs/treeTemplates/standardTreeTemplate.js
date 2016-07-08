@@ -45,10 +45,13 @@ function collapse(d) {
 
 function initTemplate(_root) {
 	root = _root;
-	svg= d3.select("#body").append("svg").attr("width", 1000).attr("height",
-			1000).call(
+
+	
+	
+	svg= d3.select('#treeBody').append("svg").attr("width", "1024").attr("height",
+			3000).call(
 			zm = d3.behavior.zoom().scaleExtent([ 1, 3 ]).on("zoom", redraw))
-			.append("g").attr("transform", "translate(" + 350 + "," + 20 + ")");
+			.append("g").attr("transform", "translate(" + 512 + "," + 20 + ")");
 	zm.translate([ 350, 20 ]);
 
 	root.x0 = 0;
@@ -56,7 +59,7 @@ function initTemplate(_root) {
 	root.children.forEach(collapse);
 	update(root);
 
-	d3.select("#body").style("height", "800px");
+	
 }
 
 function update(source) {
@@ -166,6 +169,7 @@ function update(source) {
 
 // Toggle children on click.
 function click(d) {
+	
 	closeContextMenu();
 	
 	

@@ -26,6 +26,7 @@ tree.controller('TreeController', [ '$scope', '$http', 'serviceUtils',
 				// TODO logica svg qui
 				vm.tree = piano
 				
+				
 				initTemplate(piano);
 			}
 

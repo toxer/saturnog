@@ -4,13 +4,24 @@ pianificazione.config(['$stateProvider',function($stateProvider) {
 	$stateProvider.state('navigazione',{
 		//risponde all'url /pianificazione/index/#/prova
 		url:'/prova',		
+//		views:{
+//			'leftMenu':{
+//				 //template: "<div>Test</div>"
+//				 templateUrl:"/saturno/pianificazione/leftMenu"
+//				//add controller
+//				
+//			},
+//			'mainView':{
+//				 //template: "<div>Test</div>"
+//				 templateUrl:"/saturno/pianificazione/tree"
+//				//add controller
+//				
+//				
+//			}
+//			
+//		}
 		views:{
-			'leftMenu':{
-				 //template: "<div>Test</div>"
-				 templateUrl:"/saturno/pianificazione/leftMenu"
-				//add controller
-				
-			},
+			
 			'mainView':{
 				 //template: "<div>Test</div>"
 				 templateUrl:"/saturno/pianificazione/tree"
@@ -20,7 +31,6 @@ pianificazione.config(['$stateProvider',function($stateProvider) {
 			}
 			
 		}
-		
 	});
 }]);
 
