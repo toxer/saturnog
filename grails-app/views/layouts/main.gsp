@@ -7,6 +7,8 @@
 <html lang="en" class="no-js">
 <!--<![endif]-->
 <head>
+
+
 <script>
 sessionStorage.context = '${request.contextPath}';
 </script>
@@ -132,8 +134,9 @@ sessionStorage.context = '${request.contextPath}';
 				</div>
 			</div>
 
-			<div class="row-fluid">
+			<div class="row">
 				<div class="col-md-12 mainContainer">
+				
 					<g:layoutBody />
 
 

@@ -152,12 +152,12 @@ class PianificazioneController {
 			return;
 		}
 		def retObj = new JSONObject();
-		retObj.nomeVersione = p.nome;
+		retObj.nomeVersione = p.nomeVersione;
 		p.delete(flush:true, failOnError:true);
 		//per controllo, guardo che l'id versine ricevuto corrisponda a
 		//quello presente nell'id utente in sessione.
 		//Questi devono sempre coincidere
-		render retObj JSON
+		render retObj as JSON
 		
 		
 	}

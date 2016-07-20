@@ -38,7 +38,7 @@
 			 align="center">
 
 <%--			<div ui-view="leftMenu" class="col-md-3"></div>--%>
-			<div ui-view="mainView" class="col-md-12">
+			<div ui-view="mainView"  id ="treeContainer" class="col-md-12 pre-scrollable" style="height:540px">
 				
 			</div>
 
