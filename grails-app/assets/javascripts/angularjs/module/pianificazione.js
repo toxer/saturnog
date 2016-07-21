@@ -4,22 +4,7 @@ pianificazione.config(['$stateProvider',function($stateProvider) {
 	$stateProvider.state('navigazione',{
 		//risponde all'url /pianificazione/index/#/prova
 		url:'/prova',		
-//		views:{
-//			'leftMenu':{
-//				 //template: "<div>Test</div>"
-//				 templateUrl:"/saturno/pianificazione/leftMenu"
-//				//add controller
-//				
-//			},
-//			'mainView':{
-//				 //template: "<div>Test</div>"
-//				 templateUrl:"/saturno/pianificazione/tree"
-//				//add controller
-//				
-//				
-//			}
-//			
-//		}
+
 		views:{
 			
 			'mainView':{
@@ -184,6 +169,9 @@ pianificazione.controller('PianificazioneController', [
 							'tabId' : vm.tabId,
 							'idVersione' : vm.pianoCorrente.id
 						}).success(function(response, status, headers, config) {
+							
+							
+							
 				$scope.pianoJson = response
 					
 
@@ -287,5 +275,9 @@ pianificazione.controller('PianificazioneController', [
 					alert(response)
 				});
 			}
+			
+			
+			
+			
 
 		} ]);

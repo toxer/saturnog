@@ -24,10 +24,18 @@ tree.controller('TreeController', [ '$scope', '$http', 'serviceUtils',
 				// alert("render piano corrente")
 				// renderizza il piano
 				// TODO logica svg qui
-				vm.tree = piano
 				
-				
-				initTemplate(piano);
+				initTemplate(piano,vm);
 			}
+			
+			//aggiunta nodi all'albero
+			vm.addChild=function(idNodo){
+				alert ("Richiesta di aggiunta figlio al nodo con id "+idNodo)
+			}
+			
+			vm.addSibiling=function(idNodo){
+				alert ("Richiesta di aggiunta fratello al nodo con id "+idNodo)
+			}
+			
 
 		} ]);

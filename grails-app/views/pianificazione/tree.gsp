@@ -1,3 +1,7 @@
+<%--Importazione css e js per context menu --%>
+<asset:stylesheet src="contextMenu/3d-context-menu.css" />
+<%-- Template dell'albero --%>
+<asset:javascript src="angularjs/contextMenu/3d-context-menu.js" />
 <asset:javascript src="angularjs/treeTemplates/templateAlberoBlocchi.js" />
 <style>
 
