@@ -25,6 +25,7 @@ tree.controller('TreeController', [ '$scope', '$http', 'serviceUtils',
 				// renderizza il piano
 				// TODO logica svg qui
 				
+				//initTemplate(piano,vm,40);
 				initTemplate(piano,vm);
 			}
 			
@@ -33,7 +34,7 @@ tree.controller('TreeController', [ '$scope', '$http', 'serviceUtils',
 				alert ("Richiesta di aggiunta figlio al nodo con id "+idNodo)
 			}
 			
-			vm.addSibiling=function(idNodo){
+			vm.addSibling=function(idNodo){
 				alert ("Richiesta di aggiunta fratello al nodo con id "+idNodo)
 			}
 			

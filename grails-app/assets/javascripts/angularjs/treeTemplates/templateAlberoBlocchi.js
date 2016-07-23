@@ -4,9 +4,8 @@ var contextMenuItems = [ {
 	title : 'Aggiungi un figlio',
 	action : function(elm, d, i) {
 		// utilizzo le funzioni del TreeController passato in fase di init
-		
-			treeController.addChild(d.idNodo);
-		
+
+		treeController.addChild(d.idNodo);
 
 	},
 	disabled : false
@@ -17,7 +16,7 @@ var contextMenuItems = [ {
 		if (d.idNodo == undefined) {
 
 		} else {
-			treeController.addSibiling(d.idNodo);
+			treeController.addSiblings(d.idNodo);
 		}
 	},
 	disabled : false
@@ -47,9 +46,6 @@ var diagonal = d3.svg.diagonal().projection(function(d) {
 var svg = undefined;
 var yToGo = undefined
 
-// i nodi come stanno
-var nodes = undefined;
-
 // necessary so that zoom knows where to zoom and unzoom from
 
 // _children figli collassati
@@ -63,9 +59,12 @@ function collapse(d) {
 	}
 }
 
-function initTemplate(_root, _treeController) {
+function initTemplate(_root, _treeController, idNodeToOpen) {
 	treeController = _treeController
 	root = _root;
+
+	// ricavo la massima ampiezza disponibile
+
 	var maxIpoteticalWidth = (root.children.length > 0 ? root.children.length
 			: 1)
 			* (rectW * 2 + 60);
@@ -80,9 +79,18 @@ function initTemplate(_root, _treeController) {
 	root.x0 = 0;
 	root.y0 = height / 2;
 	root.children.forEach(collapse);
-	// forzo lo scroll al centro orizzontalmente basandomi sul primo nodo
+
+	// se devo, apro il nodo e tutti i suoi genitori
+	if (idNodeToOpen != undefined && root.children != undefined) {
+		var nodo = undefined
+		console.log(root)
+		nodo=findById(idNodeToOpen, root);
+		console.log(nodo.name)
+		
+	}
 
 	update(root);
+	// forzo lo scroll al centro orizzontalmente basandomi sul primo nodo
 
 	if (root.children != undefined && root.children.length > 0) {
 
@@ -95,10 +103,90 @@ function initTemplate(_root, _treeController) {
 
 }
 
+function findById(idNodo,  nodoRadice,iterazione) {
+	
+	
+	if (iterazione==undefined){
+		iterazione = 0;
+	}
+	iterazione++;
+
+	if (nodoRadice == undefined) {
+		return true;
+	}
+	if (nodoRadice.idNodo==idNodo) {
+	
+		return nodoRadice;
+	}
+	
+	var nodoRisposta=undefined
+	
+	// eseguo la ricerca per i sottofigli
+	if (nodoRadice.children != undefined) {
+		nodoRadice.children.forEach(function(child) {
+			if (child.idNodo == idNodo){
+				nodoRisposta = child;
+				return true;
+			}
+			nodoRisposta=findById(idNodo, child,iterazione);
+			if (nodoRisposta != undefined){
+			}
+		});
+	}
+	
+	
+	
+	if (nodoRadice._children != undefined) {
+
+		nodoRadice._children.forEach(function(child) {
+			if (child.idNodo == idNodo){
+				nodoRisposta = child;
+				return true;
+			}
+			nodoRisposta==findById(idNodo,  child,iterazione);
+			if (nodoRisposta != undefined){
+
+			}
+
+		});
+	}
+	return nodoRisposta
+	
+
+}
+
+function openNode(nodo) {
+	console.log("Nodo aperto: " + nodo)
+	// per aprire un nodo, devo apripre prima tutti i suoi parenti.
+	// i nodi aperti sono nella lista children del padre, i nodi chiusi
+	// in _children
+	var nodoAperto = false;
+	// prima controllo se è nella lista aperta del padre
+	if (nodo.parent != undefined) {
+		nodo.parent.children.forEach(function(d) {
+			if (d.id == nodo.id) {
+				nodoAperto = true;
+				return;
+			}
+		});
+	} else {
+		nodoAperto = true;
+	}
+
+	// il nodo è ancora chiuso
+	if (!nodoAperto) {
+		// controllo che il padre sia aperto in modo ricorsivo
+		openNode(nodo.parent);
+		click(nodo.parent);
+	}
+	// eseguo un click sul padre per forzare l'apertura
+
+}
+
 function update(source) {
 
 	// Compute the new tree layout.
-	nodes = tree.nodes(root).reverse(), links = tree.links(nodes);
+	var nodes = tree.nodes(root).reverse(), links = tree.links(nodes);
 
 	// Normalize for fixed-depth.
 	nodes.forEach(function(d) {
@@ -120,7 +208,7 @@ function update(source) {
 	// contextMenu(d3.mouse(this)[0], d3.mouse(this)[1], this)
 	// });
 
-	nodeEnter.on("contextmenu", d3.contextMenu(contextMenuItems));
+	//nodeEnter.on("contextmenu", d3.contextMenu(contextMenuItems));
 
 	nodeEnter.append("rect").attr("width", rectW).attr("height", rectH).attr(
 			"stroke", "black").attr("stroke-width", 1).style("fill",
@@ -211,6 +299,7 @@ function update(source) {
 // Toggle children on click.
 function click(d) {
 	var lastY = $('#treeContainer').scrollTop();
+	console.log(d)
 
 	closeContextMenu();
 

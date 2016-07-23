@@ -4,10 +4,24 @@
 	}
 }
 
+/*prescollable height*/
+
 @media ( max-width : 768px) {
 	.mainContainer {
 		padding-top: 120px; /*old: 130px*/
 		/*somma delle varie barre e bredacumb*/
+	}
+}
+
+@media ( max-height :500px) {
+	.pre-scrollable {
+		max-height: 340px;
+	}
+}
+
+@media ( max-height :500px) {
+	.pre-scrollable {
+		max-height: 540px;
 	}
 }
 
@@ -189,5 +203,7 @@
 	left: 50%;
 }
 
+html, body {
+	height: 100% !important;
+}
 
-html, body { height: 100%!important; }
