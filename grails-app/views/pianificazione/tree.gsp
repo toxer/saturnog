@@ -2,6 +2,7 @@
 <asset:stylesheet src="contextMenu/3d-context-menu.css" />
 <%-- Template dell'albero --%>
 <asset:javascript src="angularjs/contextMenu/3d-context-menu.js" />
+<asset:javascript src="angularjs/treeTemplates/commonTreeUtils.js" />
 <asset:javascript src="angularjs/treeTemplates/templateAlberoBlocchi.js" />
 <style>
 
@@ -28,7 +29,7 @@ path.link {
 
 
 <div ng-controller="TreeController as tc" >
-	
+	<button class="btn btn-danger" ng-click="tc.findNodeTest()">Trova nodo</button>
 		<div style="max-height:none">
 			<div id="treeBody"></div>
 		</div>

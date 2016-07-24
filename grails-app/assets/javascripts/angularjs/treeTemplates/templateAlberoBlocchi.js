@@ -1,26 +1,5 @@
 var treeController = undefined
 
-var contextMenuItems = [ {
-	title : 'Aggiungi un figlio',
-	action : function(elm, d, i) {
-		// utilizzo le funzioni del TreeController passato in fase di init
-
-		treeController.addChild(d.idNodo);
-
-	},
-	disabled : false
-// optional, defaults to false
-}, {
-	title : 'Aggiungi un fratello',
-	action : function(elm, d, i) {
-		if (d.idNodo == undefined) {
-
-		} else {
-			treeController.addSiblings(d.idNodo);
-		}
-	},
-	disabled : false
-} ]
 
 function closeContextMenu() {
 	d3.select('.context-menu').remove();
@@ -59,7 +38,7 @@ function collapse(d) {
 	}
 }
 
-function initTemplate(_root, _treeController, idNodeToOpen) {
+function initTemplate(_root, _treeController) {
 	treeController = _treeController
 	root = _root;
 
@@ -80,14 +59,7 @@ function initTemplate(_root, _treeController, idNodeToOpen) {
 	root.y0 = height / 2;
 	root.children.forEach(collapse);
 
-	// se devo, apro il nodo e tutti i suoi genitori
-	if (idNodeToOpen != undefined && root.children != undefined) {
-		var nodo = undefined
-		console.log(root)
-		nodo=findById(idNodeToOpen, root);
-		console.log(nodo.name)
-		
-	}
+	
 
 	update(root);
 	// forzo lo scroll al centro orizzontalmente basandomi sul primo nodo
@@ -103,85 +75,9 @@ function initTemplate(_root, _treeController, idNodeToOpen) {
 
 }
 
-function findById(idNodo,  nodoRadice,iterazione) {
-	
-	
-	if (iterazione==undefined){
-		iterazione = 0;
-	}
-	iterazione++;
 
-	if (nodoRadice == undefined) {
-		return true;
-	}
-	if (nodoRadice.idNodo==idNodo) {
-	
-		return nodoRadice;
-	}
-	
-	var nodoRisposta=undefined
-	
-	// eseguo la ricerca per i sottofigli
-	if (nodoRadice.children != undefined) {
-		nodoRadice.children.forEach(function(child) {
-			if (child.idNodo == idNodo){
-				nodoRisposta = child;
-				return true;
-			}
-			nodoRisposta=findById(idNodo, child,iterazione);
-			if (nodoRisposta != undefined){
-			}
-		});
-	}
-	
-	
-	
-	if (nodoRadice._children != undefined) {
 
-		nodoRadice._children.forEach(function(child) {
-			if (child.idNodo == idNodo){
-				nodoRisposta = child;
-				return true;
-			}
-			nodoRisposta==findById(idNodo,  child,iterazione);
-			if (nodoRisposta != undefined){
 
-			}
-
-		});
-	}
-	return nodoRisposta
-	
-
-}
-
-function openNode(nodo) {
-	console.log("Nodo aperto: " + nodo)
-	// per aprire un nodo, devo apripre prima tutti i suoi parenti.
-	// i nodi aperti sono nella lista children del padre, i nodi chiusi
-	// in _children
-	var nodoAperto = false;
-	// prima controllo se è nella lista aperta del padre
-	if (nodo.parent != undefined) {
-		nodo.parent.children.forEach(function(d) {
-			if (d.id == nodo.id) {
-				nodoAperto = true;
-				return;
-			}
-		});
-	} else {
-		nodoAperto = true;
-	}
-
-	// il nodo è ancora chiuso
-	if (!nodoAperto) {
-		// controllo che il padre sia aperto in modo ricorsivo
-		openNode(nodo.parent);
-		click(nodo.parent);
-	}
-	// eseguo un click sul padre per forzare l'apertura
-
-}
 
 function update(source) {
 

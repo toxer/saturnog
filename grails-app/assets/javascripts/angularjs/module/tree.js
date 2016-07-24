@@ -38,5 +38,9 @@ tree.controller('TreeController', [ '$scope', '$http', 'serviceUtils',
 				alert ("Richiesta di aggiunta fratello al nodo con id "+idNodo)
 			}
 			
+			vm.findNodeTest = function(){
+				openNodeById(41,true);
+			}
+			
 
 		} ]);

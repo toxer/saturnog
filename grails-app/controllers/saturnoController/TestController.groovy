@@ -121,7 +121,13 @@ class TestController {
 		cinque.setDescrizione("Descrizione obiettivo cinque");
 		cinque.setAnno(p.getAnno());
 		
+		Obiettivo sei = new Obiettivo();
+		sei.setNome("Obiettivo sei");
+		sei.setDescrizione("Descrizione obiettivo sei");
+		sei.setAnno(p.getAnno());
+		
 		uno.addToFigli(tre)		
+		tre.addToFigli(sei);
 		due.addToFigli(quattro)
 		due.addToFigli(cinque);
 		
@@ -166,6 +172,7 @@ class TestController {
 		p.addToObiettivi(tre);
 		p.addToObiettivi(quattro);
 		p.addToObiettivi(cinque);
+		p.addToObiettivi(sei);
 		p.organigramma=o1;
 		p.save(true);
 		render p as JSON	
