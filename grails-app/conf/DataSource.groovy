@@ -12,7 +12,7 @@ hibernate {
 environments {
 	development {
 		dataSource {
-			dbCreate = "update" // one of 'create', 'create-drop','update'
+			dbCreate = "validate" // one of 'create', 'create-drop','update'
 			url = "jdbc:mysql://localhost:3306/febeg"
 			username = "root"
 			password = "pippo123"

@@ -1,9 +1,11 @@
 package saturno.anagrafica
 
+import java.io.Serializable;
+
 import saturno.common.Ente
 import saturno.organigramma.NodoOrganigramma
 
-class Persona {
+class Persona implements Serializable{
 	Integer id
 	String nome
 	String cognome

@@ -1,10 +1,9 @@
 package saturno.common
 
-class Scala {
+class Scala implements Serializable{
 	Integer id
 	String tipologia
 	String nome;
-	String desc;
 	String descrizione;
 	static hasMany=[gradini:Gradino]
 

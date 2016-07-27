@@ -1,8 +1,10 @@
 package saturno.anagrafica
 
+import java.io.Serializable;
+
 import saturno.common.Ente
 
-class ObiettivoAnagrafica {
+class ObiettivoAnagrafica implements Serializable{
 	Integer id
 	Integer anno
 	String nome

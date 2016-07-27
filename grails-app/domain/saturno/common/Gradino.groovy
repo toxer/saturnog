@@ -1,8 +1,9 @@
 package saturno.common
 
-class Gradino {
-	Integer id
-	
+import java.io.Serializable;
+
+class Gradino implements Serializable{
+	Integer id	
 	Double intervalloNumericoStart
 	Double intervalloNumericoEnd
 	Date intervalloDateStart

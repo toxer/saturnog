@@ -20,19 +20,17 @@ var contextMenuItems = [ {
 	disabled : false
 } ]
 
-
-
-function findById(idNodo, nodoRadice,open) {
+function findById(idNodo, nodoRadice, open) {
 
 	if (nodoRadice == undefined) {
 		return undefined
 	}
 	if (nodoRadice.idNodo == idNodo) {
-		//applico l'apertura ricorsiva del path
-		if (open){
+		// applico l'apertura ricorsiva del path
+		if (open) {
 			openNode(nodoRadice)
 		}
-		
+
 		return nodoRadice;
 	}
 
@@ -47,13 +45,13 @@ function findById(idNodo, nodoRadice,open) {
 			if (nodoTrovato != undefined) {
 				return true;
 			}
-			nodoTrovato = findById(idNodo, d,open)
+			nodoTrovato = findById(idNodo, d, open)
 
 		});
 	}
 
 	if (nodoTrovato != undefined) {
-		
+
 		return nodoTrovato
 	}
 
@@ -67,28 +65,28 @@ function findById(idNodo, nodoRadice,open) {
 			if (nodoTrovato != undefined) {
 				return true;
 			}
-			nodoTrovato = findById(idNodo, d,open)
+			nodoTrovato = findById(idNodo, d, open)
 
 		});
 	}
-	
-	
 	return nodoTrovato
 
 }
 
 function openNodeById(idNodo) {
-	
+
 	var nodo = undefined
 	if (idNodo != undefined && root != undefined) {
-		nodo = findById(idNodo, root,true);
-		if (nodo != undefined){
-			
+		nodo = findById(idNodo, root, true);
+		if (nodo != undefined) {
 			update(root)
-			
-			
-		}else{
-			alert("Nodo con id: "+idNodo+" non trovato");
+			// scrolla fino al nodo
+
+			$('#treeContainer').scrollTop(nodo.y0 - nodeDepth)
+			$('#treeContainer').scrollLeft(nodo.x0)
+
+		} else {
+			alert("Nodo con id: " + idNodo + " non trovato");
 		}
 	}
 
@@ -98,15 +96,13 @@ function openNode(nodo) {
 	if (nodo == undefined) {
 		return;
 	}
-	console.log("Nodo: "+nodo.name+" "+nodo._children)
-	//apro il nodo se nencessario
-	if (nodo._children){
+	// apro il nodo se nencessario
+	if (nodo._children) {
 		nodo.children = nodo._children;
 		nodo._children = undefined
 	}
-	
+
 	// controllo se il nodo è aperto controllando che il padre sia aperto
-	
 
 	openNode(nodo.parent);
 
@@ -123,4 +119,111 @@ function openChild(parentNode) {
 		parentNode.children = undefined;
 
 	}
+}
+
+function countAllNode(rootNode) {
+	var actualNode = 1;// se stesso
+	var figli = allChild(rootNode);
+	figli.forEach(function(d) {
+		actualNode += countAllNode(d) // il conteggio dei figli del figlio
+	});
+	return actualNode;
+}
+
+function nodiInArray(rootNode, onlyOpen) {
+	return explodeNodeToArray(rootNode, undefined, onlyOpen)[0]
+}
+
+function explodeNodeToArray(rootNode, nodeArray, onlyOpen) {
+	rootNode = tree(rootNode)
+	if (rootNode == undefined) {
+		return nodeArray;
+	}
+	if (nodeArray == undefined) {
+		nodeArray = [];
+	}
+	nodeArray.push(rootNode);
+	var figli = allChild(rootNode, onlyOpen);
+
+	figli.forEach(function(d) {
+		explodeNodeToArray(d, nodeArray, onlyOpen);
+	});
+
+	return nodeArray;
+
+}
+
+// numero massimo di nodi
+function maxNodeForLevel(rootNode) {
+	// divido per depth
+	var mappaNodi = {};
+	var nodi = nodiInArray(rootNode);
+	console.log(nodi)
+	nodi.forEach(function(d) {
+
+		if (mappaNodi[d.depth] == undefined) {
+			mappaNodi[d.depth] = 0;
+		}
+		mappaNodi[d.depth] = mappaNodi[d.depth] + 1;
+	});
+	return mappaNodi
+}
+
+function allChild(rootNode, onlyOpen) {
+
+	var figli = []
+
+	if (rootNode.children != undefined) {
+		rootNode.children.forEach(function(d) {
+			figli.push(d);
+		})
+	}
+	if (onlyOpen == undefined || !onlyOpen) {
+		if (rootNode._children != undefined) {
+			rootNode._children.forEach(function(d) {
+				figli.push(d)
+			})
+		}
+	}
+	return figli;
+
+}
+
+function setCorrectWidth(rootNode) {
+	// tutti i soli nodi aperti in array
+	var nodiAperti = nodiInArray(rootNode, true)
+	var minWidth = undefined
+	var maxWidth = undefined
+
+	nodiAperti.forEach(function(d) {
+		console.log(d.name+" "+d.x+" "+d.x0)
+
+		if (minWidth == undefined) {
+			minWidth = d.x
+			maxWidth = d.x + rectW
+		} else {
+
+			if (d.x < minWidth) {
+				minWidth = d.x;
+			}
+		}
+		if (d.x > maxWidth) {
+			maxWidth = d.x;
+		}
+
+	})
+	var numeroMassimoNodiInLivello=4 //da calcolare
+	var width = (Math.abs(minWidth) + Math.abs(maxWidth)) + rectW * numeroMassimoNodiInLivello
+	// modifico la width dell'svg
+	
+	
+	
+	
+
+		$('#treeSvg').attr("width", width)
+		$('#svgG').attr("transform",
+				"translate(" + (width / 2) + "," + 20 + ")")
+	
+
+	return (Math.abs(minWidth) + Math.abs(maxWidth))
 }

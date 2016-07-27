@@ -19,7 +19,7 @@
 	}
 }
 
-@media ( max-height :500px) {
+@media ( min-height :500px) {
 	.pre-scrollable {
 		max-height: 540px;
 	}

@@ -1,6 +1,8 @@
 package saturno.common
 
-class Logger {
+import java.io.Serializable;
+
+class Logger implements Serializable{
 	Integer id
 	String oggetto
 	String codice

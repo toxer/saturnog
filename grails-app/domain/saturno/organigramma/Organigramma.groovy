@@ -1,10 +1,12 @@
 package saturno.organigramma
 
+import java.io.Serializable;
+
 import saturno.anagrafica.Persona;
 import saturno.common.Ente
 import saturno.piano.Versione
 
-class Organigramma {
+class Organigramma implements Serializable{
 	Integer id
 	Ente ente
 	String note

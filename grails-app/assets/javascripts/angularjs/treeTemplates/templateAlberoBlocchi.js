@@ -41,23 +41,26 @@ function collapse(d) {
 function initTemplate(_root, _treeController) {
 	treeController = _treeController
 	root = _root;
-
+	root.children.forEach(collapse);
 	// ricavo la massima ampiezza disponibile
-
-	var maxIpoteticalWidth = (root.children.length > 0 ? root.children.length
+	setCorrectWidth(root);
+	
+	
+	var maxIpoteticalWidth = (countAllNode(root) > 0 ? countAllNode(root)
 			: 1)
 			* (rectW * 2 + 60);
+	
 
 	svg = d3.select('#treeBody').append("svg")
-			.attr("width", maxIpoteticalWidth).attr("height", 3000).call(
+			.attr("width", maxIpoteticalWidth).attr("height", 3000).attr("id","treeSvg").call(
 					zm = d3.behavior.zoom().scaleExtent([ 1, 3 ]).on("zoom",
 							redraw)).append("g").attr("transform",
-					"translate(" + (maxIpoteticalWidth / 2) + "," + 20 + ")");
+					"translate(" + (maxIpoteticalWidth / 2) + "," + 20 + ")").attr("id","svgG");
 	// zm.translate([ 350, 20 ]);
 
 	root.x0 = 0;
 	root.y0 = height / 2;
-	root.children.forEach(collapse);
+	
 
 	
 
@@ -104,7 +107,7 @@ function update(source) {
 	// contextMenu(d3.mouse(this)[0], d3.mouse(this)[1], this)
 	// });
 
-	//nodeEnter.on("contextmenu", d3.contextMenu(contextMenuItems));
+	nodeEnter.on("contextmenu", d3.contextMenu(contextMenuItems));
 
 	nodeEnter.append("rect").attr("width", rectW).attr("height", rectH).attr(
 			"stroke", "black").attr("stroke-width", 1).style("fill",
@@ -189,6 +192,8 @@ function update(source) {
 		d.x0 = d.x;
 		d.y0 = d.y;
 	});
+	
+	setCorrectWidth(root)
 
 }
 

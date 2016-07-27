@@ -1,10 +1,12 @@
 package saturno.piano
 
+import java.io.Serializable;
+
 import saturno.anagrafica.Persona
 import saturno.common.Scala
 import saturno.organigramma.NodoOrganigramma
 
-class Obiettivo {
+class Obiettivo implements Serializable{
 	Integer id
 	Integer anno
 	String nome

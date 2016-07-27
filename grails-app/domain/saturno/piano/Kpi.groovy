@@ -1,9 +1,11 @@
 package saturno.piano
 
+import java.io.Serializable;
+
 import saturno.anagrafica.KpiAnagrafica
 import saturno.common.Scala
 
-class Kpi {
+class Kpi implements Serializable{
 	Integer id
 	Integer anno
 	String nome

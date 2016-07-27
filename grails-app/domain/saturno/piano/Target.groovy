@@ -1,7 +1,9 @@
 package saturno.piano
 
+import java.io.Serializable;
 
-class Target {
+
+class Target implements Serializable{
 	Integer id
 	Double valore
 	String prettyValue
