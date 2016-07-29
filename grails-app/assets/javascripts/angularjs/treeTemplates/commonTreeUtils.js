@@ -153,11 +153,11 @@ function explodeNodeToArray(rootNode, nodeArray, onlyOpen) {
 
 }
 
-// numero massimo di nodi
-function maxNodeForLevel(rootNode) {
+// mappa livello,numero nodi
+function maxNodeForLevel(rootNode,onlyOpen) {
 	// divido per depth
 	var mappaNodi = {};
-	var nodi = nodiInArray(rootNode);
+	var nodi = nodiInArray(rootNode,onlyOpen);
 	console.log(nodi)
 	nodi.forEach(function(d) {
 
@@ -167,6 +167,22 @@ function maxNodeForLevel(rootNode) {
 		mappaNodi[d.depth] = mappaNodi[d.depth] + 1;
 	});
 	return mappaNodi
+}
+
+//numero massimo di nodi trovato in un livello
+function maxNodeInLevel(rootNode,onlyOpen){
+	var maxNode =0;
+	var mappaNodi = maxNodeForLevel(rootNode,onlyOpen)
+	
+	Object.keys(mappaNodi).forEach(function(d){
+		if(mappaNodi[d]>maxNode){
+			maxNode=mappaNodi[d]
+		}
+	});
+	return maxNode;
+	
+	
+	
 }
 
 function allChild(rootNode, onlyOpen) {
@@ -188,6 +204,8 @@ function allChild(rootNode, onlyOpen) {
 	return figli;
 
 }
+
+
 
 function setCorrectWidth(rootNode) {
 	// tutti i soli nodi aperti in array
@@ -211,18 +229,13 @@ function setCorrectWidth(rootNode) {
 			maxWidth = d.x;
 		}
 
-	})
-	var numeroMassimoNodiInLivello=4 //da calcolare
+	});
+	var numeroMassimoNodiInLivello=maxNodeInLevel(rootNode);
 	var width = (Math.abs(minWidth) + Math.abs(maxWidth)) + rectW * numeroMassimoNodiInLivello
 	// modifico la width dell'svg
-	
-	
-	
-	
-
 		$('#treeSvg').attr("width", width)
 		$('#svgG').attr("transform",
-				"translate(" + (width / 2) + "," + 20 + ")")
+				"translate(" + ((width-rectW) / 2)+ "," + 20 + ")")
 	
 
 	return (Math.abs(minWidth) + Math.abs(maxWidth))

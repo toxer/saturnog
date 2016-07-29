@@ -4,6 +4,7 @@
 <asset:javascript src="angularjs/contextMenu/3d-context-menu.js" />
 <asset:javascript src="angularjs/treeTemplates/commonTreeUtils.js" />
 <asset:javascript src="angularjs/treeTemplates/templateAlberoBlocchi.js" />
+
 <style>
 
 .node rect {

@@ -43,7 +43,7 @@ function initTemplate(_root, _treeController) {
 	root = _root;
 	root.children.forEach(collapse);
 	// ricavo la massima ampiezza disponibile
-	setCorrectWidth(root);
+	
 	
 	
 	var maxIpoteticalWidth = (countAllNode(root) > 0 ? countAllNode(root)
@@ -57,7 +57,7 @@ function initTemplate(_root, _treeController) {
 							redraw)).append("g").attr("transform",
 					"translate(" + (maxIpoteticalWidth / 2) + "," + 20 + ")").attr("id","svgG");
 	// zm.translate([ 350, 20 ]);
-
+	setCorrectWidth(root);
 	root.x0 = 0;
 	root.y0 = height / 2;
 	
