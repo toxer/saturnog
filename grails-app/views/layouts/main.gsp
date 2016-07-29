@@ -34,6 +34,9 @@ sessionStorage.context = '${request.contextPath}';
 <g:layoutHead />
 <%-- Finestra di riecerca della camera --%>
 
+<%--CkEditor  --%>
+<asset:javascript src="ng-ckeditor/libs/ckeditor/ckeditor.js"></asset:javascript>
+<asset:javascript src="ng-ckeditor/ng-ckeditor.js"></asset:javascript>
 
 
 

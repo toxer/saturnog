@@ -29,10 +29,10 @@ path.link {
 </style>
 
 
-<div ng-controller="TreeController as tc" >
-	<button class="btn btn-danger" ng-click="tc.findNodeTest()">Trova nodo</button>
-		<div style="max-height:none">
-			<div id="treeBody"></div>
-		</div>
-	
+<div ng-controller="TreeController as tc">
+	<g:render template="/dialogs/aggiungiModificaObiettivo" />
+	<div style="max-height: none">
+		<div id="treeBody"></div>
+	</div>
+
 </div>

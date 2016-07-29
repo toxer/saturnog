@@ -3,7 +3,7 @@ var contextMenuItems = [ {
 	action : function(elm, d, i) {
 		// utilizzo le funzioni del TreeController passato in fase di init
 
-		treeController.addChild(d.idNodo);
+		treeController.addChild(d.idNodo,d.name);
 
 	},
 	disabled : false
@@ -158,7 +158,6 @@ function maxNodeForLevel(rootNode,onlyOpen) {
 	// divido per depth
 	var mappaNodi = {};
 	var nodi = nodiInArray(rootNode,onlyOpen);
-	console.log(nodi)
 	nodi.forEach(function(d) {
 
 		if (mappaNodi[d.depth] == undefined) {
@@ -214,8 +213,6 @@ function setCorrectWidth(rootNode) {
 	var maxWidth = undefined
 
 	nodiAperti.forEach(function(d) {
-		console.log(d.name+" "+d.x+" "+d.x0)
-
 		if (minWidth == undefined) {
 			minWidth = d.x
 			maxWidth = d.x + rectW

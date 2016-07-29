@@ -1,9 +1,15 @@
-var myApp = angular.module('myApp', ['CambiaAnno','Pianificazione']);
+var myApp = angular.module('myApp', ['CambiaAnno','Pianificazione','ngCkeditor']);
 
 // servizio invocato ogni qual volta si aggiornane le
 // caratteristiche dell'untete: ente in uso, anno, versione
 
 myApp.run(function($rootScope) {
+	//setup editor options
+	$rootScope.editorOptions = {
+	 language: 'it'
+	 //,uiColor: '#000000'
+	};
+	
 	// torna alla pagina principale
 	$rootScope.goToMain = function() {
 		window.location = location.protocol + "//" + location.host + "/"
