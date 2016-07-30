@@ -1,6 +1,5 @@
 var treeController = undefined
 
-
 function closeContextMenu() {
 	d3.select('.context-menu').remove();
 }
@@ -15,7 +14,7 @@ var margin = {
 		- margin.bottom;
 
 var root = undefined
-var i = 0, duration = 750, rectW = 120, rectH = 60, nodeDepth = 180;
+var i = 0, duration = 750, rectW = 180, rectH = 100, nodeDepth = 180;
 
 var tree = d3.layout.tree().nodeSize([ rectW + 10, rectH + 10 ]);
 var diagonal = d3.svg.diagonal().projection(function(d) {
@@ -42,57 +41,43 @@ function initTemplate(_root, _treeController) {
 	treeController = _treeController
 	root = _root;
 	root.children.forEach(collapse);
-	
-	console.log(_root)
-	
-	// ricavo la massima ampiezza disponibile
-	
-	
-	
-	var maxIpoteticalWidth = (countAllNode(root) > 0 ? countAllNode(root)
-			: 1)
-			* (rectW * 2 + 60);
-	
 
-//	svg = d3.select('#treeBody').append("svg")
-//			.attr("width", maxIpoteticalWidth).attr("height", 3000).attr("id","treeSvg").call(
-//					zm = d3.behavior.zoom().scaleExtent([ 1, 3 ]).on("zoom",
-//							redraw)).append("g").attr("transform",
-//					"translate(" + (maxIpoteticalWidth / 2) + "," + 20 + ")").attr("id","svgG");
-	
+	console.log(_root)
+
+	// ricavo la massima ampiezza disponibile
+
+	var maxIpoteticalWidth = (countAllNode(root) > 0 ? countAllNode(root) : 1)
+			* (rectW * 2 + 60);
+
+	// svg = d3.select('#treeBody').append("svg")
+	// .attr("width", maxIpoteticalWidth).attr("height",
+	// 3000).attr("id","treeSvg").call(
+	// zm = d3.behavior.zoom().scaleExtent([ 1, 3 ]).on("zoom",
+	// redraw)).append("g").attr("transform",
+	// "translate(" + (maxIpoteticalWidth / 2) + "," + 20 +
+	// ")").attr("id","svgG");
+
 	svg = d3.select('#treeBody').append("svg")
-	.attr("width", maxIpoteticalWidth).attr("height", 3000).attr("id","treeSvg").append("g").attr("cx",
-			(maxIpoteticalWidth / 2)).attr('cy',20).attr("id","svgG");
+			.attr("width", maxIpoteticalWidth).attr("height", 3000).attr("id",
+					"treeSvg").append("g").attr("cx", (maxIpoteticalWidth / 2))
+			.attr('cy', 20).attr("id", "svgG");
 	// zm.translate([ 350, 20 ]);
 	setCorrectWidth(root);
 	root.x0 = 0;
 	root.y0 = height / 2;
-	
 
-	
-
-	update(root,0);
+	update(root, 0);
 	// forzo lo scroll al centro orizzontalmente basandomi sul primo nodo
 
-	if (root.children != undefined && root.children.length > 0) {
-
-		$('#treeContainer').scrollLeft(
-				(maxIpoteticalWidth / 2) - (Math.abs(root.children[0].x0))
-						+ (rectW + 20))
-	} else {
-		// $('#treeContainer').scrollLeft((maxIpoteticalWidth/2)-(Math.abs(root.x0))+(rectW+20))
-	}
+	var xToGo = (($('#treeSvg').attr("width")) / 3);
+	$('#treeContainer').scrollLeft(xToGo)
 
 }
 
+function update(source, now) {
 
+	durationTransform = now != undefined ? now : duration
 
-
-
-function update(source,now) {
-
-	durationTransform = now!=undefined?now:duration
-	
 	// Compute the new tree layout.
 	var nodes = tree.nodes(root).reverse(), links = tree.links(nodes);
 
@@ -107,10 +92,11 @@ function update(source,now) {
 	});
 
 	// Enter any new nodes at the parent's previous position.
-	var nodeEnter = node.enter().append("g").attr("class", "node").attr(
-			"transform", function(d) {
-				return "translate(" + source.x0 + "," + source.y0 + ")";
-			}).on("click", click);
+	var nodeEnter = node.enter().append("g").attr("class", function(d) {
+		return "node level"+d.depth;
+	}).attr("transform", function(d) {
+		return "translate(" + source.x0 + "," + source.y0 + ")";
+	}).on("click", click);
 
 	// nodeEnter.on("contextmenu", function() {
 	// contextMenu(d3.mouse(this)[0], d3.mouse(this)[1], this)
@@ -118,25 +104,41 @@ function update(source,now) {
 
 	nodeEnter.on("contextmenu", d3.contextMenu(contextMenuItems));
 
-	nodeEnter.append("rect").attr("width", rectW).attr("height", rectH).attr(
-			"stroke", "black").attr("stroke-width", 1).style("fill",
-			function(d) {
-				return d._children ? "lightsteelblue" : "#fff";
-			});
+	// nodeEnter.append("rect").attr("width", rectW).attr("height", rectH).attr(
+	// "stroke", "black").attr("stroke-width", 1).style("fill",
+	// function(d) {
+	// return d._children ? "lightsteelblue" : "#fff";
+	// });
 
-	nodeEnter.append("text").attr("x", rectW / 2).attr("y", rectH / 2).attr(
+	// nodeEnter.append("text").attr("x", rectW / 2).attr("y", rectH / 2).attr(
+	// "dy", ".35em").attr("text-anchor", "middle").text(function(d) {
+	// return d.name;
+	// });
+
+	// creazione del nodo
+
+	var nodeTitle = nodeEnter.append("rect").attr("width", rectW).attr(
+			"height", 2 * rectH / 3)
+	var nodeCode = nodeEnter.append("rect").attr("width", rectW).attr("height",
+			rectH / 3)
+	nodeEnter.append("text").attr("x", rectW / 2).attr("y", rectH / 6).attr(
 			"dy", ".35em").attr("text-anchor", "middle").text(function(d) {
-		return d.name;
+		return d.codiceCamera;
 	});
+
+	nodeEnter.append("text").attr("text-anchor", "middle").attr("x", rectW / 2)
+			.attr("y", rectH / 3 + 10).attr("dy", ".35em").attr("text-anchor",
+					"middle").text(function(d) {
+				return d.name;
+			});
 
 	// applico l'id del nodo come attribute
 	nodeEnter.attr("id", function(d) {
 		return d.id
 	})
 
-	
-	var nodeUpdate = node.transition().duration(durationTransform).attr("transform",
-			function(d) {
+	var nodeUpdate = node.transition().duration(durationTransform).attr(
+			"transform", function(d) {
 				return "translate(" + d.x + "," + d.y + ")";
 			});
 
@@ -201,7 +203,7 @@ function update(source,now) {
 		d.x0 = d.x;
 		d.y0 = d.y;
 	});
-	
+
 	setCorrectWidth(root)
 
 }
@@ -222,19 +224,27 @@ function click(d) {
 		d._children = d.children;
 		d.children = null;
 		// yToGo è la posizione del padre
-		yToGo = d.y0 - 4 * rectH + nodeDepth
+		yToGo = d.y0 - 2 * rectH + nodeDepth
 
 	} else if (d._children) {
 
 		// apertura nodo
 		// yToGo è la posizione del padre + depth
-		yToGo = d.y0 + nodeDepth - 4 * rectH
+		yToGo = d.y0 + nodeDepth - 2 * rectH
 		d.children = d._children;
 		d._children = null;
 
 	}
+
 	update(d);
-	$('#treeContainer').scrollTop(yToGo)
+
+	var width = $('#treeSvg').attr("width");
+	console.log(width)
+	var xToGo = d.x + (($('#treeSvg').attr("width")) / 4);
+	console.log(xToGo)
+
+	$('#treeContainer').scrollTop(yToGo);
+	$('#treeContainer').scrollLeft(xToGo);
 
 }
 

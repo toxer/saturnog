@@ -15,6 +15,14 @@
   stroke-width: 1.5px;
 }
 
+.node.level0 {
+  cursor: pointer;
+  fill: red!important;
+  fill-opacity: .5;
+  stroke: red;
+  stroke-width: none;
+}
+
 .node text {
   font: 10px sans-serif;
   pointer-events: none;
@@ -32,6 +40,7 @@ path.link {
 <div ng-controller="TreeController as tc">
 	<g:render template="/dialogs/aggiungiModificaObiettivo" />
 	<div style="max-height: none">
+		
 		<div id="treeBody"></div>
 	</div>
 

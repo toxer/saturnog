@@ -49,7 +49,7 @@ tree
 							}
 
 							// aggiunta nodi all'albero
-							vm.addChild = function(idNodoPadre, titoloNodoPadre) {
+							vm.addNode = function(idNodoPadre, titoloNodoPadre) {
 
 								$('#creaModificaObiettivo').modal('toggle');
 								if (vm.obiettivo == undefined) {

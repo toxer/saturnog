@@ -25,7 +25,6 @@
 						ng-click="pc.creaNuovaVersioneOpenDialog();">Crea nuova
 						versione</button>
 						<a class="btn btn-warning" ui-sref="navigazione">Test</a>
-						<a class="btn btn-danger" ng-click="pc.datiDiTest()">Inserimento dati finti</a>
 						<a class="btn btn-danger" ng-click="pc.clonaVersione()">Clona questa versione</a>
 				</div>
 				<div class="col-xs-2">

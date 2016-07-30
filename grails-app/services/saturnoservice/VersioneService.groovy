@@ -164,10 +164,16 @@ class VersioneService {
 
 		}
 		obj.name=o.nome;
+		if (obj.name!=null && obj.name.length()>35){
+			//FIXME usare tspan
+			obj.name = obj.name.substring(0,35)+"..."
+		}
 		if (o.figli != null && o.figli.size()>0){
 			obj.children = new JSONArray();
 		}
 		obj.idNodo = o.id
+		obj.codiceCamera=o.codiceCamera
+		
 
 		for (Obiettivo c : o.figli){
 			JSONObject objc = new JSONObject()

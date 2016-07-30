@@ -2,8 +2,7 @@ var contextMenuItems = [ {
 	title : 'Aggiungi un figlio',
 	action : function(elm, d, i) {
 		// utilizzo le funzioni del TreeController passato in fase di init
-
-		treeController.addChild(d.idNodo,d.name);
+		treeController.addNode(d.idNodo, d.name);
 
 	},
 	disabled : false
@@ -12,9 +11,11 @@ var contextMenuItems = [ {
 	title : 'Aggiungi un fratello',
 	action : function(elm, d, i) {
 		if (d.idNodo == undefined) {
-			
+
 		} else {
-			treeController.addSiblings(d.idNodo);
+			if (d.parent != undefined) {
+				treeController.addNode(d.parent.idNodo,d.parent.name);
+			}
 		}
 	},
 	disabled : false
@@ -73,13 +74,13 @@ function findById(idNodo, nodoRadice, open) {
 
 }
 
-function openNodeById(idNodo,duration) {
+function openNodeById(idNodo, duration) {
 
 	var nodo = undefined
 	if (idNodo != undefined && root != undefined) {
 		nodo = findById(idNodo, root, true);
 		if (nodo != undefined) {
-			update(root,duration)
+			update(root, duration)
 			// scrolla fino al nodo
 
 			$('#treeContainer').scrollTop(nodo.y0 - nodeDepth)
@@ -91,6 +92,8 @@ function openNodeById(idNodo,duration) {
 	}
 
 }
+
+
 
 function openNode(nodo) {
 	if (nodo == undefined) {
@@ -154,10 +157,10 @@ function explodeNodeToArray(rootNode, nodeArray, onlyOpen) {
 }
 
 // mappa livello,numero nodi
-function maxNodeForLevel(rootNode,onlyOpen) {
+function maxNodeForLevel(rootNode, onlyOpen) {
 	// divido per depth
 	var mappaNodi = {};
-	var nodi = nodiInArray(rootNode,onlyOpen);
+	var nodi = nodiInArray(rootNode, onlyOpen);
 	nodi.forEach(function(d) {
 
 		if (mappaNodi[d.depth] == undefined) {
@@ -168,20 +171,18 @@ function maxNodeForLevel(rootNode,onlyOpen) {
 	return mappaNodi
 }
 
-//numero massimo di nodi trovato in un livello
-function maxNodeInLevel(rootNode,onlyOpen){
-	var maxNode =0;
-	var mappaNodi = maxNodeForLevel(rootNode,onlyOpen)
-	
-	Object.keys(mappaNodi).forEach(function(d){
-		if(mappaNodi[d]>maxNode){
-			maxNode=mappaNodi[d]
+// numero massimo di nodi trovato in un livello
+function maxNodeInLevel(rootNode, onlyOpen) {
+	var maxNode = 0;
+	var mappaNodi = maxNodeForLevel(rootNode, onlyOpen)
+
+	Object.keys(mappaNodi).forEach(function(d) {
+		if (mappaNodi[d] > maxNode) {
+			maxNode = mappaNodi[d]
 		}
 	});
 	return maxNode;
-	
-	
-	
+
 }
 
 function allChild(rootNode, onlyOpen) {
@@ -204,8 +205,6 @@ function allChild(rootNode, onlyOpen) {
 
 }
 
-
-
 function setCorrectWidth(rootNode) {
 	// tutti i soli nodi aperti in array
 	var nodiAperti = nodiInArray(rootNode, true)
@@ -227,13 +226,13 @@ function setCorrectWidth(rootNode) {
 		}
 
 	});
-	var numeroMassimoNodiInLivello=maxNodeInLevel(rootNode);
-	var width = (Math.abs(minWidth) + Math.abs(maxWidth)) + rectW * numeroMassimoNodiInLivello
+	var numeroMassimoNodiInLivello = maxNodeInLevel(rootNode);
+	var width = (Math.abs(minWidth) + Math.abs(maxWidth)) + rectW
+			* numeroMassimoNodiInLivello
 	// modifico la width dell'svg
-		$('#treeSvg').attr("width", width)
-		$('#svgG').attr("transform",
-				"translate(" + ((width-rectW) / 2)+ "," + 20 + ")")
-	
+	$('#treeSvg').attr("width", width)
+	$('#svgG').attr("transform",
+			"translate(" + ((width - rectW) / 2) + "," + 20 + ")")
 
 	return (Math.abs(minWidth) + Math.abs(maxWidth))
 }
