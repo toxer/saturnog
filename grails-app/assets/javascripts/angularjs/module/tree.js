@@ -32,19 +32,65 @@ tree
 								// renderizza il piano
 								// TODO logica svg qui
 
+								// prima elimino eventuali svg presenti
+								$('#treeBody').empty();
+
+								
+								initTemplate(piano, vm)
+								if (vm.obiettivo != undefined && vm.obiettivo.id != undefined){
+									// mi posizione con la
+									// funzione di ricerca sul
+									// nodo
+									openNodeById(vm.obiettivo.id,0);
+								}
+
 								// initTemplate(piano,vm,40);
-								initTemplate(piano, vm);
+
 							}
 
 							// aggiunta nodi all'albero
 							vm.addChild = function(idNodoPadre, titoloNodoPadre) {
 
 								$('#creaModificaObiettivo').modal('toggle');
-								vm.obiettivo = new Object();
+								if (vm.obiettivo == undefined) {
+									vm.obiettivo = new Object();
+								}
 								vm.obiettivo.idParent = idNodoPadre
 								vm.obiettivo.titoloParent = titoloNodoPadre
+
 								$scope.$apply()
 
+							}
+
+							vm.saveNodo = function() {
+								console.log(vm.obiettivo);
+								$('#creaModificaObiettivo').modal('hide');
+
+								$http
+										.post(
+												sessionStorage.context
+														+ '/pianificazione/aggiungiNodo',
+												{
+													'tabId' : vm.tabId,
+													'idVersione' : $scope.pianoCorrente.id,
+													'obiettivo' : vm.obiettivo
+												})
+										.success(
+												function(response, status,
+														headers, config) {
+
+													vm.obiettivo.id = response.nuovoId
+													$scope.pianoJson = response.piano
+
+													
+												}).error(
+												function(response, status,
+														headers, config) {
+													alert("saveNodo "
+															+ response)
+												});
+
+								vm.obiettivo = undefined
 							}
 
 							vm.addSibling = function(idNodo) {
@@ -52,9 +98,7 @@ tree
 										+ idNodo)
 							}
 
-							vm.findNodeTest = function() {
-								openNodeById(41, true);
-							}
+							
 
 							vm.apriNuovoObiettivo = function() {
 
@@ -73,4 +117,3 @@ tree
 							}
 
 						} ]);
-

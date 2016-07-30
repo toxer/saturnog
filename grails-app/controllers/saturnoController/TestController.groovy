@@ -14,6 +14,11 @@ class TestController {
 	def versioneService
 	
 	
+	def prova(){
+		def o = Obiettivo.findAll().get(0);
+		render o as JSON
+	}
+	
 	def testClonazione(){
 		if (!utilsService.testTabId()){
 			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'

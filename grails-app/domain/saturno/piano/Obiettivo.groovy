@@ -45,5 +45,8 @@ class Obiettivo implements Serializable{
 		descrizione type: 'text'
 		nome type:'text'
 		note type:'text'
+		
+		
+		
 	}
 }

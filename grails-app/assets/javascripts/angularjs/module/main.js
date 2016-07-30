@@ -189,7 +189,7 @@ myApp
 									serviceUtils.getEnti($scope)
 								}).error(
 								function(data, status, headers, config) {
-									alert(data);
+									alert("fuction selectEnte"+data);
 								});
 					} else {
 						// controllo se ho già un utente in session

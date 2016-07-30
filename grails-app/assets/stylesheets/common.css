@@ -13,13 +13,13 @@
 	}
 }
 
-@media ( max-height :500px) {
+@media ( max-height :768px) {
 	.pre-scrollable {
 		max-height: 340px;
 	}
 }
 
-@media ( min-height :500px) {
+@media ( min-height :768px) {
 	.pre-scrollable {
 		max-height: 540px;
 	}

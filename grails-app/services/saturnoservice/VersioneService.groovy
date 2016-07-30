@@ -150,6 +150,10 @@ class VersioneService {
 			JSONObject obj = new JSONObject()
 			versione.children.add(stampaObiettivo(o,null));
 		}
+
+		versione.children=versione.children?.sort { a,b -> a.name <=> b.name}
+		
+
 		return versione
 
 	}
@@ -170,6 +174,11 @@ class VersioneService {
 			stampaObiettivo (c,objc)
 			obj.children.add(objc);
 		}
+
+		//ordinamento per nome
+		
+		
+		obj.children=obj.children?.sort { a,b -> a.name <=> b.name}
 		return obj;
 	}
 

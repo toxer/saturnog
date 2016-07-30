@@ -12,7 +12,7 @@ var contextMenuItems = [ {
 	title : 'Aggiungi un fratello',
 	action : function(elm, d, i) {
 		if (d.idNodo == undefined) {
-
+			
 		} else {
 			treeController.addSiblings(d.idNodo);
 		}
@@ -73,13 +73,13 @@ function findById(idNodo, nodoRadice, open) {
 
 }
 
-function openNodeById(idNodo) {
+function openNodeById(idNodo,duration) {
 
 	var nodo = undefined
 	if (idNodo != undefined && root != undefined) {
 		nodo = findById(idNodo, root, true);
 		if (nodo != undefined) {
-			update(root)
+			update(root,duration)
 			// scrolla fino al nodo
 
 			$('#treeContainer').scrollTop(nodo.y0 - nodeDepth)

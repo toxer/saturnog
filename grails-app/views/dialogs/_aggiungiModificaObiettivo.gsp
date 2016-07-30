@@ -25,7 +25,13 @@
 							class="text-muted">Id obiettivo padre</small>
 					</fieldset>
 					<fieldset class="form-group">
-						<label for="annoVersione">Titolo dell'obiettivo</label> <input
+						<label for="codiceCamera">Codice dell'obiettivo</label> <input
+							type="text" class="form-control" id="codiceCamera"
+							ng-model="tc.obiettivo.codiceCamera" required> <small
+							class="text-muted">Codice identificativo dell'obiettivo</small>
+					</fieldset>
+					<fieldset class="form-group">
+						<label for="titoloObiettivo">Titolo dell'obiettivo</label> <input
 							type="text" class="form-control" id="titoloObiettivo"
 							ng-model="tc.obiettivo.titolo" required> <small
 							class="text-muted">Titolo sintetico dell'obiettivo</small>
@@ -38,7 +44,7 @@
 			</div>
 			<div id="modalFooter" class="modal-footer input-group-addon">
 				<button class="btn btn-success"
-					ng-click="tc.aggiungiNuovoObiettivo()">OK</button>
+					ng-click="tc.saveNodo()">OK</button>
 				<button class="btn btn-danger" data-dismiss="modal">Annulla</button>
 
 			</div>

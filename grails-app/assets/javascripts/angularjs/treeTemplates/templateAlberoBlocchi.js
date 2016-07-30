@@ -42,6 +42,9 @@ function initTemplate(_root, _treeController) {
 	treeController = _treeController
 	root = _root;
 	root.children.forEach(collapse);
+	
+	console.log(_root)
+	
 	// ricavo la massima ampiezza disponibile
 	
 	
@@ -51,11 +54,15 @@ function initTemplate(_root, _treeController) {
 			* (rectW * 2 + 60);
 	
 
+//	svg = d3.select('#treeBody').append("svg")
+//			.attr("width", maxIpoteticalWidth).attr("height", 3000).attr("id","treeSvg").call(
+//					zm = d3.behavior.zoom().scaleExtent([ 1, 3 ]).on("zoom",
+//							redraw)).append("g").attr("transform",
+//					"translate(" + (maxIpoteticalWidth / 2) + "," + 20 + ")").attr("id","svgG");
+	
 	svg = d3.select('#treeBody').append("svg")
-			.attr("width", maxIpoteticalWidth).attr("height", 3000).attr("id","treeSvg").call(
-					zm = d3.behavior.zoom().scaleExtent([ 1, 3 ]).on("zoom",
-							redraw)).append("g").attr("transform",
-					"translate(" + (maxIpoteticalWidth / 2) + "," + 20 + ")").attr("id","svgG");
+	.attr("width", maxIpoteticalWidth).attr("height", 3000).attr("id","treeSvg").append("g").attr("cx",
+			(maxIpoteticalWidth / 2)).attr('cy',20).attr("id","svgG");
 	// zm.translate([ 350, 20 ]);
 	setCorrectWidth(root);
 	root.x0 = 0;
@@ -64,7 +71,7 @@ function initTemplate(_root, _treeController) {
 
 	
 
-	update(root);
+	update(root,0);
 	// forzo lo scroll al centro orizzontalmente basandomi sul primo nodo
 
 	if (root.children != undefined && root.children.length > 0) {
@@ -82,8 +89,10 @@ function initTemplate(_root, _treeController) {
 
 
 
-function update(source) {
+function update(source,now) {
 
+	durationTransform = now!=undefined?now:duration
+	
 	// Compute the new tree layout.
 	var nodes = tree.nodes(root).reverse(), links = tree.links(nodes);
 
@@ -125,8 +134,8 @@ function update(source) {
 		return d.id
 	})
 
-	// Transition nodes to their new position.
-	var nodeUpdate = node.transition().duration(duration).attr("transform",
+	
+	var nodeUpdate = node.transition().duration(durationTransform).attr("transform",
 			function(d) {
 				return "translate(" + d.x + "," + d.y + ")";
 			});
@@ -140,7 +149,7 @@ function update(source) {
 	nodeUpdate.select("text").style("fill-opacity", 1);
 
 	// Transition exiting nodes to the parent's new position.
-	var nodeExit = node.exit().transition().duration(duration).attr(
+	var nodeExit = node.exit().transition().duration(durationTransform).attr(
 			"transform", function(d) {
 				return "translate(" + source.x + "," + source.y + ")";
 			}).remove();
@@ -171,10 +180,10 @@ function update(source) {
 			});
 
 	// Transition links to their new position.
-	link.transition().duration(duration).attr("d", diagonal);
+	link.transition().duration(durationTransform).attr("d", diagonal);
 
 	// Transition exiting nodes to the parent's new position.
-	link.exit().transition().duration(duration).attr("d", function(d) {
+	link.exit().transition().duration(durationTransform).attr("d", function(d) {
 		var o = {
 			x : source.x,
 			y : source.y
