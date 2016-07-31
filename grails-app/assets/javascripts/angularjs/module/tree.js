@@ -14,19 +14,31 @@ tree
 							vm.tabId = sessionStorage.tabId;
 							// metodo di visualizzazione dell'albero corrente
 							// basato sul watch della variabile di scope
-							
-							//va usato lo scope del controller superiore, altrimenti, alla prima modifica
-							//fatta sulla variabile pianoJson il controller superiore perde la variabile
-							//e quindi tutti i cambia versione non funzionano più
-							$scope.pianificazioneControllerScope.$watch('pianoJson', function() {
 
-								if ($scope.pianoCorrente != undefined) {
-									vm.renderPiano($scope.pianificazioneControllerScope.pianoJson)
-								} else {
-									vm.tree = ""
-								}
+							// va usato lo scope del controller superiore,
+							// altrimenti, alla prima modifica (es. aggiunta
+							// nodo)
+							// fatta sulla variabile pianoJson da TreeController
+							// il controller
+							// superiore (PianificazioneController) perde la
+							// variabile (che passa allo
+							// scope di TreeController)
+							// e quindi tutti i cambia versione non funzionano
+							// più perchè fatti su una variabile diversa da 
+							//quella in watch qui
+							$scope.pianificazioneControllerScope
+									.$watch(
+											'pianoJson',
+											function() {
 
-							})
+												if ($scope.pianoCorrente != undefined) {
+													vm
+															.renderPiano($scope.pianificazioneControllerScope.pianoJson)
+												} else {
+													vm.tree = ""
+												}
+
+											})
 
 							// funzione che renderizza il piano della
 							// performance
@@ -38,13 +50,13 @@ tree
 								// prima elimino eventuali svg presenti
 								$('#treeBody').empty();
 
-								
 								initTemplate(piano, vm)
-								if (vm.obiettivo != undefined && vm.obiettivo.id != undefined){
+								if (vm.obiettivo != undefined
+										&& vm.obiettivo.id != undefined) {
 									// mi posizione con la
 									// funzione di ricerca sul
 									// nodo
-									openNodeById(vm.obiettivo.id,0);
+									openNodeById(vm.obiettivo.id, 0);
 								}
 
 								// initTemplate(piano,vm,40);
@@ -81,13 +93,11 @@ tree
 										.success(
 												function(response, status,
 														headers, config) {
-													
 
 													vm.obiettivo.id = response.nuovoId
 													$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
-													$scope.pianificazioneControllerScope.pianoCorrente=response.piano
+													$scope.pianificazioneControllerScope.pianoCorrente = response.piano
 
-													
 												}).error(
 												function(response, status,
 														headers, config) {
@@ -102,8 +112,6 @@ tree
 								alert("Richiesta di aggiunta fratello al nodo con id "
 										+ idNodo)
 							}
-
-							
 
 							vm.apriNuovoObiettivo = function() {
 

@@ -17,7 +17,15 @@ class PianificazioneController {
 	def index(){
 	}
 
-	def tree(){
+	def treeStandard(){
+	}
+	
+	def bsc(){
+		
+	}
+	
+	def performance(){
+		
 	}
 
 	def leftMenu(){

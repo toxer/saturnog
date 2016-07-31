@@ -1,0 +1,1 @@
+<div><h1><label class="label label-danger">Performance mode</label></h1></div>

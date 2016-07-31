@@ -18,16 +18,20 @@
 		<g:render template="/dialogs/eliminaVersione" />
 		<div class="container-fluid menu" id="pianificazioneMenu">
 			<div class="row-fluid">
-				<div class="col-xs-10">
+				<div class="col-xs-3" align="left">
 					<button class="btn btn-primary"
 						ng-click="pc.scegliVersioneOpenDialog()">Cambia versione</button>
 					<button class="btn btn-warning"
 						ng-click="pc.creaNuovaVersioneOpenDialog();">Crea nuova
 						versione</button>
-						<a class="btn btn-warning" ui-sref="alberoStandard">Test</a>
-						<a class="btn btn-danger" ng-click="pc.clonaVersione()">Clona questa versione</a>
+<%--						<a class="btn btn-danger" ng-click="pc.clonaVersione()">Clona questa versione</a>--%>
 				</div>
-				<div class="col-xs-2">
+				<div class="col-xs-6" align="center">
+				<a class="btn btn-success" ui-sref="alberoStandard">Modalità standard</a>
+				<a class="btn btn-success" ui-sref="bsc">Modalità bsc</a>
+				<a class="btn btn-success" ui-sref="performance">Modalità performance</a>
+				</div>
+				<div class="col-xs-3" align="right">
 					<button class="btn btn-danger" ng-click="pc.eliminaVersione();">Elimina
 						questa versione</button>
 				</div>

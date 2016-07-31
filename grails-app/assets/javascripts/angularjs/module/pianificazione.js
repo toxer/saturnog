@@ -21,7 +21,33 @@ pianificazione.config([ '$stateProvider', function($stateProvider) {
 		views : {
 			'mainView' : {
 				// template: "<div>Test</div>"
-				templateUrl : "/saturno/pianificazione/tree"
+				templateUrl : "/saturno/pianificazione/treeStandard"
+			// add controller
+			}
+
+		}
+	})
+	.state('bsc',{
+		// risponde all'url /pianificazione/index/#/prova
+		url : 'standard',
+
+		views : {
+			'mainView' : {
+				// template: "<div>Test</div>"
+				templateUrl : "/saturno/pianificazione/bsc"
+			// add controller
+			}
+
+		}
+	})
+	.state('performance',{
+		// risponde all'url /pianificazione/index/#/prova
+		url : 'standard',
+
+		views : {
+			'mainView' : {
+				// template: "<div>Test</div>"
+				templateUrl : "/saturno/pianificazione/performance"
 			// add controller
 			}
 
@@ -33,9 +59,10 @@ pianificazione.config([ '$stateProvider', function($stateProvider) {
 
 pianificazione.controller('PianificazioneController', [
 		'$scope',
+		'$state',
 		'$http',
 		'serviceUtils',
-		function($scope, $http, serviceUtils) {
+		function($scope,$state, $http, serviceUtils) {
 			
 			var vm = this
 			vm.tabId = sessionStorage.tabId;
@@ -128,6 +155,10 @@ pianificazione.controller('PianificazioneController', [
 										+ vm.pianoCorrente.nomeVersione)
 								alert("Nuova versione creata "
 										+ vm.pianoCorrente.nomeVersione)
+										
+								//vado in noTree
+									$state.go('default')		
+								
 							}).error(
 							function(response, status, headers, config) {
 								alert(response)
@@ -166,8 +197,7 @@ pianificazione.controller('PianificazioneController', [
 
 				// aggiorno la variabile di scope che è in watch su
 				// TreeController
-				console.log("Piano corrente")
-				console.log($scope.pianoCorrente)
+			
 				$scope.pianoCorrente = vm.pianoCorrente;
 				$('#scegliVersioneDialog').modal('toggle');
 
