@@ -14,11 +14,14 @@ tree
 							vm.tabId = sessionStorage.tabId;
 							// metodo di visualizzazione dell'albero corrente
 							// basato sul watch della variabile di scope
-
-							$scope.$watch('pianoJson', function() {
+							
+							//va usato lo scope del controller superiore, altrimenti, alla prima modifica
+							//fatta sulla variabile pianoJson il controller superiore perde la variabile
+							//e quindi tutti i cambia versione non funzionano più
+							$scope.pianificazioneControllerScope.$watch('pianoJson', function() {
 
 								if ($scope.pianoCorrente != undefined) {
-									vm.renderPiano($scope.pianoJson)
+									vm.renderPiano($scope.pianificazioneControllerScope.pianoJson)
 								} else {
 									vm.tree = ""
 								}
@@ -63,7 +66,7 @@ tree
 							}
 
 							vm.saveNodo = function() {
-								console.log(vm.obiettivo);
+								console.log($scope.pianoCorrente);
 								$('#creaModificaObiettivo').modal('hide');
 
 								$http
@@ -78,9 +81,11 @@ tree
 										.success(
 												function(response, status,
 														headers, config) {
+													
 
 													vm.obiettivo.id = response.nuovoId
-													$scope.pianoJson = response.piano
+													$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
+													$scope.pianificazioneControllerScope.pianoCorrente=response.piano
 
 													
 												}).error(

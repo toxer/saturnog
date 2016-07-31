@@ -23,6 +23,8 @@ class PianificazioneController {
 	def leftMenu(){
 	}
 
+	def noTree(){}
+
 	def testVersionExist(){
 
 		def userObject = utilsService.currentUserObject()
@@ -83,18 +85,31 @@ class PianificazioneController {
 			render status:500,text:'Id versione non trovato'
 			return;
 		}
+		
+		//conrollo che poteva causare errori perchè il settaggio dell'user object
+		//viene fatto asincronamente.
+		
+		//viene lasciato in fase di salvataggio dei dati
 
-		if (idVersione != userObject.versione){
-			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
-			return;
-		}
+//		if (idVersione != userObject.versione){
+//			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+//			return;
+//		}
 
 		Versione p = Versione.findById(idVersione)
 		if (p == null){
 			render status:500,text:'Versione non presente nel db'
 			return;
 		}
-		JSONObject pianoJson = versioneService.stampaPianoObiettiviCompleto(p);
+		JSONObject pianoJson;
+		try{
+			pianoJson = versioneService.stampaPianoObiettiviCompleto(p);
+		}
+		catch (Exception exc){
+			exc.printStackTrace();
+			render status:500,text:'Errore nella stampa dell\'albero'
+			return
+		}
 		render pianoJson as JSON
 
 
@@ -262,6 +277,10 @@ class PianificazioneController {
 			render status:500,text:'Versione non presente nel db'
 			return;
 		}
+		if (idVersione != userObject.versione){
+			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+			return;
+		}
 		def obiettivo = request.JSON?.obiettivo;
 		if (obiettivo == null){
 			render status:500,text:'Non inviato obiettivo'
@@ -297,7 +316,8 @@ class PianificazioneController {
 
 		JSONObject pianoJson = versioneService.stampaPianoObiettiviCompleto(obiettivoDominio.versione);
 		def resp = new JSONObject();
-		resp.piano = pianoJson;
+		resp.pianoJson = pianoJson;
+		resp.piano = obiettivoDominio.versione
 		resp.nuovoId = obiettivoDominio.id;
 
 		render resp as JSON

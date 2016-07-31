@@ -42,9 +42,10 @@ myApp.factory('httpSpinnerInterceptor', function($q,$rootScope) {
         return response;
       },
 
-     responseError: function(response) {
+     responseError: function(responseError) {
     	 $('#spinner').fadeOut('fast');
-        return responseError;
+    	 console.log(responseError)
+        return response;
       }
     };
   });
@@ -103,7 +104,7 @@ myApp.service('serviceUtils', function($http) {
 
 		}, function(response, status, headers, config) {
 			//alert(response.data);
-			return undefined
+			return response
 		});
 	}
 
@@ -202,6 +203,7 @@ myApp
 								.success(
 										function(response, status, headers,
 												config) {
+											console.log(status)
 											
 											if (response != undefined
 													&& !$
@@ -227,9 +229,7 @@ myApp
 												serviceUtils.getEnti($scope)
 
 											}
-										}).error(
-										function(response, status, headers,
-												config) {
+										}).error(function(response, status, headers, config) {
 											
 											alert("Tab id invalido");
 											sessionStorage.removeItem('tabId')

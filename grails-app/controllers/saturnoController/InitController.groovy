@@ -41,7 +41,7 @@ class InitController {
 	def getUserObject(){
 		
 		if (!utilsService.testTabId()){
-			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
 		}
 		def tabId = request.JSON.tabId;

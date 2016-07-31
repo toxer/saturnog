@@ -1,26 +1,33 @@
-var pianificazione = angular.module("Pianificazione", ['ui.router','Tree' ]);
-//view per la pagina di pianificazione
-pianificazione.config(['$stateProvider',function($stateProvider) {
-	$stateProvider.state('navigazione',{
-		//risponde all'url /pianificazione/index/#/prova
-		url:'/prova',		
+var pianificazione = angular.module("Pianificazione", [ 'ui.router', 'Tree' ]);
+// view per la pagina di pianificazione
+pianificazione.config([ '$stateProvider', function($stateProvider) {
+	$stateProvider.state('default', {
+		// risponde all'url /pianificazione/index/#/prova
+		url : '',
 
-		views:{
-			
-			'mainView':{
-				 //template: "<div>Test</div>"
-				 templateUrl:"/saturno/pianificazione/tree"
-				//add controller
-				
-				
+		views : {
+			'mainView' : {
+				// template: "<div>Test</div>"
+				templateUrl : "/saturno/pianificazione/noTree"
+			// add controller
 			}
-			
+
+		}
+	})
+	.state('alberoStandard',{
+		// risponde all'url /pianificazione/index/#/prova
+		url : 'standard',
+
+		views : {
+			'mainView' : {
+				// template: "<div>Test</div>"
+				templateUrl : "/saturno/pianificazione/tree"
+			// add controller
+			}
+
 		}
 	});
-}]);
-
-
-
+} ]);
 
 // servizio usato per comunicare con TreeController
 
@@ -29,9 +36,10 @@ pianificazione.controller('PianificazioneController', [
 		'$http',
 		'serviceUtils',
 		function($scope, $http, serviceUtils) {
-			console.log($scope)
+			
 			var vm = this
 			vm.tabId = sessionStorage.tabId;
+			$scope.pianificazioneControllerScope = $scope
 
 			// funzione che esegue il test per vedere se ho almeno una versione
 			// presente
@@ -158,25 +166,25 @@ pianificazione.controller('PianificazioneController', [
 
 				// aggiorno la variabile di scope che è in watch su
 				// TreeController
-				
+				console.log("Piano corrente")
+				console.log($scope.pianoCorrente)
 				$scope.pianoCorrente = vm.pianoCorrente;
 				$('#scegliVersioneDialog').modal('toggle');
-				
-				//renderizzo il piano completo
+
+				// renderizzo il piano completo
 				$http.post(
 						sessionStorage.context
 								+ '/pianificazione/stampaAlberoCompleto', {
 							'tabId' : vm.tabId,
 							'idVersione' : vm.pianoCorrente.id
 						}).success(function(response, status, headers, config) {
-							
-							
-							
-				$scope.pianoJson = response
+				
+					$scope.pianoJson = response
+					
 					
 
 				}).error(function(response, status, headers, config) {
-					alert(response)
+					alert("scegliVersione "+response)
 				});
 
 			}
@@ -239,19 +247,14 @@ pianificazione.controller('PianificazioneController', [
 			// $scope.$watch('pc.pianoCorrente',function(){
 			// alert("Ok")
 			// })
-			
-			
-			
-			//funzione per inserire dati di test in una versione
-			vm.datiDiTest=function(){
-				$http.post(
-						sessionStorage.context
-								+ '/test/test', {
-							'tabId' : vm.tabId,
-							'idVersione' : vm.pianoCorrente.id
-						}).success(function(response, status, headers, config) {
 
-					
+			// funzione per inserire dati di test in una versione
+			vm.datiDiTest = function() {
+				$http.post(sessionStorage.context + '/test/test', {
+					'tabId' : vm.tabId,
+					'idVersione' : vm.pianoCorrente.id
+				}).success(function(response, status, headers, config) {
+
 					alert("Dati di test inseriti " + response.nomeVersione)
 
 				}).error(function(response, status, headers, config) {
@@ -259,27 +262,20 @@ pianificazione.controller('PianificazioneController', [
 				});
 
 			}
-			
-			vm.clonaVersione=function(){
-				$http.post(
-						sessionStorage.context
-								+ '/test/testClonazione', {
-							'tabId' : vm.tabId,
-							'idVersione' : vm.pianoCorrente.id
-						}).success(function(response, status, headers, config) {
 
-					
-					alert("Versione clonata con successo " + response.nomeVersione)
+			vm.clonaVersione = function() {
+				$http.post(sessionStorage.context + '/test/testClonazione', {
+					'tabId' : vm.tabId,
+					'idVersione' : vm.pianoCorrente.id
+				}).success(
+						function(response, status, headers, config) {
 
-				}).error(function(response, status, headers, config) {
+							alert("Versione clonata con successo "
+									+ response.nomeVersione)
+
+						}).error(function(response, status, headers, config) {
 					alert(response)
 				});
 			}
-			
-			
-			
-			
-			
-			
 
 		} ]);
