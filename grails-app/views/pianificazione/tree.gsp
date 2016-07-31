@@ -15,7 +15,7 @@
   stroke-width: 1.5px;
 }
 
-.node.level0 {
+.node.level0 rect{
   cursor: pointer;
   fill: red!important;
   fill-opacity: .5;

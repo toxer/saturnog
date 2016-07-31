@@ -173,7 +173,7 @@ class VersioneService {
 		}
 		obj.idNodo = o.id
 		obj.codiceCamera=o.codiceCamera
-		
+		obj.livello=o.livello
 
 		for (Obiettivo c : o.figli){
 			JSONObject objc = new JSONObject()

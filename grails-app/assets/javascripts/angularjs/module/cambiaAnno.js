@@ -18,7 +18,7 @@ cambiaAnno.controller('CambiaAnnoController', [ '$scope', '$http','serviceUtils'
 			
 			vm.selezionaAnno = function(){
 				serviceUtils.userObject($scope,undefined,vm.anno);
-				goToMain();
+				$scope.goToMain();
 			}
 
 		} ]);

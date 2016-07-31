@@ -10,6 +10,11 @@
 // if (System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
+
+
+//configurazione albero standard di degfault
+grails.standardConfiguration="{'class':'saturno.piano.VersioneCfg','id':null,'anno':null,'ente':{'class':'saturno.common.Ente','id':'111111','dsEnte':'INFOCAMERE S.C.p.A.','kpi':[],'versione':[]},'livelli':[{'class':'saturno.piano.LivelloCfg','id':null,'codice':'AZ','colore':'green','livello':4,'nomePlurale':'Azioni','nomeSingolare':'Azione','versioneCfg':{'_ref':'../..','class':'saturno.piano.VersioneCfg'}},{'class':'saturno.piano.LivelloCfg','id':null,'codice':'OO','colore':'green','livello':2,'nomePlurale':'Obiettivi operativi','nomeSingolare':'Obiettivo operativo','versioneCfg':{'_ref':'../..','class':'saturno.piano.VersioneCfg'}},{'class':'saturno.piano.LivelloCfg','id':null,'codice':'OS','colore':'green','livello':1,'nomePlurale':'Obiettivi strategici','nomeSingolare':'Obiettivo strategico','versioneCfg':{'_ref':'../..','class':'saturno.piano.VersioneCfg'}},{'class':'saturno.piano.LivelloCfg','id':null,'codice':'AS','colore':'red','livello':0,'nomePlurale':'Aree strategiche','nomeSingolare':'Area strategica','versioneCfg':{'_ref':'../..','class':'saturno.piano.VersioneCfg'}},{'class':'saturno.piano.LivelloCfg','id':null,'codice':'PR','colore':'green','livello':3,'nomePlurale':'Programmi','nomeSingolare':'Programma','versioneCfg':{'_ref':'../..','class':'saturno.piano.VersioneCfg'}}],'numeroLivelli':5}"
+
 grails.gorm.default.constraints = {
 	'*'(nullable:true,blank:true)
 }

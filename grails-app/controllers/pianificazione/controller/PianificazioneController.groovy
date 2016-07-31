@@ -4,12 +4,15 @@ import grails.converters.JSON
 
 import org.codehaus.groovy.grails.web.json.JSONObject
 
+import saturno.piano.LivelloCfg
 import saturno.piano.Obiettivo
 import saturno.piano.Versione
+import saturno.piano.VersioneCfg
 
 class PianificazioneController {
 	def utilsService;
 	def versioneService
+	def grailsApplication
 
 	def index(){
 	}
@@ -117,6 +120,41 @@ class PianificazioneController {
 		piano.setDtFinSist(null);
 		piano.setCreatoDa(userObject.currentUser?.userId)
 		piano.save(true);
+
+		//controllo se esiste un configuratore per l'anno
+		def versioneCfg=VersioneCfg.findByEnteAndAnno(piano.ente,piano.anno);
+		if (versioneCfg == null){
+			//salvo l'ultima versione presente per l'ente nell'anno corrente
+			def versioni = VersioneCfg.findAllByEnte(piano.ente)
+			if (versioni != null && versioni.size()>0){
+				versioneCfg = versioni.get(0)
+			}
+			//se nullo prendo l'oggetto di default nelle properties
+			if (versioneCfg==null){
+				versioneCfg = new VersioneCfg(JSON.parse(grailsApplication.config.grails.standardConfiguration))
+			}
+
+
+			if (versioneCfg != null){
+				VersioneCfg nuovaVersione = new VersioneCfg();
+				nuovaVersione.anno = piano.anno;
+				nuovaVersione.ente = piano.ente;
+				nuovaVersione.numeroLivelli=versioneCfg.numeroLivelli
+				for (LivelloCfg l : versioneCfg.livelli){
+
+
+					LivelloCfg nuovoLivello = new LivelloCfg();
+					nuovoLivello.setCodice(l.codice)
+					nuovoLivello.setNomePlurale(l.nomePlurale)
+					nuovoLivello.setNomeSingolare(l.nomeSingolare);
+					nuovoLivello.setColore(l.colore);
+					nuovoLivello.setLivello(l.livello)
+					nuovaVersione.addToLivelli(nuovoLivello)
+				}
+				nuovaVersione.save(true);
+			}
+
+		}
 
 		render piano as JSON
 
@@ -247,21 +285,21 @@ class PianificazioneController {
 				return;
 			}
 			obiettivoDominio.setPadre(parent);
-			
+
 		}
-		
+
 		obiettivoDominio.nome=obiettivo.titolo
 		obiettivoDominio.descrizione=obiettivo.descrizione
 		obiettivoDominio.codiceCamera=obiettivo.codiceCamera
-		obiettivoDominio.livello = obiettivoDominio.padre!=null?obiettivoDominio.padre.livello++:0;
+		obiettivoDominio.livello = obiettivoDominio.padre!=null?obiettivoDominio.padre.livello+1:0;
 		obiettivoDominio.save(true);
-		
-		
+
+
 		JSONObject pianoJson = versioneService.stampaPianoObiettiviCompleto(obiettivoDominio.versione);
 		def resp = new JSONObject();
 		resp.piano = pianoJson;
 		resp.nuovoId = obiettivoDominio.id;
-		
+
 		render resp as JSON
 
 
