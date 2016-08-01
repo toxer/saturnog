@@ -61,6 +61,7 @@ tree
 									// funzione di ricerca sul
 									// nodo
 									openNodeById(vm.obiettivo.id, 0);
+									vm.obiettivo=undefined
 								}
 
 								// initTemplate(piano,vm,40);

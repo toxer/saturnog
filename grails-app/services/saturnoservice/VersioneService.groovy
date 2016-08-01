@@ -141,8 +141,9 @@ class VersioneService {
 
 	def stampaPianoObiettiviCompleto(Versione v){
 		JSONObject versione=new JSONObject();
-		versione.name = v.nomeVersione;
+		versione.name = v.note
 		versione.children = new JSONArray();
+		versione.codiceCamera=v.nomeVersione
 
 		//scorro solo gli obiettivi senza padre, il metodo stampaObiettivo
 		//farà il resto con la ricorsione
@@ -164,9 +165,9 @@ class VersioneService {
 
 		}
 		obj.name=o.nome;
-		if (obj.name!=null && obj.name.length()>100){
-			//FIXME usare tspan
-			obj.name = obj.name.substring(0,97)+"..."
+		if (obj.name!=null && obj.name.length()>175){
+			
+			obj.name = obj.name.substring(0,172)+"..."
 		}
 		if (o.figli != null && o.figli.size()>0){
 			obj.children = new JSONArray();

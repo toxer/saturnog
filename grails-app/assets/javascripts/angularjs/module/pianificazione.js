@@ -338,6 +338,8 @@ pianificazione
 													// cancellazioni delle
 													// variabili d'ambiente
 													vm.pianoCorrente = null
+													$scope.pianoJson=null
+													$scope.configuratore=null
 													$scope.pianoCorrente = null
 													// aggiornamento
 													// dell'userObject locale

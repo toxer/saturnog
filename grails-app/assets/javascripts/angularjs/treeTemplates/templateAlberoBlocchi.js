@@ -46,6 +46,8 @@ function initTemplate(_root, _treeController, configuratore) {
 	if (root.children != undefined) {
 		root.children.forEach(collapse);
 	}
+	
+	collapse(root)
 
 	// ricavo la massima ampiezza disponibile
 
@@ -90,7 +92,7 @@ function update(source, now) {
 		var titles = []
 		// formatto il testo creando delle righe
 		if (d.name != undefined) {
-			d.titleLines = d.name.match(/.{1,20}/g)
+			d.titleLines = d.name.match(/.{1,35}/g)
 		} else {
 			d.titleLines = []
 		}
@@ -128,12 +130,27 @@ function update(source, now) {
 
 	// creazione del nodo
 
-	nodeEnter.append("rect").attr("width", rectW).attr("height", 2 * rectH / 3)
+
+	
+	
+	
+	nodeEnter.append("rect").attr("width", rectW).attr("height", 3 * rectH / 3)
 			.attr("rx", "15").attr("ry", "15")
 	nodeEnter.append("rect").attr("width", rectW).attr("height", rectH / 3)
 			.attr("rx", "15").attr("ry", "15")
+			
+			
 	var codeNode = nodeEnter.append("text").attr("x", rectW / 2).attr("y",
-			rectH / 6).attr("dy", ".35em").attr("text-anchor", "middle").text(
+			rectH / 6).attr("dy", ".35em").attr("text-anchor", "middle").append("tspan").attr("style","font-weight:bold").
+			text(function(d){
+				var nomeSingolare =configurazioneLivelli.find(x=> x.livello === d.depth).nomeSingolare
+				if (nomeSingolare != undefined){
+					nomeSingolare = nomeSingolare.toUpperCase();
+				}
+				return nomeSingolare
+				})
+			.attr("y",rectH/6-5).append("tspan").attr("x",rectW/2).attr("y",
+					15+rectH / 6).attr("style","font-weight:bold").text(
 			function(d) {
 				return d.codiceCamera;
 			});
@@ -166,22 +183,19 @@ function update(source, now) {
 
 	nodeUpdate
 			.select("rect")
-			.attr("width", rectW)
-			.attr("height", rectH)
 			.attr(
 					"stroke",
 					function(d) {
 						var confLivello = configurazioneLivelli.find(x=> x.livello === d.depth)
 
 						return confLivello != undefined ? confLivello.colore
-								: balck
+								: "#3182bd"
 					}).attr("stroke-width", 1).style("fill", function(d) {
 						var confLivello = configurazioneLivelli.find(x=> x.livello === d.depth)
 						if (confLivello == undefined){
 							confLivello = new Object();
-							confLivello.colore= "lightblue";
+							confLivello.colore= "#3182bd";
 						}
-						console.log(d.name+" "+confLivello.colore)
 				return d._children ? confLivello.colore :confLivello.colore;
 			}).style("fill-opacity",function(d){
 				return d._children?1:0.5
@@ -199,7 +213,7 @@ function update(source, now) {
 	nodeExit.select("rect").attr("width", rectW).attr("height", rectH)
 	// .attr("width", bbox.getBBox().width)""
 	// .attr("height", bbox.getBBox().height)
-	.attr("stroke", "black").attr("stroke-width", 1);
+	.attr("stroke", "#000000").attr("stroke-width", 1);
 
 	nodeExit.select("text");
 
@@ -281,9 +295,7 @@ function click(d) {
 	update(d);
 
 	var width = $('#treeSvg').attr("width");
-	console.log(width)
 	var xToGo = d.x + (($('#treeSvg').attr("width")) / 4);
-	console.log(xToGo)
 
 	$('#treeContainer').scrollTop(yToGo);
 	$('#treeContainer').scrollLeft(xToGo);

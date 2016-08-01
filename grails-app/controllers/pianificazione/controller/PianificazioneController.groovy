@@ -125,7 +125,7 @@ class PianificazioneController {
 		
 		if (piano.configuratore == null){
 			log.debug("Creato il configuratore")
-			piano.configuratore=configuratore(piano.ente,piano.anno);
+			piano.configuratore=configuratore(p.ente,p.anno);
 		}
 		
 		
@@ -156,7 +156,7 @@ class PianificazioneController {
 		piano.setCreatoDa(userObject.currentUser?.userId)
 		piano.save(true);
 
-		configuratore(piano.ente,piano.anno)
+		
 
 		render piano as JSON
 
