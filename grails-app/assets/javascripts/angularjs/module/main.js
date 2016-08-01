@@ -42,11 +42,11 @@ myApp.factory('httpSpinnerInterceptor', function($q,$rootScope) {
         return response;
       },
 
-     responseError: function(responseError) {
-    	 $('#spinner').fadeOut('fast');
-    	 console.log(responseError)
-        return response;
-      }
+//     responseError: function(responseError) {
+//    	 $('#spinner').fadeOut('fast');
+//    	 console.log(responseError)
+//        return responseError;
+//      }
     };
   });
 

@@ -78,6 +78,7 @@ class PianificazioneController {
 
 
 	def stampaAlberoCompleto(){
+		
 		if (!utilsService.testTabId()){
 			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
@@ -144,11 +145,21 @@ class PianificazioneController {
 		piano.setCreatoDa(userObject.currentUser?.userId)
 		piano.save(true);
 
+		configuratore(piano.ente,piano.anno)
+
+		render piano as JSON
+
+
+
+	}
+	
+	
+	private configuratore(ente,anno){
 		//controllo se esiste un configuratore per l'anno
-		def versioneCfg=VersioneCfg.findByEnteAndAnno(piano.ente,piano.anno);
+		def versioneCfg=VersioneCfg.findByEnteAndAnno(ente,anno);
 		if (versioneCfg == null){
 			//salvo l'ultima versione presente per l'ente nell'anno corrente
-			def versioni = VersioneCfg.findAllByEnte(piano.ente)
+			def versioni = VersioneCfg.findAllByEnte(ente)
 			if (versioni != null && versioni.size()>0){
 				versioneCfg = versioni.get(0)
 			}
@@ -160,8 +171,8 @@ class PianificazioneController {
 
 			if (versioneCfg != null){
 				VersioneCfg nuovaVersione = new VersioneCfg();
-				nuovaVersione.anno = piano.anno;
-				nuovaVersione.ente = piano.ente;
+				nuovaVersione.anno = anno;
+				nuovaVersione.ente = ente;
 				nuovaVersione.numeroLivelli=versioneCfg.numeroLivelli
 				for (LivelloCfg l : versioneCfg.livelli){
 
@@ -178,11 +189,6 @@ class PianificazioneController {
 			}
 
 		}
-
-		render piano as JSON
-
-
-
 	}
 
 	def cancellaVersioneCorrente(){
