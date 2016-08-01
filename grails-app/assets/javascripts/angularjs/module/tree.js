@@ -49,6 +49,7 @@ tree
 
 								// prima elimino eventuali svg presenti
 								$('#treeBody').empty();
+								console.log(piano)
 
 								initTemplate(piano, vm)
 								if (vm.obiettivo != undefined
@@ -78,7 +79,7 @@ tree
 							}
 
 							vm.saveNodo = function() {
-								console.log($scope.pianoCorrente);
+								if (vm.nuovoObiettivoForm.$valid) {
 								$('#creaModificaObiettivo').modal('hide');
 
 								$http
@@ -106,6 +107,10 @@ tree
 												});
 
 								vm.obiettivo = undefined
+								}
+								else{
+									alert("Attenzione, non sono stati completati tutti i campi obbligatori del form")
+								}
 							}
 
 							vm.addSibling = function(idNodo) {

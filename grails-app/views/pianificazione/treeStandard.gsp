@@ -15,13 +15,7 @@
   stroke-width: 1.5px;
 }
 
-.node.level0 rect{
-  cursor: pointer;
-  fill: red!important;
-  fill-opacity: .5;
-  stroke: red;
-  stroke-width: none;
-}
+
 
 .node text {
   font: 10px sans-serif;

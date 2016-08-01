@@ -13,8 +13,7 @@ pianificazione.config([ '$stateProvider', function($stateProvider) {
 			}
 
 		}
-	})
-	.state('alberoStandard',{
+	}).state('alberoStandard', {
 		// risponde all'url /pianificazione/index/#/prova
 		url : 'standard',
 
@@ -26,8 +25,7 @@ pianificazione.config([ '$stateProvider', function($stateProvider) {
 			}
 
 		}
-	})
-	.state('bsc',{
+	}).state('bsc', {
 		// risponde all'url /pianificazione/index/#/prova
 		url : 'standard',
 
@@ -39,8 +37,7 @@ pianificazione.config([ '$stateProvider', function($stateProvider) {
 			}
 
 		}
-	})
-	.state('performance',{
+	}).state('performance', {
 		// risponde all'url /pianificazione/index/#/prova
 		url : 'standard',
 
@@ -57,255 +54,368 @@ pianificazione.config([ '$stateProvider', function($stateProvider) {
 
 // servizio usato per comunicare con TreeController
 
-pianificazione.controller('PianificazioneController', [
-		'$scope',
-		'$state',
-		'$http',
-		'serviceUtils',
-		function($scope,$state, $http, serviceUtils) {
-			
-			var vm = this
-			vm.tabId = sessionStorage.tabId;
-			$scope.pianificazioneControllerScope = $scope
+pianificazione
+		.controller(
+				'PianificazioneController',
+				[
+						'$scope',
+						'$state',
+						'$http',
+						'serviceUtils',
+						function($scope, $state, $http, serviceUtils) {
 
-			// funzione che esegue il test per vedere se ho almeno una versione
-			// presente
-			// se si apre la finestra di selezione, altrimenti apre quella di
-			// creazione
-			vm.scegliVersioneOpenDialog = function() {
-				$http.post(
-						sessionStorage.context
-								+ '/pianificazione/testVersionExist', {
-							'tabId' : vm.tabId
-						}).success(function(response, status, headers, config) {
-					var versione = response
+							var vm = this
+							vm.tabId = sessionStorage.tabId;
+							$scope.pianificazioneControllerScope = $scope
 
-					if (!versione.versionePresente) {
-						$('#versioneNonPresenteDialog').modal({
-							backdrop : 'static',
-							keyboard : true
-						})
-					} else {
-						// salvo le versioni presenti nel piano
+							// funzione che esegue il test per vedere se ho
+							// almeno una versione
+							// presente
+							// se si apre la finestra di selezione, altrimenti
+							// apre quella di
+							// creazione
+							vm.scegliVersioneOpenDialog = function() {
+								$http
+										.post(
+												sessionStorage.context
+														+ '/pianificazione/testVersionExist',
+												{
+													'tabId' : vm.tabId
+												})
+										.success(
+												function(response, status,
+														headers, config) {
+													var versione = response
 
-						vm.piani = versione.versioni
-						vm.pianoCorrente = versione.versioni[0];
-						// apri seleziona versione
-						$('#scegliVersioneDialog').modal({
-							backdrop : 'static',
-							keyboard : true
-						});
-					}
+													if (!versione.versionePresente) {
+														$(
+																'#versioneNonPresenteDialog')
+																.modal(
+																		{
+																			backdrop : 'static',
+																			keyboard : true
+																		})
+													} else {
+														// salvo le versioni
+														// presenti nel piano
 
-				}).error(function(response, status, headers, config) {
-					alert(response)
-				});
+														vm.piani = versione.versioni
+														vm.pianoCorrente = versione.versioni[0];
+														// apri seleziona
+														// versione
+														$(
+																'#scegliVersioneDialog')
+																.modal(
+																		{
+																			backdrop : 'static',
+																			keyboard : true
+																		});
+													}
 
-				// funzioni del controller
-			}
+												}).error(
+												function(response, status,
+														headers, config) {
+													alert(response)
+												});
 
-			vm.creaNuovaVersioneOpenDialog = function() {
+								// funzioni del controller
+							}
 
-				// recupero il prossimo piano
+							vm.creaNuovaVersioneOpenDialog = function() {
 
-				$http.post(
-						sessionStorage.context
-								+ '/pianificazione/prossimoPianoLibero', {
-							'tabId' : vm.tabId
-						}).success(function(response, status, headers, config) {
+								// recupero il prossimo piano
 
-					vm.piano = response
-					$('#creaNuovaVersioneDialog').modal({
-						backdrop : 'static',
-						keyboard : true
-					})
+								$http
+										.post(
+												sessionStorage.context
+														+ '/pianificazione/prossimoPianoLibero',
+												{
+													'tabId' : vm.tabId
+												})
+										.success(
+												function(response, status,
+														headers, config) {
 
-				}).error(function(response, status, headers, config) {
-					alert(response)
-				});
+													vm.piano = response
+													$(
+															'#creaNuovaVersioneDialog')
+															.modal(
+																	{
+																		backdrop : 'static',
+																		keyboard : true
+																	})
 
-			}
+												}).error(
+												function(response, status,
+														headers, config) {
+													alert(response)
+												});
 
-			// crea una nuova versione
-			vm.creaNuovaVersione = function() {
-				// controllo se c'è il form
+							}
 
-				if (vm.nuovaVersioneForm == undefined) {
-					alert("Non trovato il form di nuova versione");
-					return;
-				}
-				if (vm.nuovaVersioneForm.$valid) {
-					$http.post(
-							sessionStorage.context
-									+ '/pianificazione/creaNuovaVersione', {
-								'tabId' : vm.tabId,
-								'piano' : vm.piano
-							}).success(
-							function(response, status, headers, config) {
+							// crea una nuova versione
+							vm.creaNuovaVersione = function() {
+								// controllo se c'è il form
 
-								$('#creaNuovaVersioneDialog').modal('toggle');
+								if (vm.nuovaVersioneForm == undefined) {
+									alert("Non trovato il form di nuova versione");
+									return;
+								}
+								if (vm.nuovaVersioneForm.$valid) {
+									$http
+											.post(
+													sessionStorage.context
+															+ '/pianificazione/creaNuovaVersione',
+													{
+														'tabId' : vm.tabId,
+														'piano' : vm.piano
+													})
+											.success(
+													function(response, status,
+															headers, config) {
 
-								// set della variabile locale al controlle
-								// e di quello scope in watch dal TreeController
-								vm.pianoCorrente = response
-								$scope.pianoCorrente = vm.pianoCorrente
+														$(
+																'#creaNuovaVersioneDialog')
+																.modal('toggle');
+
+														// set della variabile
+														// locale al controlle
+														// e di quello scope in
+														// watch dal
+														// TreeController
+														vm.pianoCorrente = response
+														$scope.pianoCorrente = vm.pianoCorrente
+														serviceUtils
+																.userObject(
+																		$scope,
+																		undefined,
+																		undefined,
+																		vm.pianoCorrente.id)
+														serviceUtils
+																.updateBreadcumb("Pianificazione "
+																		+ vm.pianoCorrente.nomeVersione)
+														alert("Nuova versione creata "
+																+ vm.pianoCorrente.nomeVersione)
+
+														// vado in noTree
+														$http
+																.post(
+																		sessionStorage.context
+																				+ '/pianificazione/stampaAlberoCompleto',
+																		{
+																			'tabId' : vm.tabId,
+																			'idVersione' : vm.pianoCorrente.id
+																		})
+																.success(
+																		function(
+																				response,
+																				status,
+																				headers,
+																				config) {
+
+																			$scope.pianoJson = response.pianoJson
+																			$scope.configuratore = response.configuratore
+
+																		})
+																.error(
+																		function(
+																				response,
+																				status,
+																				headers,
+																				config) {
+																			alert(response)
+																		});
+														$state.go('default')
+
+													}).error(
+													function(response, status,
+															headers, config) {
+														alert(response)
+													});
+								} else {
+									// alert('form non valido')
+								}
+
+							}
+
+							// elimina tutte le variabili d'ambiente
+							// e lo user object
+							vm.resettaVersione = function() {
+								// cancellazioni delle variabili d'ambiente
+								vm.pianoCorrente = null
+								$scope.pianoCorrente = null
+								// aggiornamento dell'userObject locale
+								serviceUtils.userObject($scope, undefined,
+										undefined, "-1")
+								serviceUtils.updateBreadcumb("Pianificazione ")
+
+							}
+
+							// seleziona una versione
+							vm.scegliVersione = function() {
+								// controllo se c'è il form
+
+								if (vm.versioneForm == undefined) {
+									alert("Non trovato il form di scelta versione");
+									return;
+								}
+
 								serviceUtils.userObject($scope, undefined,
 										undefined, vm.pianoCorrente.id)
 								serviceUtils.updateBreadcumb("Pianificazione "
 										+ vm.pianoCorrente.nomeVersione)
-								alert("Nuova versione creata "
-										+ vm.pianoCorrente.nomeVersione)
-										
-								//vado in noTree
-									$state.go('default')		
-								
-							}).error(
-							function(response, status, headers, config) {
-								alert(response)
-							});
-				} else {
-					// alert('form non valido')
-				}
 
-			}
+								// aggiorno la variabile di scope che è in watch
+								// su
+								// TreeController
 
-			// elimina tutte le variabili d'ambiente
-			// e lo user object
-			vm.resettaVersione = function() {
-				// cancellazioni delle variabili d'ambiente
-				vm.pianoCorrente = null
-				$scope.pianoCorrente = null
-				// aggiornamento dell'userObject locale
-				serviceUtils.userObject($scope, undefined, undefined, "-1")
-				serviceUtils.updateBreadcumb("Pianificazione ")
+								$scope.pianoCorrente = vm.pianoCorrente;
+								$('#scegliVersioneDialog').modal('toggle');
 
-			}
+								// renderizzo il piano completo
+								$http
+										.post(
+												sessionStorage.context
+														+ '/pianificazione/stampaAlberoCompleto',
+												{
+													'tabId' : vm.tabId,
+													'idVersione' : vm.pianoCorrente.id
+												})
+										.success(
+												function(response, status,
+														headers, config) {
 
-			// seleziona una versione
-			vm.scegliVersione = function() {
-				// controllo se c'è il form
+													$scope.pianoJson = response.pianoJson
+													$scope.configuratore = response.configuratore
 
-				if (vm.versioneForm == undefined) {
-					alert("Non trovato il form di scelta versione");
-					return;
-				}
+												}).error(
+												function(response, status,
+														headers, config) {
+													alert(response)
+												});
 
-				serviceUtils.userObject($scope, undefined, undefined,
-						vm.pianoCorrente.id)
-				serviceUtils.updateBreadcumb("Pianificazione "
-						+ vm.pianoCorrente.nomeVersione)
+							}
 
-				// aggiorno la variabile di scope che è in watch su
-				// TreeController
-			
-				$scope.pianoCorrente = vm.pianoCorrente;
-				$('#scegliVersioneDialog').modal('toggle');
+							// eliminazione della versione
 
-				// renderizzo il piano completo
-				$http.post(
-						sessionStorage.context
-								+ '/pianificazione/stampaAlberoCompleto', {
-							'tabId' : vm.tabId,
-							'idVersione' : vm.pianoCorrente.id
-						}).success(function(response, status, headers, config) {
-				
-					$scope.pianoJson = response
-					
-					
+							vm.eliminaVersione = function() {
+								if (vm.pianoCorrente != undefined) {
 
-				}).error(function(response, status, headers, config) {
-					alert("scegliVersione "+response)
-				});
+									$('#eliminaVersioneDialog').modal({
+										backdrop : 'static',
+										keyboard : true
+									})
+								} else {
+									alert("Piano corrente non trovato")
+								}
 
-			}
+							}
 
-			// eliminazione della versione
+							vm.eliminaVersioneOpenDialog = function() {
+								$('#eliminaVersioneDialog').modal('toggle');
+								$('#confermaEliminazioneVersione').modal({
+									backdrop : 'static',
+									keyboard : true
+								})
+							}
 
-			vm.eliminaVersione = function() {
-				if (vm.pianoCorrente != undefined) {
+							vm.eliminaVersioneDefinitivamente = function() {
+								// eliminazione della versione dal db
+								// i controlli di legitimità sono demandati al
+								// backend
+								$http
+										.post(
+												sessionStorage.context
+														+ '/pianificazione/cancellaVersioneCorrente',
+												{
+													'tabId' : vm.tabId,
+													'idVersione' : vm.pianoCorrente.id
+												})
+										.success(
+												function(response, status,
+														headers, config) {
 
-					$('#eliminaVersioneDialog').modal({
-						backdrop : 'static',
-						keyboard : true
-					})
-				} else {
-					alert("Piano corrente non trovato")
-				}
+													// cancellazioni delle
+													// variabili d'ambiente
+													vm.pianoCorrente = null
+													$scope.pianoCorrente = null
+													// aggiornamento
+													// dell'userObject locale
+													serviceUtils.userObject(
+															$scope, undefined,
+															undefined, "-1")
+													serviceUtils
+															.updateBreadcumb("Pianificazione ")
+													// avviso di eliminazione
+													alert("Versione eliminata "
+															+ response.nomeVersione)
 
-			}
+												}).error(
+												function(response, status,
+														headers, config) {
+													alert(response)
+												});
 
-			vm.eliminaVersioneOpenDialog = function() {
-				$('#eliminaVersioneDialog').modal('toggle');
-				$('#confermaEliminazioneVersione').modal({
-					backdrop : 'static',
-					keyboard : true
-				})
-			}
+								$state.go('default')
 
-			vm.eliminaVersioneDefinitivamente = function() {
-				// eliminazione della versione dal db
-				// i controlli di legitimità sono demandati al backend
-				$http.post(
-						sessionStorage.context
-								+ '/pianificazione/cancellaVersioneCorrente', {
-							'tabId' : vm.tabId,
-							'idVersione' : vm.pianoCorrente.id
-						}).success(function(response, status, headers, config) {
+							}
 
-					// cancellazioni delle variabili d'ambiente
-					vm.pianoCorrente = null
-					$scope.pianoCorrente = null
-					// aggiornamento dell'userObject locale
-					serviceUtils.userObject($scope, undefined, undefined, "-1")
-					serviceUtils.updateBreadcumb("Pianificazione ")
-					// avviso di eliminazione
-					alert("Versione eliminata " + response.nomeVersione)
+							// per prima cosa, quando eseguo il controller,
+							// faccio un test di
+							// esistenza
+							// delle versioni con la funzione
+							vm.scegliVersioneOpenDialog();
 
-				}).error(function(response, status, headers, config) {
-					alert(response)
-				});
+							// eseguo il watch della variabile
 
-			}
+							// $scope.$watch('pc.pianoCorrente',function(){
+							// alert("Ok")
+							// })
 
-			// per prima cosa, quando eseguo il controller, faccio un test di
-			// esistenza
-			// delle versioni con la funzione
-			vm.scegliVersioneOpenDialog();
+							// funzione per inserire dati di test in una
+							// versione
+							vm.datiDiTest = function() {
+								$http.post(
+										sessionStorage.context + '/test/test',
+										{
+											'tabId' : vm.tabId,
+											'idVersione' : vm.pianoCorrente.id
+										}).success(
+										function(response, status, headers,
+												config) {
 
-			// eseguo il watch della variabile
+											alert("Dati di test inseriti "
+													+ response.nomeVersione)
 
-			// $scope.$watch('pc.pianoCorrente',function(){
-			// alert("Ok")
-			// })
+										}).error(
+										function(response, status, headers,
+												config) {
+											alert(response)
+										});
 
-			// funzione per inserire dati di test in una versione
-			vm.datiDiTest = function() {
-				$http.post(sessionStorage.context + '/test/test', {
-					'tabId' : vm.tabId,
-					'idVersione' : vm.pianoCorrente.id
-				}).success(function(response, status, headers, config) {
+							}
 
-					alert("Dati di test inseriti " + response.nomeVersione)
+							vm.clonaVersione = function() {
+								$http
+										.post(
+												sessionStorage.context
+														+ '/test/testClonazione',
+												{
+													'tabId' : vm.tabId,
+													'idVersione' : vm.pianoCorrente.id
+												})
+										.success(
+												function(response, status,
+														headers, config) {
 
-				}).error(function(response, status, headers, config) {
-					alert(response)
-				});
+													alert("Versione clonata con successo "
+															+ response.nomeVersione)
 
-			}
+												}).error(
+												function(response, status,
+														headers, config) {
+													alert(response)
+												});
+							}
 
-			vm.clonaVersione = function() {
-				$http.post(sessionStorage.context + '/test/testClonazione', {
-					'tabId' : vm.tabId,
-					'idVersione' : vm.pianoCorrente.id
-				}).success(
-						function(response, status, headers, config) {
-
-							alert("Versione clonata con successo "
-									+ response.nomeVersione)
-
-						}).error(function(response, status, headers, config) {
-					alert(response)
-				});
-			}
-
-		} ]);
+						} ]);

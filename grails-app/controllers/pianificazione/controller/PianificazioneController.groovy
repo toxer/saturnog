@@ -119,7 +119,18 @@ class PianificazioneController {
 			render status:500,text:'Errore nella stampa dell\'albero'
 			return
 		}
-		render pianoJson as JSON
+		def piano = new JSONObject();
+		piano.pianoJson = pianoJson
+		piano.configuratore = VersioneCfg.findByEnteAndAnno(p.ente,p.anno)
+		
+		if (piano.configuratore == null){
+			log.debug("Creato il configuratore")
+			piano.configuratore=configuratore();
+		}
+		
+		
+		JSON.use("deep")		
+		render piano as JSON
 
 
 	}
@@ -175,8 +186,6 @@ class PianificazioneController {
 				nuovaVersione.ente = ente;
 				nuovaVersione.numeroLivelli=versioneCfg.numeroLivelli
 				for (LivelloCfg l : versioneCfg.livelli){
-
-
 					LivelloCfg nuovoLivello = new LivelloCfg();
 					nuovoLivello.setCodice(l.codice)
 					nuovoLivello.setNomePlurale(l.nomePlurale)
@@ -189,6 +198,7 @@ class PianificazioneController {
 			}
 
 		}
+		return versioneCfg
 	}
 
 	def cancellaVersioneCorrente(){
@@ -303,6 +313,8 @@ class PianificazioneController {
 
 		Obiettivo obiettivoDominio = new Obiettivo();
 		obiettivoDominio.versione = Versione.findById(idVersione)
+		
+		
 		if (obiettivoDominio.versione == null){
 			render status:500,text:'Versione non trovata per id '+idVersione
 			return

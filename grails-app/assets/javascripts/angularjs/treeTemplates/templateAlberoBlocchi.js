@@ -40,7 +40,9 @@ function collapse(d) {
 function initTemplate(_root, _treeController) {
 	treeController = _treeController
 	root = _root;
-	root.children.forEach(collapse);
+	if (root.children != undefined) {
+		root.children.forEach(collapse);
+	}
 
 	console.log(_root)
 
@@ -93,7 +95,7 @@ function update(source, now) {
 
 	// Enter any new nodes at the parent's previous position.
 	var nodeEnter = node.enter().append("g").attr("class", function(d) {
-		return "node level"+(d.livello!=undefined?d.livello:"root");
+		return "node level" + (d.livello != undefined ? d.livello : "root");
 	}).attr("transform", function(d) {
 		return "translate(" + source.x0 + "," + source.y0 + ")";
 	}).on("click", click);
@@ -118,9 +120,9 @@ function update(source, now) {
 	// creazione del nodo
 
 	var nodeTitle = nodeEnter.append("rect").attr("width", rectW).attr(
-			"height", 2 * rectH / 3).attr("rx","15").attr("ry","15")
+			"height", 2 * rectH / 3).attr("rx", "15").attr("ry", "15")
 	var nodeCode = nodeEnter.append("rect").attr("width", rectW).attr("height",
-			rectH / 3).attr("rx","15").attr("ry","15")
+			rectH / 3).attr("rx", "15").attr("ry", "15")
 	nodeEnter.append("text").attr("x", rectW / 2).attr("y", rectH / 6).attr(
 			"dy", ".35em").attr("text-anchor", "middle").text(function(d) {
 		return d.codiceCamera;
@@ -211,7 +213,6 @@ function update(source, now) {
 // Toggle children on click.
 function click(d) {
 	var lastY = $('#treeContainer').scrollTop();
-	
 
 	closeContextMenu();
 
@@ -227,15 +228,15 @@ function click(d) {
 		yToGo = d.y0 - 2 * rectH + nodeDepth
 
 	} else if (d._children) {
-		
+
 		// apertura nodo
 		// yToGo è la posizione del padre + depth
 		yToGo = d.y0 + nodeDepth - 2 * rectH
 		d.children = d._children;
 		d._children = null;
 
-	}else{
-		//nodo senza figli
+	} else {
+		// nodo senza figli
 		yToGo = d.y0 + nodeDepth - 2 * rectH
 	}
 
