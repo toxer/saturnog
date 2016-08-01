@@ -41,7 +41,7 @@ function collapse(d) {
 function initTemplate(_root, _treeController, configuratore) {
 	treeController = _treeController
 	root = _root;
-	configurazioneLivelli = configuratore.livelli
+	configurazioneLivelli = configuratore!=undefined?configuratore.livelli:undefined
 
 	if (root.children != undefined) {
 		root.children.forEach(collapse);

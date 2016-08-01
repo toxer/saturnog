@@ -59,7 +59,10 @@ tree
 										&& vm.obiettivo.id != undefined) {
 									// mi posizione con la
 									// funzione di ricerca sul
-									// nodo
+									// nodo e poi scarico l'obiettivo altrimenti 
+									//da problemi con le altre versioni.
+									
+									//tanto viene ricaricato dalle funzioni tipo addNode 
 									openNodeById(vm.obiettivo.id, 0);
 									vm.obiettivo=undefined
 								}
