@@ -125,7 +125,7 @@ class PianificazioneController {
 		
 		if (piano.configuratore == null){
 			log.debug("Creato il configuratore")
-			piano.configuratore=configuratore();
+			piano.configuratore=configuratore(piano.ente,piano.anno);
 		}
 		
 		

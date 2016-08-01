@@ -190,45 +190,54 @@ class TestController {
 		VersioneCfg versioneCfg = new VersioneCfg();
 		versioneCfg.ente= Ente.findAll().get(0)
 		versioneCfg.setNumeroLivelli(5);
+		
+		LivelloCfg l0=new LivelloCfg();
+		l0.setNomePlurale("Versioni");
+		l0.setNomeSingolare("Versione");
+		l0.setCodice("RT")
+		l0.setColore("#F0190A");
+		l0.setLivello(0)
+		versioneCfg.addToLivelli(l0);
+
 
 		LivelloCfg l1=new LivelloCfg();
 		l1.setNomePlurale("Aree strategiche");
 		l1.setNomeSingolare("Area strategica");
 		l1.setCodice("AS")
-		l1.setColore("red");
-		l1.setLivello(0)
+		l1.setColore("#EB34CF");
+		l1.setLivello(1)
 		versioneCfg.addToLivelli(l1);
 
 		LivelloCfg l2=new LivelloCfg();
 		l2.setNomePlurale("Obiettivi strategici");
 		l2.setNomeSingolare("Obiettivo strategico");
 		l2.setCodice("OS")
-		l2.setColore("green");
-		l2.setLivello(1)
+		l2.setColore("#4CA9C0");
+		l2.setLivello(2)
 		versioneCfg.addToLivelli(l2);
 
 		LivelloCfg l3=new LivelloCfg();
 		l3.setNomePlurale("Obiettivi operativi");
 		l3.setNomeSingolare("Obiettivo operativo");
 		l3.setCodice("OO")
-		l3.setColore("green");
-		l3.setLivello(2)
+		l3.setColore("#D5CE29");
+		l3.setLivello(3)
 		versioneCfg.addToLivelli(l3);
 
 		LivelloCfg l4=new LivelloCfg();
 		l4.setNomePlurale("Programmi");
 		l4.setNomeSingolare("Programma");
 		l4.setCodice("PR")
-		l4.setColore("green");
-		l4.setLivello(3)
+		l4.setColore("#F19929");
+		l4.setLivello(4)
 		versioneCfg.addToLivelli(l4);
 
 		LivelloCfg l5=new LivelloCfg();
 		l5.setNomePlurale("Azioni");
 		l5.setNomeSingolare("Azione");
 		l5.setCodice("AZ")
-		l5.setColore("green");
-		l5.setLivello(4)
+		l5.setColore("D96722");
+		l5.setLivello(5)
 		versioneCfg.addToLivelli(l5);
 
 		JSON.use("deep")

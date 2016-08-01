@@ -11,7 +11,7 @@
   cursor: pointer;
   fill: #fff;
   fill-opacity: .5;
-  stroke: #3182bd;
+  
   stroke-width: 1.5px;
 }
 

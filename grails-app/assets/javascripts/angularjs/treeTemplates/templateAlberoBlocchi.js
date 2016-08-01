@@ -23,6 +23,7 @@ var diagonal = d3.svg.diagonal().projection(function(d) {
 
 var svg = undefined;
 var yToGo = undefined
+var configurazioneLivelli
 
 // necessary so that zoom knows where to zoom and unzoom from
 
@@ -37,14 +38,14 @@ function collapse(d) {
 	}
 }
 
-function initTemplate(_root, _treeController) {
+function initTemplate(_root, _treeController, configuratore) {
 	treeController = _treeController
 	root = _root;
+	configurazioneLivelli = configuratore.livelli
+
 	if (root.children != undefined) {
 		root.children.forEach(collapse);
 	}
-
-	console.log(_root)
 
 	// ricavo la massima ampiezza disponibile
 
@@ -141,16 +142,17 @@ function update(source, now) {
 
 	var nodeText = nodeEnter.append("text").attr("class", "testo").attr(
 			"text-anchor", "middle").attr("x", rectW / 2).attr("y",
-			rectH / 3 + 8).attr("dy", ".35em").attr("text-anchor", "middle").each(function(d){
-				var testo= d3.select(this);
-				var h = rectH / 3 + 15;
-				d.titleLines.forEach(function(k){
-					
-					testo.append("tspan").attr("x",rectW/2).attr("y",h).text(k)
-					h = h+15
-				});
-			});
-			
+			rectH / 3 + 8).attr("dy", ".35em").attr("text-anchor", "middle")
+			.each(
+					function(d) {
+						var testo = d3.select(this);
+						var h = rectH / 3 + 15;
+						d.titleLines.forEach(function(k) {
+							testo.append("tspan").attr("x", rectW / 2).attr(
+									"y", h).text(k)
+							h = h + 15
+						});
+					});
 
 	// applico l'id del nodo come attribute
 	nodeEnter.attr("id", function(d) {
@@ -162,11 +164,29 @@ function update(source, now) {
 				return "translate(" + d.x + "," + d.y + ")";
 			});
 
-	nodeUpdate.select("rect").attr("width", rectW).attr("height", rectH).attr(
-			"stroke", "black").attr("stroke-width", 1).style("fill",
-			function(d) {
-				return d._children ? "lightsteelblue" : "#fff";
+	nodeUpdate
+			.select("rect")
+			.attr("width", rectW)
+			.attr("height", rectH)
+			.attr(
+					"stroke",
+					function(d) {
+						var confLivello = configurazioneLivelli.find(x=> x.livello === d.depth)
+
+						return confLivello != undefined ? confLivello.colore
+								: balck
+					}).attr("stroke-width", 1).style("fill", function(d) {
+						var confLivello = configurazioneLivelli.find(x=> x.livello === d.depth)
+						if (confLivello == undefined){
+							confLivello = new Object();
+							confLivello.colore= "lightblue";
+						}
+						console.log(d.name+" "+confLivello.colore)
+				return d._children ? confLivello.colore :confLivello.colore;
+			}).style("fill-opacity",function(d){
+				return d._children?1:0.5
 			});
+	
 
 	nodeUpdate.select("text").style("fill-opacity", 1);
 

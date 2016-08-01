@@ -40,8 +40,11 @@ tree
 
 											})
 
+							var configuratore = $scope.pianificazioneControllerScope.configuratore
+											
 							// funzione che renderizza il piano della
 							// performance
+							
 							vm.renderPiano = function(piano) {
 								// alert("render piano corrente")
 								// renderizza il piano
@@ -49,9 +52,9 @@ tree
 
 								// prima elimino eventuali svg presenti
 								$('#treeBody').empty();
-								console.log(piano)
+								
 
-								initTemplate(piano, vm)
+								initTemplate(piano, vm,configuratore)
 								if (vm.obiettivo != undefined
 										&& vm.obiettivo.id != undefined) {
 									// mi posizione con la
