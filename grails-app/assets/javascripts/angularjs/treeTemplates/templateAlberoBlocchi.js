@@ -14,7 +14,7 @@ var margin = {
 		- margin.bottom;
 
 var root = undefined
-var i = 0, duration = 750, rectW = 180, rectH = 100, nodeDepth = 180;
+var i = 0, duration = 750, rectW = 180, rectH = 120, nodeDepth = 180, maxLineLength = 3;
 
 var tree = d3.layout.tree().nodeSize([ rectW + 10, rectH + 10 ]);
 var diagonal = d3.svg.diagonal().projection(function(d) {
@@ -86,6 +86,14 @@ function update(source, now) {
 	// Normalize for fixed-depth.
 	nodes.forEach(function(d) {
 		d.y = d.depth * nodeDepth;
+		var titles = []
+		// formatto il testo creando delle righe
+		if (d.name != undefined) {
+			d.titleLines = d.name.match(/.{1,20}/g)
+		} else {
+			d.titleLines = []
+		}
+
 	});
 
 	// Update the nodes…
@@ -119,20 +127,30 @@ function update(source, now) {
 
 	// creazione del nodo
 
-	var nodeTitle = nodeEnter.append("rect").attr("width", rectW).attr(
-			"height", 2 * rectH / 3).attr("rx", "15").attr("ry", "15")
-	var nodeCode = nodeEnter.append("rect").attr("width", rectW).attr("height",
-			rectH / 3).attr("rx", "15").attr("ry", "15")
-	nodeEnter.append("text").attr("x", rectW / 2).attr("y", rectH / 6).attr(
-			"dy", ".35em").attr("text-anchor", "middle").text(function(d) {
-		return d.codiceCamera;
-	});
-
-	nodeEnter.append("text").attr("text-anchor", "middle").attr("x", rectW / 2)
-			.attr("y", rectH / 3 + 10).attr("dy", ".35em").attr("text-anchor",
-					"middle").text(function(d) {
-				return d.name;
+	nodeEnter.append("rect").attr("width", rectW).attr("height", 2 * rectH / 3)
+			.attr("rx", "15").attr("ry", "15")
+	nodeEnter.append("rect").attr("width", rectW).attr("height", rectH / 3)
+			.attr("rx", "15").attr("ry", "15")
+	var codeNode = nodeEnter.append("text").attr("x", rectW / 2).attr("y",
+			rectH / 6).attr("dy", ".35em").attr("text-anchor", "middle").text(
+			function(d) {
+				return d.codiceCamera;
 			});
+
+	codeNode.attr("style", "font-weight: bold;")
+
+	var nodeText = nodeEnter.append("text").attr("class", "testo").attr(
+			"text-anchor", "middle").attr("x", rectW / 2).attr("y",
+			rectH / 3 + 8).attr("dy", ".35em").attr("text-anchor", "middle").each(function(d){
+				var testo= d3.select(this);
+				var h = rectH / 3 + 15;
+				d.titleLines.forEach(function(k){
+					
+					testo.append("tspan").attr("x",rectW/2).attr("y",h).text(k)
+					h = h+15
+				});
+			});
+			
 
 	// applico l'id del nodo come attribute
 	nodeEnter.attr("id", function(d) {

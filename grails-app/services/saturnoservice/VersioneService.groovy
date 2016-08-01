@@ -164,9 +164,9 @@ class VersioneService {
 
 		}
 		obj.name=o.nome;
-		if (obj.name!=null && obj.name.length()>35){
+		if (obj.name!=null && obj.name.length()>100){
 			//FIXME usare tspan
-			obj.name = obj.name.substring(0,35)+"..."
+			obj.name = obj.name.substring(0,97)+"..."
 		}
 		if (o.figli != null && o.figli.size()>0){
 			obj.children = new JSONArray();
