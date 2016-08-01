@@ -79,6 +79,7 @@ tree
 							}
 
 							vm.saveNodo = function() {
+								console.log(vm.nuovoObiettivoForm.$valid)
 								if (vm.nuovoObiettivoForm.$valid) {
 								$('#creaModificaObiettivo').modal('hide');
 

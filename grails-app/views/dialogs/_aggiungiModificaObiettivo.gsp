@@ -15,13 +15,13 @@
 					<fieldset class="form-group">
 						<label for="titoloPadre">Obiettivo padre</label> <input
 							type="text" class="form-control" id="titoloPadre"
-							ng-model="tc.obiettivo.titoloParent" required readonly> <small
+							ng-model="tc.obiettivo.titoloParent" readonly> <small
 							class="text-muted">Titolo dell'obiettivo padre</small>
 					</fieldset>
 					<fieldset class="form-group" hidden>
 						<label for="idObiettivoPadre">Id obiettivo padre</label> <input
 							type="number" class="form-control" id="idObiettivoPadre"
-							ng-model="tc.obiettivo.idParent" required readonly> <small
+							ng-model="tc.obiettivo.idParent"  readonly> <small
 							class="text-muted">Id obiettivo padre</small>
 					</fieldset>
 					<fieldset class="form-group">
