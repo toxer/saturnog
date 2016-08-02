@@ -47,7 +47,7 @@ class InitController {
 		def tabId = request.JSON.tabId;
 		JSONObject data = new JSONObject();
 		data.data =  session."${tabId}".userObject;
-		render  session."${tabId}".userObject as JSON
+		render  session."${tabId}"?.userObject as JSON
 		
 		
 	}

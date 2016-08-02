@@ -19,13 +19,11 @@ class PianificazioneController {
 
 	def treeStandard(){
 	}
-	
+
 	def bsc(){
-		
 	}
-	
+
 	def performance(){
-		
 	}
 
 	def leftMenu(){
@@ -78,7 +76,7 @@ class PianificazioneController {
 
 
 	def stampaAlberoCompleto(){
-		
+
 		if (!utilsService.testTabId()){
 			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
@@ -94,16 +92,16 @@ class PianificazioneController {
 			render status:500,text:'Id versione non trovato'
 			return;
 		}
-		
+
 		//conrollo che poteva causare errori perchè il settaggio dell'user object
 		//viene fatto asincronamente.
-		
+
 		//viene lasciato in fase di salvataggio dei dati
 
-//		if (idVersione != userObject.versione){
-//			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
-//			return;
-//		}
+		//		if (idVersione != userObject.versione){
+		//			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+		//			return;
+		//		}
 
 		Versione p = Versione.findById(idVersione)
 		if (p == null){
@@ -122,17 +120,60 @@ class PianificazioneController {
 		def piano = new JSONObject();
 		piano.pianoJson = pianoJson
 		piano.configuratore = VersioneCfg.findByEnteAndAnno(p.ente,p.anno)
-		
+
 		if (piano.configuratore == null){
 			log.debug("Creato il configuratore")
 			piano.configuratore=configuratore(p.ente,p.anno);
 		}
-		
-		
-		JSON.use("deep")		
+
+
+		JSON.use("deep")
 		render piano as JSON
 
 
+	}
+
+
+	def clonaVersione(){
+		if (!utilsService.testTabId()){
+			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			return
+		}
+		def userObject = utilsService.currentUserObject()
+		if (userObject==null){
+			render status:500,text:'Utente non trovato'
+			return;
+		}
+		def idVersione = request.JSON?.idVersione
+
+		if (idVersione==null){
+			render status:500,text:'Id versione non trovato'
+			return;
+		}
+
+		if (idVersione != userObject.versione){
+			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+			return;
+		}
+		//creo una nuova versione
+		Versione pianoFrom = Versione.findById(idVersione);
+
+		if (pianoFrom ==null){
+			render status:500,text:'Versione non esistente'
+			return;
+		}
+
+		Versione pianoTo = new Versione();
+		pianoTo.anno = pianoFrom.anno;
+		pianoTo.setEnte(pianoFrom.ente);
+		pianoTo.setNomeVersione(pianoTo.getNomeVersione()+"/bis");
+
+
+
+
+
+		versioneService.clonaVersione(pianoFrom, pianoTo);
+		render pianoTo as JSON
 	}
 
 	def creaNuovaVersione(){
@@ -156,15 +197,15 @@ class PianificazioneController {
 		piano.setCreatoDa(userObject.currentUser?.userId)
 		piano.save(true);
 
-		
+
 
 		render piano as JSON
 
 
 
 	}
-	
-	
+
+
 	private configuratore(ente,anno){
 		//controllo se esiste un configuratore per l'anno
 		def versioneCfg=VersioneCfg.findByEnteAndAnno(ente,anno);
@@ -313,8 +354,8 @@ class PianificazioneController {
 
 		Obiettivo obiettivoDominio = new Obiettivo();
 		obiettivoDominio.versione = Versione.findById(idVersione)
-		
-		
+
+
 		if (obiettivoDominio.versione == null){
 			render status:500,text:'Versione non trovata per id '+idVersione
 			return

@@ -24,8 +24,8 @@ tree
 							// variabile (che passa allo
 							// scope di TreeController)
 							// e quindi tutti i cambia versione non funzionano
-							// più perchè fatti su una variabile diversa da 
-							//quella in watch qui
+							// più perchè fatti su una variabile diversa da
+							// quella in watch qui
 							$scope.pianificazioneControllerScope
 									.$watch(
 											'pianoJson',
@@ -41,10 +41,10 @@ tree
 											})
 
 							var configuratore = $scope.pianificazioneControllerScope.configuratore
-											
+
 							// funzione che renderizza il piano della
 							// performance
-							
+
 							vm.renderPiano = function(piano) {
 								// alert("render piano corrente")
 								// renderizza il piano
@@ -52,19 +52,19 @@ tree
 
 								// prima elimino eventuali svg presenti
 								$('#treeBody').empty();
-								
 
-								initTemplate(piano, vm,configuratore)
-								if (vm.obiettivo != undefined
-										&& vm.obiettivo.id != undefined) {
+								initTemplate(piano, vm, configuratore)
+								if (vm.obiettivoDaAprire != undefined
+										&& vm.obiettivoDaAprire.id != undefined) {
 									// mi posizione con la
 									// funzione di ricerca sul
-									// nodo e poi scarico l'obiettivo altrimenti 
-									//da problemi con le altre versioni.
-									
-									//tanto viene ricaricato dalle funzioni tipo addNode 
-									openNodeById(vm.obiettivo.id, 0);
-									vm.obiettivo=undefined
+									// nodo e poi scarico l'obiettivo altrimenti
+									// da problemi con le altre versioni.
+
+									// tanto viene ricaricato dalle funzioni
+									// tipo addNode
+									openNodeById(vm.obiettivoDaAprire.id, 0);
+									vm.obiettivoDaAprire = undefined
 								}
 
 								// initTemplate(piano,vm,40);
@@ -75,48 +75,44 @@ tree
 							vm.addNode = function(idNodoPadre, titoloNodoPadre) {
 
 								$('#creaModificaObiettivo').modal('toggle');
-								if (vm.obiettivo == undefined) {
-									vm.obiettivo = new Object();
-								}
+								vm.obiettivo = new Object();
 								vm.obiettivo.idParent = idNodoPadre
 								vm.obiettivo.titoloParent = titoloNodoPadre
-
 								$scope.$apply()
 
 							}
 
 							vm.saveNodo = function() {
-								console.log(vm.nuovoObiettivoForm.$valid)
+
 								if (vm.nuovoObiettivoForm.$valid) {
-								$('#creaModificaObiettivo').modal('hide');
+									$('#creaModificaObiettivo').modal('hide');
 
-								$http
-										.post(
-												sessionStorage.context
-														+ '/pianificazione/aggiungiNodo',
-												{
-													'tabId' : vm.tabId,
-													'idVersione' : $scope.pianoCorrente.id,
-													'obiettivo' : vm.obiettivo
-												})
-										.success(
-												function(response, status,
-														headers, config) {
+									$http
+											.post(
+													sessionStorage.context
+															+ '/pianificazione/aggiungiNodo',
+													{
+														'tabId' : vm.tabId,
+														'idVersione' : $scope.pianoCorrente.id,
+														'obiettivo' : vm.obiettivo
+													})
+											.success(
+													function(response, status,
+															headers, config) {
 
-													vm.obiettivo.id = response.nuovoId
-													$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
-													$scope.pianificazioneControllerScope.pianoCorrente = response.piano
+														vm.obiettivo.id = response.nuovoId
+														$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
+														$scope.pianificazioneControllerScope.pianoCorrente = response.piano
+														vm.obiettivoDaAprire = vm.obiettivo
 
-												}).error(
-												function(response, status,
-														headers, config) {
-													alert("saveNodo "
-															+ response)
-												});
+													}).error(
+													function(response, status,
+															headers, config) {
+														alert("saveNodo "
+																+ response)
+													});
 
-								vm.obiettivo = undefined
-								}
-								else{
+								} else {
 									alert("Attenzione, non sono stati completati tutti i campi obbligatori del form")
 								}
 							}

@@ -14,7 +14,7 @@ var contextMenuItems = [ {
 
 		} else {
 			if (d.parent != undefined) {
-				treeController.addNode(d.parent.idNodo,d.parent.name);
+				treeController.addNode(d.parent.idNodo, d.parent.name);
 			}
 		}
 	},
@@ -22,7 +22,6 @@ var contextMenuItems = [ {
 } ]
 
 function findById(idNodo, nodoRadice, open) {
-
 	if (nodoRadice == undefined) {
 		return undefined
 	}
@@ -31,12 +30,10 @@ function findById(idNodo, nodoRadice, open) {
 		if (open) {
 			openNode(nodoRadice)
 		}
-
 		return nodoRadice;
 	}
 
 	var nodoTrovato = undefined;
-
 	if (nodoRadice._children != undefined) {
 		nodoRadice._children.forEach(function(d) {
 			if (d.parent == undefined) {
@@ -47,12 +44,10 @@ function findById(idNodo, nodoRadice, open) {
 				return true;
 			}
 			nodoTrovato = findById(idNodo, d, open)
-
 		});
 	}
 
 	if (nodoTrovato != undefined) {
-
 		return nodoTrovato
 	}
 
@@ -75,25 +70,22 @@ function findById(idNodo, nodoRadice, open) {
 }
 
 function openNodeById(idNodo, duration) {
-
 	var nodo = undefined
 	if (idNodo != undefined && root != undefined) {
 		nodo = findById(idNodo, root, true);
 		if (nodo != undefined) {
 			update(root, duration)
 			// scrolla fino al nodo
-
+			var scrollWidth = $('#treeSvg').attr("width")
+					- $('#treeContainer').width();
+			var xToGo = scrollWidth / 2 + nodo.x0
 			$('#treeContainer').scrollTop(nodo.y0 - nodeDepth)
-			$('#treeContainer').scrollLeft(nodo.x0)
-
+			$('#treeContainer').scrollLeft(xToGo)
 		} else {
 			alert("Nodo con id: " + idNodo + " non trovato");
 		}
 	}
-
 }
-
-
 
 function openNode(nodo) {
 	if (nodo == undefined) {

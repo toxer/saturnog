@@ -37,7 +37,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row" id="treeRender"
+		<div class="row-fluid" id="treeRender"
 			 align="center">
 
 <%--			<div ui-view="leftMenu" class="col-md-3"></div>--%>

@@ -66,6 +66,7 @@ function initTemplate(_root, _treeController, configuratore) {
 			.attr("width", maxIpoteticalWidth).attr("height", 3000).attr("id",
 					"treeSvg").append("g").attr("cx", (maxIpoteticalWidth / 2))
 			.attr('cy', 20).attr("id", "svgG");
+	
 	// zm.translate([ 350, 20 ]);
 	setCorrectWidth(root);
 	root.x0 = 0;
@@ -264,23 +265,17 @@ function update(source, now) {
 
 // Toggle children on click.
 function click(d) {
-	var lastY = $('#treeContainer').scrollTop();
-
+	var lastY = $('#treeContainer').scrollTop();	
 	closeContextMenu();
-
 	var swift = nodeDepth - 4 * rectH
-
 	if (d.children) {
-
 		// chiusura del nodo
-
 		d._children = d.children;
 		d.children = null;
 		// yToGo è la posizione del padre
 		yToGo = d.y0 - 2 * rectH + nodeDepth
 
 	} else if (d._children) {
-
 		// apertura nodo
 		// yToGo è la posizione del padre + depth
 		yToGo = d.y0 + nodeDepth - 2 * rectH
@@ -294,9 +289,10 @@ function click(d) {
 
 	update(d);
 
-	var width = $('#treeSvg').attr("width");
-	var xToGo = d.x + (($('#treeSvg').attr("width")) / 4);
-
+	
+	var scrollWidth=$('#treeSvg').attr("width")-$('#treeContainer').width();
+	var xToGo = scrollWidth/2+d.x0
+	
 	$('#treeContainer').scrollTop(yToGo);
 	$('#treeContainer').scrollLeft(xToGo);
 

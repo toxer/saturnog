@@ -284,7 +284,10 @@ pianificazione
 										.success(
 												function(response, status,
 														headers, config) {
-
+													// queste variabili servono
+													// solo in stampa,
+													// devono corrispondere al
+													// pianoCorrente
 													$scope.pianoJson = response.pianoJson
 													$scope.configuratore = response.configuratore
 
@@ -337,9 +340,10 @@ pianificazione
 
 													// cancellazioni delle
 													// variabili d'ambiente
+													// e quelle per la stampa
 													vm.pianoCorrente = null
-													$scope.pianoJson=null
-													$scope.configuratore=null
+													$scope.pianoJson = null
+													$scope.configuratore = null
 													$scope.pianoCorrente = null
 													// aggiornamento
 													// dell'userObject locale
@@ -351,6 +355,7 @@ pianificazione
 													// avviso di eliminazione
 													alert("Versione eliminata "
 															+ response.nomeVersione)
+													$state.go('default')
 
 												}).error(
 												function(response, status,
@@ -358,7 +363,7 @@ pianificazione
 													alert(response)
 												});
 
-								$state.go('default')
+								
 
 							}
 
@@ -409,9 +414,31 @@ pianificazione
 										.success(
 												function(response, status,
 														headers, config) {
+													
+													
+													vm.pianoCorrente = null
+													$scope.pianoJson = null
+													$scope.configuratore = null
+													$scope.pianoCorrente = null
+													// aggiornamento
+													// dell'userObject locale
+													serviceUtils.userObject(
+															$scope, undefined,
+															undefined, "-1")
+													serviceUtils
+															.updateBreadcumb("Pianificazione ")
+													// avviso di eliminazione
+													alert("Versione eliminata "
+															+ response.nomeVersione)
+													$state.go('default')
+													
+													
+													
 
 													alert("Versione clonata con successo "
 															+ response.nomeVersione)
+													// elimino le variabili e
+													// passo a noTree
 
 												}).error(
 												function(response, status,
