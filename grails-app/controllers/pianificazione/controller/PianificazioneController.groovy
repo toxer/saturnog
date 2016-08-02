@@ -166,7 +166,7 @@ class PianificazioneController {
 		Versione pianoTo = new Versione();
 		pianoTo.anno = pianoFrom.anno;
 		pianoTo.setEnte(pianoFrom.ente);
-		pianoTo.setNomeVersione(pianoTo.getNomeVersione()+"/bis");
+		pianoTo.setNomeVersione(pianoFrom.getNomeVersione()+"/bis");
 
 
 
@@ -187,7 +187,7 @@ class PianificazioneController {
 			return;
 		}
 
-		Versione piano = request.JSON?.piano;
+		Versione piano = new Versione(request.JSON?.piano);
 		if (piano == null){
 			render status:500,text:'Piano non trovato'
 			return
@@ -195,6 +195,8 @@ class PianificazioneController {
 		piano.setDtIniSist(new Date());
 		piano.setDtFinSist(null);
 		piano.setCreatoDa(userObject.currentUser?.userId)
+	
+		
 		piano.save(true);
 
 

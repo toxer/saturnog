@@ -28,9 +28,13 @@ class Versione implements Serializable{
 		
 		//ordinamento di default
 		sort versione:"desc"
+		
+		
 	}
 	static constraints={
 		versione(unique:['anno','ente'])
+		ente nullable:false
+		anno nullable:false
 		
 	}
 	
