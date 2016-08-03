@@ -94,6 +94,8 @@ function update(source, now) {
 		return "translate(" + source.x0 + "," + source.y0 + ")";
 	}).on("click", click)
 	//.on("dblclick",dblclick);
+	
+	
 
 	nodeEnter.on("contextmenu", d3.contextMenu(contextMenuItems));	
 	

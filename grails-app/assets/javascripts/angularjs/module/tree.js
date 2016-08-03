@@ -91,7 +91,8 @@ tree
 								$scope.$apply()
 
 							}
-
+							
+							//mostra un nodo
 							vm.showNode = function(idNodo) {
 								vm.obiettivo = new Object();
 								vm.obiettivo.id = idNodo
@@ -141,7 +142,7 @@ tree
 								
 							}
 							
-							
+							//update di un nodo dell'albero
 							vm.updateNodo= function() {
 								if (vm.obiettivo == undefined) {
 									alert("Non trovato obiettivo da salvare")
@@ -184,7 +185,8 @@ tree
 								}
 							}
 
-							vm.saveNodo = function() {
+							//salvataggio di un nuovo nodo
+							vm.saveNewNodo = function() {
 								if (vm.obiettivo == undefined) {
 									alert("Non trovato obiettivo da salvare")
 									return
@@ -226,25 +228,8 @@ tree
 								}
 							}
 
-							vm.addSibling = function(idNodo) {
-								alert("Richiesta di aggiunta fratello al nodo con id "
-										+ idNodo)
-							}
+							
 
-							vm.apriNuovoObiettivo = function() {
-
-							}
-
-							vm.aggiungiNuovoObiettivo = function(idNodoPadre) {
-								if (vm.nuovoObiettivoForm == undefined) {
-									alert("Non trovato il form per la creazione dell'obiettivo")
-								}
-								// controllo validità
-								if (vm.nuovoObiettivoForm.$valid) {
-
-								} else {
-									alert("Non sono stati completati tutti i campi obbligatori")
-								}
-							}
+							
 
 						} ]);
