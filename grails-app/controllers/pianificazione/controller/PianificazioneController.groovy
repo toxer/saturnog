@@ -133,8 +133,8 @@ class PianificazioneController {
 
 	}
 
-		
-	
+
+
 
 	def clonaVersione(){
 		if (!utilsService.testTabId()){
@@ -189,8 +189,8 @@ class PianificazioneController {
 			render status:500,text:"Errore nella creazione della versione"
 			return
 		}
-		
-		
+
+
 		if (piano == null){
 			render status:500,text:'Piano non trovato'
 			return
@@ -198,8 +198,8 @@ class PianificazioneController {
 		piano.setDtIniSist(new Date());
 		piano.setDtFinSist(null);
 		piano.setCreatoDa(userObject.currentUser?.userId)
-	
-		
+
+
 		piano.save(true);
 
 
@@ -331,10 +331,10 @@ class PianificazioneController {
 
 		render piano as JSON
 	}
-	
+
 	def mostraObiettivo(){
-	
-		
+
+
 		if (!utilsService.testTabId()){
 			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
@@ -367,9 +367,59 @@ class PianificazioneController {
 			render status:500,text:'Non trovato nessun obiettivo'
 			return;
 		}
-		println(obiettivo as JSON)
+		JSON.use("deep")
 		render obiettivo as JSON
 	}
+	
+	
+	def salvaObiettivo(){
+		if (!utilsService.testTabId()){
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			return
+		}
+		def userObject = utilsService.currentUserObject()
+		if (userObject==null){
+			render status:500,text:'Utente non trovato'
+			return;
+		}
+		def idVersione = request.JSON?.idVersione
+		if (idVersione == null){
+			render status:500,text:'Versione non presente nel db'
+			return;
+		}
+		if (idVersione != userObject.versione){
+			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+			return;
+		}
+		def obiettivo = request.JSON?.obiettivo;
+		if (obiettivo == null){
+			render status:500,text:'Non inviato obiettivo'
+			return;
+		}
+		Obiettivo obiettivoDominio = Obiettivo.findById(obiettivo.id)
+		if (obiettivoDominio == null){
+			render status:500,text:'Non trovato l\'obiettivo nel db'
+			return;
+		}
+		
+		obiettivoDominio.nome=obiettivo.nome
+		obiettivoDominio.descrizione=obiettivo.descrizione
+		obiettivoDominio.codiceCamera=obiettivo.codiceCamera
+		obiettivoDominio.note=obiettivo.note
+		obiettivoDominio.save(true)
+		JSONObject pianoJson = versioneService.stampaPianoObiettiviCompleto(obiettivoDominio.versione);
+		def resp = new JSONObject();
+		resp.pianoJson = pianoJson;
+		resp.piano = obiettivoDominio.versione
+		resp.nuovoId = obiettivoDominio.id;
+		JSON.use("deep")
+
+		render resp as JSON
+		
+		
+		
+	}
+	
 
 	def aggiungiObiettivo(){
 		if (!utilsService.testTabId()){
@@ -397,6 +447,9 @@ class PianificazioneController {
 		}
 
 		Obiettivo obiettivoDominio = new Obiettivo( request?.JSON.obiettivo);
+		
+	
+				
 		obiettivoDominio.versione = Versione.findById(idVersione)
 
 
@@ -404,11 +457,10 @@ class PianificazioneController {
 			render status:500,text:'Versione non trovata per id '+idVersione
 			return
 		}
-		
-		
-		
-		if (obiettivo?.padre != null){
-			log.info(obiettivo.padre)
+
+
+
+		if (obiettivo?.padre?.id != null){
 			Obiettivo parent = Obiettivo.findById(obiettivo?.padre.id);
 			if (parent == null){
 				render status:500,text:'Padre non identificato'
@@ -420,6 +472,8 @@ class PianificazioneController {
 			}
 			obiettivoDominio.setPadre(parent);
 
+		}else{
+			obiettivoDominio.setPadre(null)
 		}
 
 		obiettivoDominio.livello = obiettivoDominio.padre!=null?obiettivoDominio.padre.livello+1:0;
@@ -432,18 +486,17 @@ class PianificazioneController {
 		resp.pianoJson = pianoJson;
 		resp.piano = obiettivoDominio.versione
 		resp.nuovoId = obiettivoDominio.id;
-
+		JSON.use("deep")
 		render resp as JSON
 
 
 
 
-		//per sicurezza non mappo direttamente il JSON nell'oggetto di dominio,
-		//ma lo creo con le informaizoni ricevute.
+
 
 	}
-	
-	
-	
+
+
+
 
 }

@@ -78,11 +78,15 @@ tree
 									backdrop : 'static',
 									keyboard : true
 								});
+								vm.save=true;
+								vm.update=false;
 								vm.obiettivo = new Object();
+								vm.obiettivo.padre = new Object();
 								if (idNodoPadre) {
-									vm.obiettivo.padre = new Object();
 									vm.obiettivo.padre.id = idNodoPadre
 									vm.obiettivo.padre.nome = titoloNodoPadre
+								}else{
+									vm.obiettivo.padre.nome = $scope.pianoCorrente.nomeVersione
 								}
 								$scope.$apply()
 
@@ -91,6 +95,9 @@ tree
 							vm.showNode = function(idNodo) {
 								vm.obiettivo = new Object();
 								vm.obiettivo.id = idNodo
+								vm.save=false;
+								vm.update=true;
+								
 								$http
 										.post(
 												sessionStorage.context
@@ -106,6 +113,11 @@ tree
 													console.log(response)
 
 													vm.obiettivo = response
+													if (vm.obiettivo.padre==undefined){
+														vm.obiettivo.padre = new Object();
+														vm.obiettivo.padre.nome=$scope.pianoCorrente.nomeVersione
+													}
+													console.log(vm.obiettivo)
 													// $scope.$apply()
 
 													$('#creaModificaObiettivo')
@@ -125,6 +137,51 @@ tree
 													$('#spinner').fadeOut(
 															'fast');
 												});
+								$scope.$apply()
+								
+							}
+							
+							
+							vm.updateNodo= function() {
+								if (vm.obiettivo == undefined) {
+									alert("Non trovato obiettivo da salvare")
+									return
+
+									
+
+								}
+
+								if (vm.nuovoObiettivoForm.$valid) {
+									$('#creaModificaObiettivo').modal('hide');
+
+									$http
+											.post(
+													sessionStorage.context
+															+ '/pianificazione/salvaObiettivo',
+													{
+														'tabId' : vm.tabId,
+														'idVersione' : $scope.pianoCorrente.id,
+														'obiettivo' : vm.obiettivo
+													})
+											.success(
+													function(response, status,
+															headers, config) {
+
+														vm.obiettivo.id = response.nuovoId
+														$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
+														$scope.pianificazioneControllerScope.pianoCorrente = response.piano
+														vm.obiettivoDaAprire = vm.obiettivo
+
+													}).error(
+													function(response, status,
+															headers, config) {
+														alert("saveNodo "
+																+ response)
+													});
+
+								} else {
+									alert("Attenzione, non sono stati completati tutti i campi obbligatori del form")
+								}
 							}
 
 							vm.saveNodo = function() {

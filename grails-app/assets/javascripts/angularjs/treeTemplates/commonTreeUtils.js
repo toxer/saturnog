@@ -1,4 +1,16 @@
 var contextMenuItems = [ {
+	title : 'Mostra l\'obiettivo',
+	action : function(elm, d, i) {
+		if (d.idNodo == undefined) {
+
+		} else {
+			if (d.idNodo != undefined && d.parent != undefined) {
+				treeController.showNode(d.idNodo);
+			}
+		}
+	},
+	disabled : false
+}, {
 	title : 'Aggiungi un figlio',
 	action : function(elm, d, i) {
 		// utilizzo le funzioni del TreeController passato in fase di init
@@ -20,18 +32,6 @@ var contextMenuItems = [ {
 	},
 	disabled : false
 
-}, {
-	title : 'Mostra un obiettivo',
-	action : function(elm, d, i) {
-		if (d.idNodo == undefined) {
-
-		} else {
-			if (d.idNodo != undefined && d.parent != undefined) {
-				treeController.showNode(d.idNodo);
-			}
-		}
-	},
-	disabled : false
 } ]
 
 function expandNodeWithoutUpdate(d) {

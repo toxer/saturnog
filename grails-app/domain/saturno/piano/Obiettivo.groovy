@@ -44,8 +44,12 @@ class Obiettivo implements Serializable{
 		id generator:'identity', column:'id_obiettivo', type:'integer'
 		descrizione type: 'text'
 		nome type:'text'
-		note type:'text'
-		
+		note type:'text'		
+	}
+	
+	static constraints={
+		anno nullable:false
+		versione nullable:false
 		
 		
 	}

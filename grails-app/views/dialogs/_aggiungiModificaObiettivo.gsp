@@ -44,7 +44,9 @@
 			</div>
 			<div id="modalFooter" class="modal-footer input-group-addon">
 				<button class="btn btn-success"
-					ng-click="tc.saveNodo()">OK</button>
+					ng-click="tc.saveNodo()" class="ng-hide" ng-hide="tc.update">OK</button>
+				<button class="btn btn-warning"
+					ng-click="tc.updateNodo()" class="ng-hide" ng-hide="tc.save">Salva</button>
 				<button class="btn btn-danger" data-dismiss="modal">Annulla</button>
 
 			</div>
