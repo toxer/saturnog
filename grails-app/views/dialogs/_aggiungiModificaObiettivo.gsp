@@ -1,7 +1,7 @@
 <div id="creaModificaObiettivo" class="modal fade" tabindex="-1"
-	role="dialog" aria-hidden="true" style="display: none;">
+	role="dialog" aria-hidden="true" style="display: none">
 
-	<div class="modal-dialog">
+	<div class="modal-dialog" style="width:80%">
 		<div id="scriviModalContent" class="modal-content">
 			<div id="scriviHeader" class="modal-header">
 				<%--				<button type="button" class="close" data-dismiss="modal"--%>
@@ -10,18 +10,18 @@
 					un obiettivo</h1>
 			</div>
 
-			<div id="scriviModalBody" class="modal-body" align="left">
+			<div id="scriviModalBody" class="modal-body pre-scrollable" align="left">
 				<form novalidate class="css-form" name="tc.nuovoObiettivoForm">
 					<fieldset class="form-group">
 						<label for="titoloPadre">Obiettivo padre</label> <input
 							type="text" class="form-control" id="titoloPadre"
-							ng-model="tc.obiettivo.titoloParent" readonly> <small
+							ng-model="tc.obiettivo.padre.nome" readonly> <small
 							class="text-muted">Titolo dell'obiettivo padre</small>
 					</fieldset>
 					<fieldset class="form-group" hidden>
 						<label for="idObiettivoPadre">Id obiettivo padre</label> <input
 							type="number" class="form-control" id="idObiettivoPadre"
-							ng-model="tc.obiettivo.idParent"  readonly> <small
+							ng-model="tc.obiettivo.padre.id"  readonly> <small
 							class="text-muted">Id obiettivo padre</small>
 					</fieldset>
 					<fieldset class="form-group">
@@ -33,7 +33,7 @@
 					<fieldset class="form-group">
 						<label for="titoloObiettivo">Titolo dell'obiettivo</label> <input
 							type="text" class="form-control" id="titoloObiettivo"
-							ng-model="tc.obiettivo.titolo" required> <small
+							ng-model="tc.obiettivo.nome" required> <small
 							class="text-muted">Titolo sintetico dell'obiettivo</small>
 					</fieldset>
 					<fieldset class="form-group">

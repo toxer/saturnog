@@ -40,7 +40,8 @@ myApp.factory('httpSpinnerInterceptor', function($q,$rootScope) {
       response: function(response) {
     	  $('#spinner').fadeOut('fast');
         return response;
-      },
+      }
+      //,
 
 //     responseError: function(responseError) {
 //    	 $('#spinner').fadeOut('fast');

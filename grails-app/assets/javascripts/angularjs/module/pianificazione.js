@@ -162,6 +162,7 @@ pianificazione
 									return;
 								}
 								if (vm.nuovaVersioneForm.$valid) {
+									
 									$http
 											.post(
 													sessionStorage.context
@@ -446,5 +447,31 @@ pianificazione
 													alert(response)
 												});
 							}
+							
+							vm.inserimentoMassivo=function(){
+
+								$http
+										.post(
+												sessionStorage.context
+														+ '/test/inserimentoMassivo',
+												{
+													'tabId' : vm.tabId,
+													'idVersione' : vm.pianoCorrente.id
+												})
+										.success(
+												function(response, status,
+														headers, config) {
+
+													alert("Inserimento completato")
+
+												}).error(
+												function(response, status,
+														headers, config) {
+													alert(response)
+												});
+
+							}
+							
+							
 
 						} ]);

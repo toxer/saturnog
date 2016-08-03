@@ -133,6 +133,8 @@ class PianificazioneController {
 
 	}
 
+		
+	
 
 	def clonaVersione(){
 		if (!utilsService.testTabId()){
@@ -167,11 +169,6 @@ class PianificazioneController {
 		pianoTo.anno = pianoFrom.anno;
 		pianoTo.setEnte(pianoFrom.ente);
 		pianoTo.setNomeVersione(pianoFrom.getNomeVersione()+"/bis");
-
-
-
-
-
 		versioneService.clonaVersione(pianoFrom, pianoTo);
 		render pianoTo as JSON
 	}
@@ -188,6 +185,12 @@ class PianificazioneController {
 		}
 
 		Versione piano = new Versione(request.JSON?.piano);
+		if (piano.anno==null || piano.ente==null || piano.id!=null){
+			render status:500,text:"Errore nella creazione della versione"
+			return
+		}
+		
+		
 		if (piano == null){
 			render status:500,text:'Piano non trovato'
 			return
@@ -328,8 +331,47 @@ class PianificazioneController {
 
 		render piano as JSON
 	}
+	
+	def mostraObiettivo(){
+	
+		
+		if (!utilsService.testTabId()){
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			return
+		}
+		def userObject = utilsService.currentUserObject()
+		if (userObject==null){
+			render status:500,text:'Utente non trovato'
+			return;
+		}
+		def idVersione = request.JSON?.idVersione
+		if (idVersione == null){
+			render status:500,text:'Versione non presente nel db'
+			return;
+		}
+		if (idVersione != userObject.versione){
+			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+			return;
+		}
+		def obiettivo = request.JSON?.obiettivo;
+		if (obiettivo == null){
+			render status:500,text:'Non inviato obiettivo'
+			return;
+		}
+		if (obiettivo.id==null){
+			render status:500,text:'Non inviato obiettivo con id'
+			return;
+		}
+		obiettivo = Obiettivo.findById(obiettivo.id)
+		if (obiettivo == null){
+			render status:500,text:'Non trovato nessun obiettivo'
+			return;
+		}
+		println(obiettivo as JSON)
+		render obiettivo as JSON
+	}
 
-	def aggiungiNodo(){
+	def aggiungiObiettivo(){
 		if (!utilsService.testTabId()){
 			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
@@ -354,7 +396,7 @@ class PianificazioneController {
 			return;
 		}
 
-		Obiettivo obiettivoDominio = new Obiettivo();
+		Obiettivo obiettivoDominio = new Obiettivo( request?.JSON.obiettivo);
 		obiettivoDominio.versione = Versione.findById(idVersione)
 
 
@@ -362,8 +404,12 @@ class PianificazioneController {
 			render status:500,text:'Versione non trovata per id '+idVersione
 			return
 		}
-		if (obiettivo?.idParent != null){
-			Obiettivo parent = Obiettivo.findById(obiettivo?.idParent);
+		
+		
+		
+		if (obiettivo?.padre != null){
+			log.info(obiettivo.padre)
+			Obiettivo parent = Obiettivo.findById(obiettivo?.padre.id);
 			if (parent == null){
 				render status:500,text:'Padre non identificato'
 				return
@@ -376,10 +422,8 @@ class PianificazioneController {
 
 		}
 
-		obiettivoDominio.nome=obiettivo.titolo
-		obiettivoDominio.descrizione=obiettivo.descrizione
-		obiettivoDominio.codiceCamera=obiettivo.codiceCamera
 		obiettivoDominio.livello = obiettivoDominio.padre!=null?obiettivoDominio.padre.livello+1:0;
+		obiettivoDominio.anno = obiettivoDominio.versione.anno
 		obiettivoDominio.save(true);
 
 
@@ -398,5 +442,8 @@ class PianificazioneController {
 		//ma lo creo con le informaizoni ricevute.
 
 	}
+	
+	
+	
 
 }

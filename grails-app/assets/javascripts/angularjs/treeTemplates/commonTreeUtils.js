@@ -19,7 +19,81 @@ var contextMenuItems = [ {
 		}
 	},
 	disabled : false
+
+}, {
+	title : 'Mostra un obiettivo',
+	action : function(elm, d, i) {
+		if (d.idNodo == undefined) {
+
+		} else {
+			if (d.idNodo != undefined && d.parent != undefined) {
+				treeController.showNode(d.idNodo);
+			}
+		}
+	},
+	disabled : false
 } ]
+
+function expandNodeWithoutUpdate(d) {
+
+	if (d._children != undefined) {
+
+		d._children.forEach(function(child) {
+			if (d.children == undefined) {
+				d.children = []
+			}
+			d.children.push(child)
+		})
+	}
+	d._children = null
+	if (d.children != undefined) {
+		d.children.forEach(function(child) {
+			expandNodeWithoutUpdate(child);
+		})
+	}
+}
+
+function collapseNodeWithoutUpdate(d) {
+
+	if (d.children != undefined) {
+
+		d.children.forEach(function(child) {
+			if (d._children == undefined) {
+				d._children = []
+			}
+			d._children.push(child)
+		})
+	}
+	d.children = null
+	if (d._children != undefined) {
+		d._children.forEach(function(child) {
+			collapseNodeWithoutUpdate(child);
+		})
+	}
+}
+
+function scrollToNode(node) {
+
+	var scrollWidth = $('#treeSvg').attr("width") - $('#treeContainer').width();
+	var xToGo = scrollWidth / 2 + node.x0
+	var yToGo = node.y0 + nodeDepth - 2 * rectH
+	$('#treeContainer').scrollTop(yToGo);
+	$('#treeContainer').scrollLeft(xToGo);
+
+}
+
+function expand(d) {
+	expandNodeWithoutUpdate(d)
+	update(d)
+	scrollToNode(d)
+
+}
+
+function collapse(d) {
+	collapseNodeWithoutUpdate(d)
+	update(d)
+	scrollToNode(d)
+}
 
 function findById(idNodo, nodoRadice, open) {
 	if (nodoRadice == undefined) {
@@ -76,11 +150,7 @@ function openNodeById(idNodo, duration) {
 		if (nodo != undefined) {
 			update(root, duration)
 			// scrolla fino al nodo
-			var scrollWidth = $('#treeSvg').attr("width")
-					- $('#treeContainer').width();
-			var xToGo = scrollWidth / 2 + nodo.x0
-			$('#treeContainer').scrollTop(nodo.y0 - nodeDepth)
-			$('#treeContainer').scrollLeft(xToGo)
+			scrollToNode(nodo)
 		} else {
 			alert("Nodo con id: " + idNodo + " non trovato");
 		}

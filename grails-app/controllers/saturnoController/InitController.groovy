@@ -116,7 +116,7 @@ class InitController {
 		}else{
 			log.debug("Mantenuta versione: "+userObject.versione)
 		}
-		
+		println("userObject "+userObject)
 		session."${tabId}".userObject = userObject
 	
 		log.debug("Setup userObject : "+session."${tabId}"?.userObject)

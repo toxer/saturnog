@@ -30,37 +30,20 @@ var configurazioneLivelli
 // _children figli collassati
 // children figli non collassati
 
-function collapse(d) {
-	if (d.children) {
-		d._children = d.children;
-		d._children.forEach(collapse);
-		d.children = null;
-	}
-}
+
 
 function initTemplate(_root, _treeController, configuratore) {
 	treeController = _treeController
 	root = _root;
 	configurazioneLivelli = configuratore!=undefined?configuratore.livelli:undefined
 
-	if (root.children != undefined) {
-		root.children.forEach(collapse);
-	}
 	
-	collapse(root)
+	// collapse(root)
 
 	// ricavo la massima ampiezza disponibile
 
 	var maxIpoteticalWidth = (countAllNode(root) > 0 ? countAllNode(root) : 1)
-			* (rectW * 2 + 60);
-
-	// svg = d3.select('#treeBody').append("svg")
-	// .attr("width", maxIpoteticalWidth).attr("height",
-	// 3000).attr("id","treeSvg").call(
-	// zm = d3.behavior.zoom().scaleExtent([ 1, 3 ]).on("zoom",
-	// redraw)).append("g").attr("transform",
-	// "translate(" + (maxIpoteticalWidth / 2) + "," + 20 +
-	// ")").attr("id","svgG");
+			* (rectW * 2 + 60);	
 
 	svg = d3.select('#treeBody').append("svg")
 			.attr("width", maxIpoteticalWidth).attr("height", 3000).attr("id",
@@ -71,12 +54,11 @@ function initTemplate(_root, _treeController, configuratore) {
 	setCorrectWidth(root);
 	root.x0 = 0;
 	root.y0 = height / 2;
-
 	update(root, 0);
-	// forzo lo scroll al centro orizzontalmente basandomi sul primo nodo
-
-	var xToGo = (($('#treeSvg').attr("width")) / 3);
-	$('#treeContainer').scrollLeft(xToGo)
+	scrollToNode(root)
+	collapse(root)
+	
+	
 
 }
 
@@ -110,30 +92,10 @@ function update(source, now) {
 		return "node level" + (d.livello != undefined ? d.livello : "root");
 	}).attr("transform", function(d) {
 		return "translate(" + source.x0 + "," + source.y0 + ")";
-	}).on("click", click);
+	}).on("click", click)
+	//.on("dblclick",dblclick);
 
-	// nodeEnter.on("contextmenu", function() {
-	// contextMenu(d3.mouse(this)[0], d3.mouse(this)[1], this)
-	// });
-
-	nodeEnter.on("contextmenu", d3.contextMenu(contextMenuItems));
-
-	// nodeEnter.append("rect").attr("width", rectW).attr("height", rectH).attr(
-	// "stroke", "black").attr("stroke-width", 1).style("fill",
-	// function(d) {
-	// return d._children ? "lightsteelblue" : "#fff";
-	// });
-
-	// nodeEnter.append("text").attr("x", rectW / 2).attr("y", rectH / 2).attr(
-	// "dy", ".35em").attr("text-anchor", "middle").text(function(d) {
-	// return d.name;
-	// });
-
-	// creazione del nodo
-
-
-	
-	
+	nodeEnter.on("contextmenu", d3.contextMenu(contextMenuItems));	
 	
 	nodeEnter.append("rect").attr("width", rectW).attr("height", 3 * rectH / 3)
 			.attr("rx", "15").attr("ry", "15")
@@ -263,6 +225,14 @@ function update(source, now) {
 
 }
 
+function dblclick(d){
+	if (d.idNodo){
+		treeController.showNode(d.idNodo);
+		scrollToNode(d)
+	}
+	
+}
+
 // Toggle children on click.
 function click(d) {
 	var lastY = $('#treeContainer').scrollTop();	
@@ -273,29 +243,25 @@ function click(d) {
 		d._children = d.children;
 		d.children = null;
 		// yToGo è la posizione del padre
-		yToGo = d.y0 - 2 * rectH + nodeDepth
+	// yToGo = d.y0 - 2 * rectH + nodeDepth
 
 	} else if (d._children) {
 		// apertura nodo
 		// yToGo è la posizione del padre + depth
-		yToGo = d.y0 + nodeDepth - 2 * rectH
+	// yToGo = d.y0 + nodeDepth - 2 * rectH
 		d.children = d._children;
 		d._children = null;
 
 	} else {
 		// nodo senza figli
-		yToGo = d.y0 + nodeDepth - 2 * rectH
+	// yToGo = d.y0 + nodeDepth - 2 * rectH
 	}
-
+	
+	
 	update(d);
 
 	
-	var scrollWidth=$('#treeSvg').attr("width")-$('#treeContainer').width();
-	var xToGo = scrollWidth/2+d.x0
-	
-	$('#treeContainer').scrollTop(yToGo);
-	$('#treeContainer').scrollLeft(xToGo);
-
+	scrollToNode(d)
 }
 
 // Redraw for zoom

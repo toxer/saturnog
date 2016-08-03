@@ -190,7 +190,7 @@ class TestController {
 		VersioneCfg versioneCfg = new VersioneCfg();
 		versioneCfg.ente= Ente.findAll().get(0)
 		versioneCfg.setNumeroLivelli(5);
-		
+
 		LivelloCfg l0=new LivelloCfg();
 		l0.setNomePlurale("Versioni");
 		l0.setNomeSingolare("Versione");
@@ -245,6 +245,62 @@ class TestController {
 
 
 
+
+	}
+
+
+	private inserimentoMassivo(){
+		if (!utilsService.testTabId()){
+			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			return
+		}
+		def userObject = utilsService.currentUserObject()
+		if (userObject==null){
+			render status:500,text:'Utente non trovato'
+			return;
+		}
+		def idVersione = request.JSON?.idVersione
+
+		if (idVersione==null){
+			render status:500,text:'Id versione non trovato'
+			return;
+		}
+
+		if (idVersione != userObject.versione){
+			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+			return;
+		}
+
+		Versione p = Versione.findById(idVersione)
+		if (p == null){
+			render status:500,text:'Versione non presente nel db'
+			return;
+		}
+
+
+		for (def i = 0; i < 100; i++){
+
+			Obiettivo uno = new Obiettivo();
+			uno.setNome("Obiettivo uno "+i);
+			uno.setDescrizione("Descrizione obiettivo "+i);
+			uno.setCodiceCamera("codice "+i)
+			uno.setAnno(p.getAnno());
+			p.addToObiettivi(uno);
+			uno.setLivello(1)
+			
+			Obiettivo due = new Obiettivo();
+			due.setNome("Obiettivo due "+i);
+			due.setDescrizione("Descrizione obiettivo child "+i);
+			due.setCodiceCamera("codice "+i)
+			due.setAnno(p.getAnno());
+			due.setPadre(uno);
+			due.setLivello(1)
+			p.addToObiettivi(uno);
+			p.addToObiettivi(due);
+			println("Inserito obiettivo "+i)
+		}
+		p.save(true)
+		render p as JSON
 
 	}
 }

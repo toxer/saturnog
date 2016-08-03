@@ -24,6 +24,8 @@
 					<button class="btn btn-warning"
 						ng-click="pc.creaNuovaVersioneOpenDialog();">Crea nuova
 						versione</button>
+<%--					<button class="btn btn-warning"--%>
+<%--						ng-click="pc.inserimentoMassivo();">Inserimento massivo</button>--%>
 <%--						<a class="btn btn-danger" ng-click="pc.clonaVersione()">Clona questa versione</a>--%>
 				</div>
 				<div class="col-xs-6" align="center">

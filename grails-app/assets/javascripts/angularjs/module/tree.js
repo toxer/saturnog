@@ -74,15 +74,67 @@ tree
 							// aggiunta nodi all'albero
 							vm.addNode = function(idNodoPadre, titoloNodoPadre) {
 
-								$('#creaModificaObiettivo').modal('toggle');
+								$('#creaModificaObiettivo').modal({
+									backdrop : 'static',
+									keyboard : true
+								});
 								vm.obiettivo = new Object();
-								vm.obiettivo.idParent = idNodoPadre
-								vm.obiettivo.titoloParent = titoloNodoPadre
+								if (idNodoPadre) {
+									vm.obiettivo.padre = new Object();
+									vm.obiettivo.padre.id = idNodoPadre
+									vm.obiettivo.padre.nome = titoloNodoPadre
+								}
 								$scope.$apply()
 
 							}
 
+							vm.showNode = function(idNodo) {
+								vm.obiettivo = new Object();
+								vm.obiettivo.id = idNodo
+								$http
+										.post(
+												sessionStorage.context
+														+ '/pianificazione/mostraObiettivo',
+												{
+													'tabId' : vm.tabId,
+													'idVersione' : $scope.pianoCorrente.id,
+													'obiettivo' : vm.obiettivo
+												})
+										.success(
+												function(response, status,
+														headers, config) {
+													console.log(response)
+
+													vm.obiettivo = response
+													// $scope.$apply()
+
+													$('#creaModificaObiettivo')
+															.modal(
+																	{
+																		backdrop : 'static',
+																		keyboard : true
+																	})
+
+												}).error(
+												function(response, status,
+														headers, config) {
+													alert("mostraObiettivo "
+															+ response)
+													console.log("Statu "
+															+ status)
+													$('#spinner').fadeOut(
+															'fast');
+												});
+							}
+
 							vm.saveNodo = function() {
+								if (vm.obiettivo == undefined) {
+									alert("Non trovato obiettivo da salvare")
+									return
+
+									
+
+								}
 
 								if (vm.nuovoObiettivoForm.$valid) {
 									$('#creaModificaObiettivo').modal('hide');
@@ -90,7 +142,7 @@ tree
 									$http
 											.post(
 													sessionStorage.context
-															+ '/pianificazione/aggiungiNodo',
+															+ '/pianificazione/aggiungiObiettivo',
 													{
 														'tabId' : vm.tabId,
 														'idVersione' : $scope.pianoCorrente.id,
