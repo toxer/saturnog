@@ -39,6 +39,7 @@ class InitController {
 	}
 	
 	def getUserObject(){
+		try{
 		
 		if (!utilsService.testTabId()){
 			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
@@ -48,6 +49,10 @@ class InitController {
 		JSONObject data = new JSONObject();
 		data.data =  session."${tabId}".userObject;
 		render  session."${tabId}"?.userObject as JSON
+		}
+		catch (Exception exc){
+			exc.printStackTrace()
+		}
 		
 		
 	}
@@ -55,7 +60,7 @@ class InitController {
 	
 
 	def updateUserObject(){
-		
+		try{
 		if (!utilsService.testTabId()){
 			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
@@ -112,6 +117,9 @@ class InitController {
 		}
 		if (data.versione != null){
 			userObject.versione = data.versione;
+			if (userObject.versione=="-1"){
+				userObject.versione=null;
+			}
 			log.debug("Versione settata "+userObject.versione)
 		}else{
 			log.debug("Mantenuta versione: "+userObject.versione)
@@ -121,13 +129,10 @@ class InitController {
 	
 		log.debug("Setup userObject : "+session."${tabId}"?.userObject)
 		render userObject as JSON
-		
-		
-		
-		
-
-
-
+		}
+		catch (Exception exc){
+			exc.printStackTrace()
+		}
 	}
 	
 	//cerca l'ente dal codice eaco e

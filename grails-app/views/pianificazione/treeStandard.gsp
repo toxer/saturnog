@@ -11,7 +11,14 @@
   cursor: pointer;
   fill: #fff;
   fill-opacity: .5;
-  
+  stroke-width: 1.5px;
+}
+
+
+.deselectedNode rect{
+  cursor: pointer;
+  fill: #999!important;
+  fill-opacity: .5;
   stroke-width: 1.5px;
 }
 
@@ -34,7 +41,7 @@ path.link {
 <div ng-controller="TreeController as tc">
 	<g:render template="/dialogs/aggiungiModificaObiettivo" />
 	<div style="max-height: none">
-		
+
 		<div id="treeBody"></div>
 	</div>
 

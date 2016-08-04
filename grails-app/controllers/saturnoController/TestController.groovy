@@ -249,7 +249,7 @@ class TestController {
 	}
 
 
-	private inserimentoMassivo(){
+	def inserimentoMassivo(){
 		if (!utilsService.testTabId()){
 			render status:503,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return

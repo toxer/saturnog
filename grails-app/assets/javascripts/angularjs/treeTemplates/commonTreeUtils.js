@@ -267,6 +267,22 @@ function allChild(rootNode, onlyOpen) {
 
 }
 
+
+function selectNodeById(rootNode,idsArray){
+	var figli = expandNodeWithoutUpdate(rootNode)	
+	var figliNonSelezionati=[]
+	figli.forEach(function (d){
+		if (idsArray.indexOf(d.idNode)==-1){
+			figliSelezionati.push(d)
+		}
+	});
+	
+	if (figliNonSelezionati.length>0){
+		figliNonSelezionati.deselected=true
+	}
+	update(rootNode,0)
+}
+
 function setCorrectWidth(rootNode) {
 	// tutti i soli nodi aperti in array
 	var nodiAperti = nodiInArray(rootNode, true)

@@ -33,9 +33,11 @@ var configurazioneLivelli
 
 
 function initTemplate(_root, _treeController, configuratore) {
+	console.log(_root);
 	treeController = _treeController
 	root = _root;
 	configurazioneLivelli = configuratore!=undefined?configuratore.livelli:undefined
+	
 
 	
 	// collapse(root)
@@ -140,6 +142,8 @@ function update(source, now) {
 	nodeEnter.attr("id", function(d) {
 		return d.id
 	})
+	
+	//nodeEnter.classed("deselectedNode",true)
 
 	var nodeUpdate = node.transition().duration(durationTransform).attr(
 			"transform", function(d) {

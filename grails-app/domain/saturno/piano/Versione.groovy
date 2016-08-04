@@ -27,7 +27,7 @@ class Versione implements Serializable{
 		anno index: 'ente_anno_piano_idx'
 		
 		//ordinamento di default
-		sort versione:"desc"
+		sort versione:"asc"
 		
 		
 	}

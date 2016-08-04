@@ -78,8 +78,7 @@ tree
 									backdrop : 'static',
 									keyboard : true
 								});
-								vm.save=true;
-								vm.update=false;
+								
 								vm.obiettivo = new Object();
 								vm.obiettivo.padre = new Object();
 								if (idNodoPadre) {
@@ -96,8 +95,7 @@ tree
 							vm.showNode = function(idNodo) {
 								vm.obiettivo = new Object();
 								vm.obiettivo.id = idNodo
-								vm.save=false;
-								vm.update=true;
+							
 								
 								$http
 										.post(
@@ -154,7 +152,39 @@ tree
 
 								if (vm.nuovoObiettivoForm.$valid) {
 									$('#creaModificaObiettivo').modal('hide');
+									
+									//controllo se il nodo è da aggiungere o da salvare
+									
+									if (vm.obiettivo.id == undefined){
+										//aggiunta
+										
+										$http
+										.post(
+												sessionStorage.context
+														+ '/pianificazione/aggiungiObiettivo',
+												{
+													'tabId' : vm.tabId,
+													'idVersione' : $scope.pianoCorrente.id,
+													'obiettivo' : vm.obiettivo
+												})
+										.success(
+												function(response, status,
+														headers, config) {
 
+													vm.obiettivo.id = response.nuovoId
+													$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
+													$scope.pianificazioneControllerScope.pianoCorrente = response.piano
+													vm.obiettivoDaAprire = vm.obiettivo
+
+												}).error(
+												function(response, status,
+														headers, config) {
+													alert("saveNodo "
+															+ response)
+												});
+										
+									}else{
+										//update
 									$http
 											.post(
 													sessionStorage.context
@@ -179,55 +209,15 @@ tree
 														alert("saveNodo "
 																+ response)
 													});
+									}
 
 								} else {
 									alert("Attenzione, non sono stati completati tutti i campi obbligatori del form")
 								}
+								
 							}
 
-							//salvataggio di un nuovo nodo
-							vm.saveNewNodo = function() {
-								if (vm.obiettivo == undefined) {
-									alert("Non trovato obiettivo da salvare")
-									return
-
-									
-
-								}
-
-								if (vm.nuovoObiettivoForm.$valid) {
-									$('#creaModificaObiettivo').modal('hide');
-
-									$http
-											.post(
-													sessionStorage.context
-															+ '/pianificazione/aggiungiObiettivo',
-													{
-														'tabId' : vm.tabId,
-														'idVersione' : $scope.pianoCorrente.id,
-														'obiettivo' : vm.obiettivo
-													})
-											.success(
-													function(response, status,
-															headers, config) {
-
-														vm.obiettivo.id = response.nuovoId
-														$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
-														$scope.pianificazioneControllerScope.pianoCorrente = response.piano
-														vm.obiettivoDaAprire = vm.obiettivo
-
-													}).error(
-													function(response, status,
-															headers, config) {
-														alert("saveNodo "
-																+ response)
-													});
-
-								} else {
-									alert("Attenzione, non sono stati completati tutti i campi obbligatori del form")
-								}
-							}
-
+						
 							
 
 							

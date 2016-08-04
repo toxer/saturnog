@@ -33,6 +33,7 @@ class PianificazioneController {
 
 	def testVersionExist(){
 
+
 		def userObject = utilsService.currentUserObject()
 		if (userObject == null){
 			render status:500,text:'Errore, non trovato un utente valido'
@@ -61,14 +62,16 @@ class PianificazioneController {
 		versione.versionePresente =false
 		versione.versione=null;
 		if (piani == null || piani.size()==0){
+			JSON.use("deep")
 			render versione as JSON
 			return
 
 		}
 		versione.versionePresente=true
 		versione.versioni=piani
-
+		JSON.use("deep")
 		render versione as JSON
+
 
 	}
 
@@ -170,10 +173,12 @@ class PianificazioneController {
 		pianoTo.setEnte(pianoFrom.ente);
 		pianoTo.setNomeVersione(pianoFrom.getNomeVersione()+"/bis");
 		versioneService.clonaVersione(pianoFrom, pianoTo);
+		JSON.use("deep")
 		render pianoTo as JSON
 	}
 
 	def creaNuovaVersione(){
+
 		if (!utilsService.testTabId()){
 			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
 			return
@@ -201,9 +206,7 @@ class PianificazioneController {
 
 
 		piano.save(true);
-
-
-
+		JSON.use("deep")
 		render piano as JSON
 
 
@@ -248,40 +251,42 @@ class PianificazioneController {
 	}
 
 	def cancellaVersioneCorrente(){
-		if (!utilsService.testTabId()){
-			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
-			return
-		}
-		def userObject = utilsService.currentUserObject()
-		if (userObject==null){
-			render status:500,text:'Utente non trovato'
-			return;
-		}
-		def idVersione = request.JSON?.idVersione
+		
+			if (!utilsService.testTabId()){
+				render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+				return
+			}
+			def userObject = utilsService.currentUserObject()
+			if (userObject==null){
+				render status:500,text:'Utente non trovato'
+				return;
+			}
+			def idVersione = request.JSON?.idVersione
 
-		if (idVersione==null){
-			render status:500,text:'Id versione non trovato'
-			return;
-		}
+			if (idVersione==null){
+				render status:500,text:'Id versione non trovato'
+				return;
+			}
 
-		if (idVersione != userObject.versione){
-			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
-			return;
-		}
+			if (idVersione != userObject.versione){
+				render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+				return;
+			}
 
-		Versione p = Versione.findById(idVersione)
-		if (p == null){
-			render status:500,text:'Versione non presente nel db'
-			return;
-		}
-		def retObj = new JSONObject();
-		retObj.nomeVersione = p.nomeVersione;
-		p.delete(flush:true, failOnError:true);
-		//per controllo, guardo che l'id versine ricevuto corrisponda a
-		//quello presente nell'id utente in sessione.
-		//Questi devono sempre coincidere
-		render retObj as JSON
-
+			Versione p = Versione.findById(idVersione)
+			if (p == null){
+				render status:500,text:'Versione non presente nel db'
+				return;
+			}
+			def retObj = new JSONObject();
+			retObj.nomeVersione = p.nomeVersione;
+			p.delete(flush:true, failOnError:true);
+			//per controllo, guardo che l'id versine ricevuto corrisponda a
+			//quello presente nell'id utente in sessione.
+			//Questi devono sempre coincidere
+			JSON.use("deep")
+			render retObj as JSON
+		
 
 	}
 
@@ -329,6 +334,8 @@ class PianificazioneController {
 
 		}
 
+		JSON.use("deep")
+		println(piano)
 		render piano as JSON
 	}
 
@@ -370,8 +377,8 @@ class PianificazioneController {
 		JSON.use("deep")
 		render obiettivo as JSON
 	}
-	
-	
+
+
 	def salvaObiettivo(){
 		if (!utilsService.testTabId()){
 			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
@@ -401,7 +408,7 @@ class PianificazioneController {
 			render status:500,text:'Non trovato l\'obiettivo nel db'
 			return;
 		}
-		
+
 		obiettivoDominio.nome=obiettivo.nome
 		obiettivoDominio.descrizione=obiettivo.descrizione
 		obiettivoDominio.codiceCamera=obiettivo.codiceCamera
@@ -413,13 +420,12 @@ class PianificazioneController {
 		resp.piano = obiettivoDominio.versione
 		resp.nuovoId = obiettivoDominio.id;
 		JSON.use("deep")
-
 		render resp as JSON
-		
-		
-		
+
+
+
 	}
-	
+
 
 	def aggiungiObiettivo(){
 		if (!utilsService.testTabId()){
@@ -447,9 +453,9 @@ class PianificazioneController {
 		}
 
 		Obiettivo obiettivoDominio = new Obiettivo( request?.JSON.obiettivo);
-		
-	
-				
+
+
+
 		obiettivoDominio.versione = Versione.findById(idVersione)
 
 
