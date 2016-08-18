@@ -54,6 +54,7 @@ tree
 								$('#treeBody').empty();
 
 								initTemplate(piano, vm, configuratore)
+								
 								if (vm.obiettivoDaAprire != undefined
 										&& vm.obiettivoDaAprire.id != undefined) {
 									// mi posizione con la
@@ -151,6 +152,14 @@ tree
 
 									
 
+																											
+
+									
+
+																		
+
+									
+
 								}
 
 								if (vm.nuovoObiettivoForm.$valid) {
@@ -177,9 +186,9 @@ tree
 																headers, config) {
 
 															vm.obiettivo.id = response.nuovoId
+															vm.obiettivoDaAprire = vm.obiettivo
 															$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
 															$scope.pianificazioneControllerScope.pianoCorrente = response.piano
-															vm.obiettivoDaAprire = vm.obiettivo
 
 														})
 												.error(
@@ -230,55 +239,64 @@ tree
 								}
 
 							}
-							
-							//elimina nodo
-							
-							
-							vm.removeNodeWarning=function(idNodo,codiceNodo,nomeNodo){
+
+							// elimina nodo
+
+							vm.removeNodeWarning = function(idNodo, codiceNodo,
+									nomeNodo,figliPresenti) {
+								console.log(figliPresenti)
+								if (figliPresenti){
+									alert("Non si può eliminare un obiettivo con dei figli");
+									return
+								}
+								
 								vm.obiettivoDaEliminare = new Object();
-								vm.obiettivoDaEliminare.nome=nomeNodo
-								vm.obiettivoDaEliminare.codice=codiceNodo
-								vm.obiettivoDaEliminare.id=idNodo
-								//da fare per aggiornare le proprietà di tc, altrimenti non viene visto in gsp
-								//dato che è stata aggiunta prima 
+								vm.obiettivoDaEliminare.nome = nomeNodo
+								vm.obiettivoDaEliminare.codice = codiceNodo
+								vm.obiettivoDaEliminare.id = idNodo
+								// da fare per aggiornare le proprietà di tc,
+								// altrimenti non viene visto in gsp
+								// dato che è stata aggiunta prima
 								$scope.$apply()
-								$('#confermaEliminazioneObiettivo')
-								.modal(
-										{
-											backdrop : 'static',
-											keyboard : true
-										})
+								$('#confermaEliminazioneObiettivo').modal({
+									backdrop : 'static',
+									keyboard : true
+								})
 							}
-							
-							vm.removeNode=function(idNodo){
+
+							vm.removeNode = function(idNodo) {
 								$http
-								.post(
-										sessionStorage.context
-												+ '/pianificazione/eliminaObiettivo',
-										{
-											'tabId' : vm.tabId,
-											'idVersione' : $scope.pianoCorrente.id,
-											'idObiettivo' : idNodo
-										})
-								.success(
-										function(response,
-												status,
-												headers, config) {
+										.post(
+												sessionStorage.context
+														+ '/pianificazione/eliminaObiettivo',
+												{
+													'tabId' : vm.tabId,
+													'idVersione' : $scope.pianoCorrente.id,
+													'idObiettivo' : idNodo
+												})
+										.success(
+												function(response, status,
+														headers, config) {
 
-											alert(response)
+													alert("Eliminato l'obiettivo "
+															+ response.codice)
 
-										})
-								.error(
-										function(response,
-												status,
-												headers, config) {
-											serviceUtils
-													.chiudiSpinner();
-											alert("removeNode "
-													+ response)
-										});	
-								vm.obiettivoDaEliminare.codice=undefined
-								$scope.$apply()
+													
+													vm.obiettivoDaAprire = new Object()
+													vm.obiettivoDaAprire.id=response.parentId;
+													$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
+													$scope.pianificazioneControllerScope.pianoCorrente = response.piano
+
+												}).error(
+												function(response, status,
+														headers, config) {
+													serviceUtils
+															.chiudiSpinner();
+													alert("removeNode "
+															+ response)
+												});
+								vm.obiettivoDaEliminare.codice = undefined
+								
 							}
 
 						} ]);

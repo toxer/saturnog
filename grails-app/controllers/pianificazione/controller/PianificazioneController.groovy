@@ -562,9 +562,15 @@ class PianificazioneController {
 		resp.nome = obiettivoDominio.nome;
 		resp.id = obiettivoDominio.id;
 		resp.codice = obiettivoDominio.codiceCamera;
+		resp.parentId=obiettivoDominio.padre?.id
 		
 		
 		obiettivoDominio = obiettivoService.deleteObj(obiettivoDominio);
+		
+		resp.piano = obiettivoDominio.versione
+		resp.pianoJson =  versioneService.stampaPianoObiettiviCompleto(resp.piano);
+		
+		
 
 		
 		//JSON.use("deep")

@@ -39,7 +39,8 @@ var contextMenuItems = [ {
 
 		} else {
 			if (d.parent != undefined) {
-				treeController.removeNodeWarning(d.idNodo,d.codiceCamera,d.name);
+				var figli = allChild(d)
+				treeController.removeNodeWarning(d.idNodo,d.codiceCamera,d.name,(figli.length>0));
 			}
 		}
 	},
