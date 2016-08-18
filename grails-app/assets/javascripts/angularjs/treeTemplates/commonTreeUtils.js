@@ -32,6 +32,19 @@ var contextMenuItems = [ {
 	},
 	disabled : false
 
+}, {
+	title : 'Rimuovi il nodo',
+	action : function(elm, d, i) {
+		if (d.idNodo == undefined) {
+
+		} else {
+			if (d.parent != undefined) {
+				treeController.removeNodeWarning(d.idNodo,d.codiceCamera,d.name);
+			}
+		}
+	},
+	disabled : false
+
 } ]
 
 function expandNodeWithoutUpdate(d) {
@@ -267,20 +280,19 @@ function allChild(rootNode, onlyOpen) {
 
 }
 
-
-function selectNodeById(rootNode,idsArray){
-	var figli = expandNodeWithoutUpdate(rootNode)	
-	var figliNonSelezionati=[]
-	figli.forEach(function (d){
-		if (idsArray.indexOf(d.idNode)==-1){
+function selectNodeById(rootNode, idsArray) {
+	var figli = expandNodeWithoutUpdate(rootNode)
+	var figliNonSelezionati = []
+	figli.forEach(function(d) {
+		if (idsArray.indexOf(d.idNode) == -1) {
 			figliSelezionati.push(d)
 		}
 	});
-	
-	if (figliNonSelezionati.length>0){
-		figliNonSelezionati.deselected=true
+
+	if (figliNonSelezionati.length > 0) {
+		figliNonSelezionati.deselected = true
 	}
-	update(rootNode,0)
+	update(rootNode, 0)
 }
 
 function setCorrectWidth(rootNode) {

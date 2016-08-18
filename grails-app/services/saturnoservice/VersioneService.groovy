@@ -1,5 +1,7 @@
 package saturnoservice
 
+import grails.transaction.Transactional
+
 import org.codehaus.groovy.grails.web.json.JSONArray
 import org.codehaus.groovy.grails.web.json.JSONObject
 
@@ -9,8 +11,9 @@ import saturno.organigramma.Organigramma
 import saturno.piano.Obiettivo
 import saturno.piano.Versione
 
+@Transactional
 class VersioneService {
-
+	static transaction=false
 	def clonaVersione(Versione versioneSorgente,Versione versioneDestinazione){
 		//clono l'organigramma perchè poi mi serve nella clonazione dei figli
 		Organigramma nuovoOrganigramma = null;
@@ -26,10 +29,6 @@ class VersioneService {
 			clonaObiettivo(o,versioneDestinazione,nuovoOrganigramma);
 		}
 		versioneDestinazione.save(true);
-
-
-
-
 	}
 
 
@@ -174,6 +173,7 @@ class VersioneService {
 		}
 		obj.idNodo = o.id
 		obj.codiceCamera=o.codiceCamera
+		obj.codice=o.codice
 		obj.livello=o.livello
 
 		for (Obiettivo c : o.figli){
@@ -188,5 +188,22 @@ class VersioneService {
 		obj.children=obj.children?.sort { a,b -> a.name <=> b.name}
 		return obj;
 	}
+	
+	
+	def creaNuovaVersione(Versione v){
+		
+		
+	
+		v.save(true);
+		return v
 
+	}
+	
+	def cancellaVersione(Versione v){
+		v.delete(flush: true, failOnError:true);
+		return v
+	}
+	
+	
+	
 }

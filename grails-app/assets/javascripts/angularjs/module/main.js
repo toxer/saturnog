@@ -1,63 +1,58 @@
-var myApp = angular.module('myApp', ['CambiaAnno','Pianificazione','ngCkeditor']);
+var myApp = angular.module('myApp', [ 'CambiaAnno', 'Pianificazione',
+		'ngCkeditor' ]);
 
 // servizio invocato ogni qual volta si aggiornane le
 // caratteristiche dell'untete: ente in uso, anno, versione
 
 myApp.run(function($rootScope) {
-	//setup editor options
+	// setup editor options
 	$rootScope.editorOptions = {
-	 language: 'it'
-	 //,uiColor: '#000000'
+		language : 'it'
+	// ,uiColor: '#000000'
 	};
-	
+
 	// torna alla pagina principale
 	$rootScope.goToMain = function() {
 		window.location = location.protocol + "//" + location.host + "/"
-				+ sessionStorage.context	
+				+ sessionStorage.context
 	}
-	
+
 });
 
+// interceptor per avere lo spinner ad ogni richiesta post
+myApp.config([ '$httpProvider', function($httpProvider) {
+	$httpProvider.interceptors.push('httpSpinnerInterceptor');
+} ]);
 
+myApp.factory('httpSpinnerInterceptor', function($q, $rootScope) {
 
+	return {
 
+		request : function(request) {
+			$('#spinner').fadeIn();
+			return request
+		},
 
+		response : function(response) {
+			$('#spinner').fadeOut('fast');
+			return response;
+		}
+	// ,
 
-//interceptor per avere lo spinner ad ogni richiesta post
-myApp.config(['$httpProvider',function($httpProvider) {
-    $httpProvider.interceptors.push('httpSpinnerInterceptor');
-}]);
-
-myApp.factory('httpSpinnerInterceptor', function($q,$rootScope) {
-   
-    return {
-    	
-      request:function(request){
-    	  $('#spinner').fadeIn();
-    	  return request
-      },
-
-      response: function(response) {
-    	  $('#spinner').fadeOut('fast');
-        return response;
-      }
-      //,
-
-//     responseError: function(responseError) {
-//    	 $('#spinner').fadeOut('fast');
-//    	 console.log(responseError)
-//        return responseError;
-//      }
-    };
-  });
-
+	// responseError: function(responseError) {
+	// $('#spinner').fadeOut('fast');
+	// console.log(responseError)
+	// return responseError;
+	// }
+	};
+});
 
 myApp.service('serviceUtils', function($http) {
 
 	// usato per aggiornare l'interfaccia da userObject
 
 	updateInterfaces = function(scope) {
-		
+
 		// logo camerale
 
 		scope.logoSrc = "" + sessionStorage.context + "/images/logo/"
@@ -70,11 +65,11 @@ myApp.service('serviceUtils', function($http) {
 		scope.annoCorrente = JSON.parse(sessionStorage.userObject).anno
 
 	}
-	
-	updateBreadcumb = function(text){
+
+	updateBreadcumb = function(text) {
 		$('#breadcumb').html(text);
 	}
-	this.updateBreadcumb=updateBreadcumb;
+	this.updateBreadcumb = updateBreadcumb;
 
 	this.updateInterfaces = updateInterfaces;
 	userObject = function(scope, enteSelezionato, anno, versione) {
@@ -88,7 +83,7 @@ myApp.service('serviceUtils', function($http) {
 		if (versione != undefined) {
 			data.versione = versione;
 		}
-		
+
 		var updateUser = $http.post(sessionStorage.context
 				+ '/init/updateUserObject', {
 			'tabId' : sessionStorage.tabId,
@@ -104,12 +99,16 @@ myApp.service('serviceUtils', function($http) {
 			return response.data
 
 		}, function(response, status, headers, config) {
-			//alert(response.data);
+			// alert(response.data);
 			return response
 		});
 	}
 
 	this.userObject = userObject
+
+	this.chiudiSpinner = function() {
+		$('#spinner').fadeOut('fast');
+	}
 
 	this.getEnti = function(scope) {
 		var entiPromise = $http.post(sessionStorage.context + '/init/getEnti',
@@ -146,98 +145,118 @@ myApp.service('serviceUtils', function($http) {
 
 myApp
 		.controller(
-				'MainController',['$scope', '$http','serviceUtils',
+				'MainController',
+				[
+						'$scope',
+						'$http',
+						'serviceUtils',
 
-				function($scope, $http, serviceUtils) {
-					$scope.breadcumb=""
-					
-					// questo serve per poter permettere
-					// alla finsetra changeCamera di essere aperta
-					// da pulsante
+						function($scope, $http, serviceUtils) {
+							$scope.breadcumb = ""
 
-					$scope.cambiaCamera = function() {
-						serviceUtils.getEnti($scope)
+							// questo serve per poter permettere
+							// alla finsetra changeCamera di essere aperta
+							// da pulsante
 
-					}
+							$scope.cambiaCamera = function() {
+								serviceUtils.getEnti($scope)
 
-					
-					var vm = this
-					vm.tabId = sessionStorage.tabId;
-					
-					
-					
-					// selezione dell'ente da finestra
-					vm.selectEnte = function() {
+							}
 
-						serviceUtils.userObject($scope, vm.enteSelezionato);
+							var vm = this
+							vm.tabId = sessionStorage.tabId;
 
-					}
+							// selezione dell'ente da finestra
+							vm.selectEnte = function() {
 
-					if (sessionStorage.tabId == null) {
-						// console.log("tabId not found in sessionStorage")
+								serviceUtils.userObject($scope,
+										vm.enteSelezionato);
 
-						$http.post(
-								sessionStorage.context
-										+ '/init/createSessionTabId', {
-									'tabId' : vm.tabId
-								}).success(
-								function(data, status, headers, config) {
-									console
-											.log("tab id received "
-													+ data.tabId)
-									sessionStorage.tabId = data.tabId
-									vm.tabId = data.tabId
-									// vm.getEnti(sessionStorage.tabId)
-									serviceUtils.getEnti($scope)
-								}).error(
-								function(data, status, headers, config) {
-									alert("fuction selectEnte"+data);
-								});
-					} else {
-						// controllo se ho già un utente in session
-						$http
-								.post(
-										sessionStorage.context
-												+ '/init/getUserObject', {
-											'tabId' : sessionStorage.tabId
-										})
-								.success(
-										function(response, status, headers,
-												config) {
-											console.log(status)
-											
-											if (response != undefined
-													&& !$
-															.isEmptyObject(response)) {
+							}
 
-												// ho già un oggetto
-												// utente
-												// lo carico in session
-												// client
-												sessionStorage.userObject = sessionStorage.userObject = JSON
-														.stringify(response);
-												// e aggiorno l'interfaccia
-												serviceUtils
-														.updateInterfaces($scope)
-												return;
-											} else {
-												// non ho un oggetto
-												// utente in sessione,
-												// passo per la scelta
-												// dell'ente
-												// vm
-												// .getEnti(sessionStorage.tabId);
-												serviceUtils.getEnti($scope)
+							if (sessionStorage.tabId == null) {
+								// console.log("tabId not found in
+								// sessionStorage")
 
-											}
-										}).error(function(response, status, headers, config) {
-											
-											alert("Tab id invalido");
-											sessionStorage.removeItem('tabId')
-											window.location = location.protocol + "//" + location.host + "/"
-											+ sessionStorage.context
-										});
+								$http
+										.post(
+												sessionStorage.context
+														+ '/init/createSessionTabId',
+												{
+													'tabId' : vm.tabId
+												})
+										.success(
+												function(data, status, headers,
+														config) {
+													console
+															.log("tab id received "
+																	+ data.tabId)
+													sessionStorage.tabId = data.tabId
+													vm.tabId = data.tabId
+													// vm.getEnti(sessionStorage.tabId)
+													serviceUtils
+															.getEnti($scope)
+												}).error(
+												function(data, status, headers,
+														config) {
+													alert("fuction selectEnte"
+															+ data);
+												});
+							} else {
+								// controllo se ho già un utente in session
+								$http
+										.post(
+												sessionStorage.context
+														+ '/init/getUserObject',
+												{
+													'tabId' : sessionStorage.tabId
+												})
+										.success(
+												function(response, status,
+														headers, config) {
+													console.log(status)
 
-					}
+													if (response != undefined
+															&& !$
+																	.isEmptyObject(response)) {
 
-				}]);
+														// ho già un oggetto
+														// utente
+														// lo carico in session
+														// client
+														sessionStorage.userObject = sessionStorage.userObject = JSON
+																.stringify(response);
+														// e aggiorno
+														// l'interfaccia
+														serviceUtils
+																.updateInterfaces($scope)
+														return;
+													} else {
+														// non ho un oggetto
+														// utente in sessione,
+														// passo per la scelta
+														// dell'ente
+														// vm
+														// .getEnti(sessionStorage.tabId);
+														serviceUtils
+																.getEnti($scope)
+
+													}
+												})
+										.error(
+												function(response, status,
+														headers, config) {
+
+													alert("Tab id invalido");
+													sessionStorage
+															.removeItem('tabId')
+													window.location = location.protocol
+															+ "//"
+															+ location.host
+															+ "/"
+															+ sessionStorage.context
+												});
+
+							}
+
+						} ]);

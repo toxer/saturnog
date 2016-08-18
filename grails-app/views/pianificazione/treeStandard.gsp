@@ -40,6 +40,7 @@ path.link {
 
 <div ng-controller="TreeController as tc">
 	<g:render template="/dialogs/aggiungiModificaObiettivo" />
+	<g:render template="/dialogsWarning/confermaEliminazioneObiettivo" />
 	<div style="max-height: none">
 
 		<div id="treeBody"></div>

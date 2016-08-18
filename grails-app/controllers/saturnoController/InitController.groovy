@@ -48,6 +48,7 @@ class InitController {
 		def tabId = request.JSON.tabId;
 		JSONObject data = new JSONObject();
 		data.data =  session."${tabId}".userObject;
+	//	JSON.use("deep")
 		render  session."${tabId}"?.userObject as JSON
 		}
 		catch (Exception exc){
@@ -128,6 +129,7 @@ class InitController {
 		session."${tabId}".userObject = userObject
 	
 		log.debug("Setup userObject : "+session."${tabId}"?.userObject)
+		JSON.use("deep")
 		render userObject as JSON
 		}
 		catch (Exception exc){
@@ -175,6 +177,7 @@ class InitController {
 		log.debug(parametri)
 		def rows= sql.rows("select distinct(az.aziendaId),az.nome from utenti_aziende_aplicazioni ap join aziende az on (ap.aziendaId=az.aziendaId)  where sigla=:appName and userId=:userId order by az.nome", parametri)
 		log.debug("Enti trovati: "+rows.size());
+		JSON.use("deep")
 		render rows as JSON
 	}
 
@@ -189,6 +192,7 @@ class InitController {
 		
 		JSONObject obj = new JSONObject();
 		obj.tabId=tabId
+		JSON.use("deep")
 		render obj as JSON
 	}
 }

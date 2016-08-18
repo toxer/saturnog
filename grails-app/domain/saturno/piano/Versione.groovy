@@ -20,7 +20,7 @@ class Versione implements Serializable{
 
 	static mapping = {
 		version true
-		id generator:'identity', column:'id_piano', type:'integer'
+		id generator:'native', column:'id_piano', type:'integer'
 		note type:'text'
 		//indice ricerche
 		ente index: 'ente_anno_piano_idx'
@@ -35,6 +35,9 @@ class Versione implements Serializable{
 		versione(unique:['anno','ente'])
 		ente nullable:false
 		anno nullable:false
+		dtFinSist nullable:true
+		modificatoDa nullable:true
+		note nullable:true
 		
 	}
 	

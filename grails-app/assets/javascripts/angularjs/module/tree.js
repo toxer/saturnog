@@ -78,25 +78,24 @@ tree
 									backdrop : 'static',
 									keyboard : true
 								});
-								
+
 								vm.obiettivo = new Object();
 								vm.obiettivo.padre = new Object();
 								if (idNodoPadre) {
 									vm.obiettivo.padre.id = idNodoPadre
 									vm.obiettivo.padre.nome = titoloNodoPadre
-								}else{
+								} else {
 									vm.obiettivo.padre.nome = $scope.pianoCorrente.nomeVersione
 								}
 								$scope.$apply()
 
 							}
-							
-							//mostra un nodo
+
+							// mostra un nodo
 							vm.showNode = function(idNodo) {
 								vm.obiettivo = new Object();
 								vm.obiettivo.id = idNodo
-							
-								
+
 								$http
 										.post(
 												sessionStorage.context
@@ -112,9 +111,9 @@ tree
 													console.log(response)
 
 													vm.obiettivo = response
-													if (vm.obiettivo.padre==undefined){
+													if (vm.obiettivo.padre == undefined) {
 														vm.obiettivo.padre = new Object();
-														vm.obiettivo.padre.nome=$scope.pianoCorrente.nomeVersione
+														vm.obiettivo.padre.nome = $scope.pianoCorrente.nomeVersione
 													}
 													console.log(vm.obiettivo)
 													// $scope.$apply()
@@ -133,18 +132,22 @@ tree
 															+ response)
 													console.log("Statu "
 															+ status)
-													$('#spinner').fadeOut(
-															'fast');
+													serviceUtils
+															.chiudiSpinner();
 												});
 								$scope.$apply()
-								
+
 							}
-							
-							//update di un nodo dell'albero
-							vm.updateNodo= function() {
+
+							// update di un nodo dell'albero
+							vm.updateNodo = function() {
 								if (vm.obiettivo == undefined) {
 									alert("Non trovato obiettivo da salvare")
 									return
+
+									
+
+																		
 
 									
 
@@ -152,74 +155,130 @@ tree
 
 								if (vm.nuovoObiettivoForm.$valid) {
 									$('#creaModificaObiettivo').modal('hide');
-									
-									//controllo se il nodo è da aggiungere o da salvare
-									
-									if (vm.obiettivo.id == undefined){
-										//aggiunta
-										
+
+									// controllo se il nodo è da aggiungere o da
+									// salvare
+
+									if (vm.obiettivo.id == undefined) {
+										// aggiunta
+
 										$http
-										.post(
-												sessionStorage.context
-														+ '/pianificazione/aggiungiObiettivo',
-												{
-													'tabId' : vm.tabId,
-													'idVersione' : $scope.pianoCorrente.id,
-													'obiettivo' : vm.obiettivo
-												})
-										.success(
-												function(response, status,
-														headers, config) {
+												.post(
+														sessionStorage.context
+																+ '/pianificazione/aggiungiObiettivo',
+														{
+															'tabId' : vm.tabId,
+															'idVersione' : $scope.pianoCorrente.id,
+															'obiettivo' : vm.obiettivo
+														})
+												.success(
+														function(response,
+																status,
+																headers, config) {
 
-													vm.obiettivo.id = response.nuovoId
-													$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
-													$scope.pianificazioneControllerScope.pianoCorrente = response.piano
-													vm.obiettivoDaAprire = vm.obiettivo
+															vm.obiettivo.id = response.nuovoId
+															$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
+															$scope.pianificazioneControllerScope.pianoCorrente = response.piano
+															vm.obiettivoDaAprire = vm.obiettivo
 
-												}).error(
-												function(response, status,
-														headers, config) {
-													alert("saveNodo "
-															+ response)
-												});
-										
-									}else{
-										//update
-									$http
-											.post(
-													sessionStorage.context
-															+ '/pianificazione/salvaObiettivo',
-													{
-														'tabId' : vm.tabId,
-														'idVersione' : $scope.pianoCorrente.id,
-														'obiettivo' : vm.obiettivo
-													})
-											.success(
-													function(response, status,
-															headers, config) {
+														})
+												.error(
+														function(response,
+																status,
+																headers, config) {
+															alert("saveNodo "
+																	+ response)
+															serviceUtils
+																	.chiudiSpinner();
+														});
 
-														vm.obiettivo.id = response.nuovoId
-														$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
-														$scope.pianificazioneControllerScope.pianoCorrente = response.piano
-														vm.obiettivoDaAprire = vm.obiettivo
+									} else {
+										// update
+										$http
+												.post(
+														sessionStorage.context
+																+ '/pianificazione/salvaObiettivo',
+														{
+															'tabId' : vm.tabId,
+															'idVersione' : $scope.pianoCorrente.id,
+															'obiettivo' : vm.obiettivo
+														})
+												.success(
+														function(response,
+																status,
+																headers, config) {
 
-													}).error(
-													function(response, status,
-															headers, config) {
-														alert("saveNodo "
-																+ response)
-													});
+															vm.obiettivo.id = response.nuovoId
+															$scope.pianificazioneControllerScope.pianoJson = response.pianoJson
+															$scope.pianificazioneControllerScope.pianoCorrente = response.piano
+															vm.obiettivoDaAprire = vm.obiettivo
+
+														})
+												.error(
+														function(response,
+																status,
+																headers, config) {
+															serviceUtils
+																	.chiudiSpinner();
+															alert("saveNodo "
+																	+ response)
+														});
 									}
 
 								} else {
 									alert("Attenzione, non sono stati completati tutti i campi obbligatori del form")
 								}
-								
+
 							}
-
-						
 							
-
+							//elimina nodo
 							
+							
+							vm.removeNodeWarning=function(idNodo,codiceNodo,nomeNodo){
+								vm.obiettivoDaEliminare = new Object();
+								vm.obiettivoDaEliminare.nome=nomeNodo
+								vm.obiettivoDaEliminare.codice=codiceNodo
+								vm.obiettivoDaEliminare.id=idNodo
+								//da fare per aggiornare le proprietà di tc, altrimenti non viene visto in gsp
+								//dato che è stata aggiunta prima 
+								$scope.$apply()
+								$('#confermaEliminazioneObiettivo')
+								.modal(
+										{
+											backdrop : 'static',
+											keyboard : true
+										})
+							}
+							
+							vm.removeNode=function(idNodo){
+								$http
+								.post(
+										sessionStorage.context
+												+ '/pianificazione/eliminaObiettivo',
+										{
+											'tabId' : vm.tabId,
+											'idVersione' : $scope.pianoCorrente.id,
+											'idObiettivo' : idNodo
+										})
+								.success(
+										function(response,
+												status,
+												headers, config) {
+
+											alert(response)
+
+										})
+								.error(
+										function(response,
+												status,
+												headers, config) {
+											serviceUtils
+													.chiudiSpinner();
+											alert("removeNode "
+													+ response)
+										});	
+								vm.obiettivoDaEliminare.codice=undefined
+								$scope.$apply()
+							}
 
 						} ]);

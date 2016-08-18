@@ -4,16 +4,19 @@ import grails.converters.JSON
 
 import org.codehaus.groovy.grails.web.json.JSONObject
 
+import saturno.common.Ente
 import saturno.piano.LivelloCfg
 import saturno.piano.Obiettivo
 import saturno.piano.Versione
 import saturno.piano.VersioneCfg
 
 class PianificazioneController {
+
 	def utilsService;
 	def versioneService
+	def obiettivoService;
 	def grailsApplication
-
+	def sessionFactory
 	def index(){
 	}
 
@@ -62,14 +65,14 @@ class PianificazioneController {
 		versione.versionePresente =false
 		versione.versione=null;
 		if (piani == null || piani.size()==0){
-			JSON.use("deep")
+			//JSON.use("deep")
 			render versione as JSON
 			return
 
 		}
 		versione.versionePresente=true
 		versione.versioni=piani
-		JSON.use("deep")
+	//	JSON.use("deep")
 		render versione as JSON
 
 
@@ -130,11 +133,12 @@ class PianificazioneController {
 		}
 
 
-		JSON.use("deep")
+		//JSON.use("deep")
 		render piano as JSON
 
 
 	}
+
 
 
 
@@ -168,12 +172,12 @@ class PianificazioneController {
 			return;
 		}
 
-		Versione pianoTo = new Versione();
+		Versione pianoTo = Versione.create();
 		pianoTo.anno = pianoFrom.anno;
-		pianoTo.setEnte(pianoFrom.ente);
+		pianoTo.setEnte(Ente.findById(pianoFrom.ente.id));
 		pianoTo.setNomeVersione(pianoFrom.getNomeVersione()+"/bis");
 		versioneService.clonaVersione(pianoFrom, pianoTo);
-		JSON.use("deep")
+		//JSON.use("deep")
 		render pianoTo as JSON
 	}
 
@@ -189,8 +193,10 @@ class PianificazioneController {
 			return;
 		}
 
-		Versione piano = new Versione(request.JSON?.piano);
-		if (piano.anno==null || piano.ente==null || piano.id!=null){
+		def versioneRicevuta = request.JSON?.piano;
+		Versione piano =Versione.create();
+
+		if (versioneRicevuta.anno==null || versioneRicevuta.ente==null || versioneRicevuta.id!=null){
 			render status:500,text:"Errore nella creazione della versione"
 			return
 		}
@@ -200,14 +206,26 @@ class PianificazioneController {
 			render status:500,text:'Piano non trovato'
 			return
 		}
+			
 		piano.setDtIniSist(new Date());
 		piano.setDtFinSist(null);
+		piano.setNomeVersione(versioneRicevuta.nomeVersione)
+		piano.setVersione(versioneRicevuta.versione)
+		piano.setAnno(versioneRicevuta.anno)
+		piano.setEnte(Ente.findById(userObject.ente.id))
+		piano.setNote(versioneRicevuta.note)
+		piano.setAperto(true)
 		piano.setCreatoDa(userObject.currentUser?.userId)
 
+		def v = versioneService.creaNuovaVersione(piano);
 
-		piano.save(true);
-		JSON.use("deep")
-		render piano as JSON
+
+
+
+
+	//	JSON.use("deep")
+		render v as JSON
+		
 
 
 
@@ -251,42 +269,42 @@ class PianificazioneController {
 	}
 
 	def cancellaVersioneCorrente(){
-		
-			if (!utilsService.testTabId()){
-				render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
-				return
-			}
-			def userObject = utilsService.currentUserObject()
-			if (userObject==null){
-				render status:500,text:'Utente non trovato'
-				return;
-			}
-			def idVersione = request.JSON?.idVersione
 
-			if (idVersione==null){
-				render status:500,text:'Id versione non trovato'
-				return;
-			}
+		if (!utilsService.testTabId()){
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			return
+		}
+		def userObject = utilsService.currentUserObject()
+		if (userObject==null){
+			render status:500,text:'Utente non trovato'
+			return;
+		}
+		def idVersione = request.JSON?.idVersione
 
-			if (idVersione != userObject.versione){
-				render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
-				return;
-			}
+		if (idVersione==null){
+			render status:500,text:'Id versione non trovato'
+			return;
+		}
 
-			Versione p = Versione.findById(idVersione)
-			if (p == null){
-				render status:500,text:'Versione non presente nel db'
-				return;
-			}
-			def retObj = new JSONObject();
-			retObj.nomeVersione = p.nomeVersione;
-			p.delete(flush:true, failOnError:true);
-			//per controllo, guardo che l'id versine ricevuto corrisponda a
-			//quello presente nell'id utente in sessione.
-			//Questi devono sempre coincidere
-			JSON.use("deep")
-			render retObj as JSON
-		
+		if (idVersione != userObject.versione){
+			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+			return;
+		}
+
+		Versione p = Versione.findById(idVersione)
+		if (p == null){
+			render status:500,text:'Versione non presente nel db'
+			return;
+		}
+		def retObj = new JSONObject();
+		retObj.nomeVersione = p.nomeVersione;
+		versioneService.cancellaVersione(p);
+		//per controllo, guardo che l'id versine ricevuto corrisponda a
+		//quello presente nell'id utente in sessione.
+		//Questi devono sempre coincidere
+		//JSON.use("deep")
+		render retObj as JSON
+
 
 	}
 
@@ -334,7 +352,7 @@ class PianificazioneController {
 
 		}
 
-		JSON.use("deep")
+		//JSON.use("deep")
 		println(piano)
 		render piano as JSON
 	}
@@ -374,7 +392,7 @@ class PianificazioneController {
 			render status:500,text:'Non trovato nessun obiettivo'
 			return;
 		}
-		JSON.use("deep")
+		//JSON.use("deep")
 		render obiettivo as JSON
 	}
 
@@ -413,18 +431,21 @@ class PianificazioneController {
 		obiettivoDominio.descrizione=obiettivo.descrizione
 		obiettivoDominio.codiceCamera=obiettivo.codiceCamera
 		obiettivoDominio.note=obiettivo.note
-		obiettivoDominio.save(true)
+		obiettivoDominio = obiettivoService.saveObj(obiettivoDominio)
 		JSONObject pianoJson = versioneService.stampaPianoObiettiviCompleto(obiettivoDominio.versione);
 		def resp = new JSONObject();
 		resp.pianoJson = pianoJson;
 		resp.piano = obiettivoDominio.versione
 		resp.nuovoId = obiettivoDominio.id;
-		JSON.use("deep")
+		//JSON.use("deep")
 		render resp as JSON
 
 
 
 	}
+	
+	
+	
 
 
 	def aggiungiObiettivo(){
@@ -484,7 +505,7 @@ class PianificazioneController {
 
 		obiettivoDominio.livello = obiettivoDominio.padre!=null?obiettivoDominio.padre.livello+1:0;
 		obiettivoDominio.anno = obiettivoDominio.versione.anno
-		obiettivoDominio.save(true);
+		obiettivoDominio = obiettivoService.saveObj(obiettivoDominio)
 
 
 		JSONObject pianoJson = versioneService.stampaPianoObiettiviCompleto(obiettivoDominio.versione);
@@ -492,11 +513,62 @@ class PianificazioneController {
 		resp.pianoJson = pianoJson;
 		resp.piano = obiettivoDominio.versione
 		resp.nuovoId = obiettivoDominio.id;
-		JSON.use("deep")
+		//JSON.use("deep")
 		render resp as JSON
 
 
 
+
+
+
+	}
+	
+	
+	def eliminaObiettivo(){
+		if (!utilsService.testTabId()){
+			render status:500,text:'Identificativo della tab non valido, chiudere il browser e riprovare'
+			return
+		}
+		def userObject = utilsService.currentUserObject()
+		if (userObject==null){
+			render status:500,text:'Utente non trovato'
+			return;
+		}
+		def idVersione = request.JSON?.idVersione
+		if (idVersione == null){
+			render status:500,text:'Versione non presente nel db'
+			return;
+		}
+		if (idVersione != userObject.versione){
+			render status:500,text:'L\'id versione trasmesso non coincide con quello in sessione'
+			return;
+		}
+		def idObiettivo = request.JSON?.idObiettivo;
+		if (idObiettivo == null){
+			render status:500,text:'Non inviato l\'id obiettivo'
+			return;
+		}
+		Obiettivo obiettivoDominio = Obiettivo.findById(idObiettivo)
+		if (obiettivoDominio == null){
+			render status:500,text:'Non trovato l\'obiettivo nel db'
+			return;
+		}
+		
+		if (obiettivoDominio.versione.id!= idVersione){
+			render status:500,text: 'Versione dell\'obiettivo non corrispondente alla versione attuale'
+		}
+		
+		JSONObject resp = new JSONObject();
+		resp.nome = obiettivoDominio.nome;
+		resp.id = obiettivoDominio.id;
+		resp.codice = obiettivoDominio.codiceCamera;
+		
+		
+		obiettivoDominio = obiettivoService.deleteObj(obiettivoDominio);
+
+		
+		//JSON.use("deep")
+		render resp as JSON
 
 
 

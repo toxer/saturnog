@@ -162,6 +162,7 @@ pianificazione
 									return;
 								}
 								if (vm.nuovaVersioneForm.$valid) {
+									vm.piano.id = undefined
 									
 									$http
 											.post(
@@ -224,6 +225,7 @@ pianificazione
 																				status,
 																				headers,
 																				config) {
+																			serviceUtils.chiudiSpinner();
 																			alert(response)
 																		});
 														$state.go('default')
@@ -295,6 +297,7 @@ pianificazione
 												}).error(
 												function(response, status,
 														headers, config) {
+													serviceUtils.chiudiSpinner();
 													alert(response)
 												});
 
@@ -361,6 +364,7 @@ pianificazione
 												}).error(
 												function(response, status,
 														headers, config) {
+													serviceUtils.chiudiSpinner();
 													alert(response)
 												});
 
@@ -398,6 +402,7 @@ pianificazione
 										}).error(
 										function(response, status, headers,
 												config) {
+											serviceUtils.chiudiSpinner();
 											alert(response)
 										});
 
@@ -444,6 +449,7 @@ pianificazione
 												}).error(
 												function(response, status,
 														headers, config) {
+													serviceUtils.chiudiSpinner();
 													alert(response)
 												});
 							}
@@ -467,6 +473,7 @@ pianificazione
 												}).error(
 												function(response, status,
 														headers, config) {
+													serviceUtils.chiudiSpinner();
 													alert(response)
 												});
 
